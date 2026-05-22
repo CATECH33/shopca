@@ -6,6 +6,7 @@ import Login from './auth/Login.jsx'
 import Register from './auth/Register.jsx'
 import Forgot from './auth/Forgot.jsx'
 import VerifyPending from './auth/VerifyPending.jsx'
+import EarlyAccessPage from './earlyaccess/EarlyAccessPage.jsx'
 import UserDashLayout from './userdash/UserDashLayout.jsx'
 import UDOverview from './userdash/UDOverview.jsx'
 import UDSavedSearches from './userdash/UDSavedSearches.jsx'
@@ -46,6 +47,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/auth/register" element={<Register />} />
           <Route path="/auth/forgot" element={<Forgot />} />
           <Route path="/auth/verify-pending" element={<VerifyPending />} />
+          <Route path="/early-access" element={<EarlyAccessPage />} />
           <Route path="/dashboard" element={<UserDashLayout />}>
             <Route index element={<UDOverview />} />
             <Route path="searches" element={<UDSavedSearches />} />

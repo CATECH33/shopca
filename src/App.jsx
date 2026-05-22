@@ -869,6 +869,16 @@ function Header({ currentView, setCurrentView, user, role, onSignIn, onPublish, 
             <>
               <NotificationCenter user={user} />
               <button
+                onClick={() => navigate('/early-access')}
+                className={`flex items-center gap-1.5 text-sm font-semibold transition-colors px-3 py-1.5 rounded-full border ${
+                  isOverlay
+                    ? 'border-orange-400/50 text-orange-400 hover:bg-orange-400/10'
+                    : 'border-orange-200 text-orange-600 hover:bg-orange-50'
+                }`}
+              >
+                ⚡ Accès anticipé
+              </button>
+              <button
                 onClick={() => navigate('/dashboard')}
                 className={`text-sm font-medium transition-colors px-3 py-2 rounded-full ${isOverlay ? 'text-white hover:text-orange-400' : 'text-navy-900 hover:text-orange-600'}`}
               >
@@ -1326,6 +1336,92 @@ function Listings({ listings, loading, error, source, title = 'Biens à la une',
             })}
           </motion.div>
         )}
+      </div>
+    </section>
+  )
+}
+
+/* ============================================================================
+   Early Access teaser (home page banner)
+   ============================================================================ */
+function EarlyAccessTeaser() {
+  const navigate = useNavigate()
+  const MOCK = [
+    { img: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=300&q=60', price: '680 000 €', mins: 18 },
+    { img: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=300&q=60', price: '1 890 000 €', mins: 7  },
+    { img: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=300&q=60', price: '498 000 €', mins: 26 },
+  ]
+  return (
+    <section className="py-20 bg-gradient-to-br from-[#0B1F3A] via-[#0B1F3A] to-[#162E52] overflow-hidden relative">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-600/15 blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full bg-indigo-600/10 blur-3xl" />
+      </div>
+      <div className="max-w-6xl mx-auto px-6 lg:px-10 relative">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Left copy */}
+          <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+            <span className="inline-flex items-center gap-2 bg-orange-600/20 border border-orange-500/30 text-orange-400 text-[11px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 rounded-full mb-5">
+              <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
+              Accès Anticipé · Premium
+            </span>
+            <h2 className="text-3xl xl:text-4xl font-extrabold text-white leading-tight mb-4">
+              Voyez les annonces<br />
+              <span className="text-orange-400">avant tout le monde</span>
+            </h2>
+            <p className="text-slate-400 text-base mb-8 max-w-md">
+              Les membres Premium accèdent aux nouvelles annonces <strong className="text-white">15 à 30 minutes avant le grand public</strong>. Dans l'immobilier, chaque minute compte.
+            </p>
+            <div className="space-y-3 mb-8">
+              {[
+                'Compteur en temps réel avant mise en ligne publique',
+                'Alertes instantanées SMS, email et push',
+                '"Vous voyez cette annonce avant 94% des utilisateurs"',
+              ].map(t => (
+                <div key={t} className="flex items-center gap-3 text-sm text-white/80">
+                  <div className="w-5 h-5 rounded-full bg-orange-600/30 flex items-center justify-center shrink-0">
+                    <Icons.Check size={11} className="text-orange-400" />
+                  </div>
+                  {t}
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center gap-3">
+              <motion.button
+                whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}
+                onClick={() => navigate('/early-access')}
+                className="h-12 px-7 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-full transition shadow-soft text-sm">
+                Découvrir l'accès anticipé
+              </motion.button>
+              <span className="text-white/40 text-xs">À partir de 29€/mois</span>
+            </div>
+          </motion.div>
+
+          {/* Right — blurred cards preview */}
+          <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}
+            className="relative flex gap-3">
+            {MOCK.map((m, i) => (
+              <div key={i} className={`relative flex-1 rounded-2xl overflow-hidden ${i === 1 ? 'mt-0' : 'mt-8'}`}>
+                <img src={m.img} alt="" className="w-full h-52 object-cover"/>
+                <div className="absolute inset-0 bg-gradient-to-t from-navy-900/80 to-transparent"/>
+                {/* Blur overlay */}
+                <div className="absolute inset-0 backdrop-blur-sm bg-navy-900/30 flex flex-col items-center justify-center">
+                  <div className="w-8 h-8 rounded-xl bg-orange-600/80 flex items-center justify-center mb-2">
+                    <Icons.Lock size={14} className="text-white"/>
+                  </div>
+                  <div className="text-white/80 text-xs font-bold text-center px-2">Réservé Premium</div>
+                </div>
+                {/* Countdown badge */}
+                <div className="absolute top-2 right-2 bg-orange-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  −{m.mins} min
+                </div>
+                <div className="absolute bottom-2 left-2 text-white text-xs font-bold">{m.price}</div>
+              </div>
+            ))}
+            {/* Glow */}
+            <div className="absolute inset-0 rounded-3xl ring-1 ring-orange-500/20 pointer-events-none"/>
+          </motion.div>
+        </div>
       </div>
     </section>
   )
@@ -1942,6 +2038,7 @@ function Footer({ setCurrentView }) {
               <li><button onClick={() => setCurrentView('louer')} className="hover:text-orange-500 transition-colors">Louer</button></li>
               <li><a href="#" className="hover:text-orange-500 transition-colors">Colocation</a></li>
               <li><a href="#" className="hover:text-orange-500 transition-colors">Estimation gratuite</a></li>
+              <li><button onClick={() => navigate('/early-access')} className="hover:text-orange-500 transition-colors">⚡ Accès anticipé</button></li>
               <li><button onClick={() => navigate('/dashboard')} className="hover:text-orange-500 transition-colors">Mon espace</button></li>
             </ul>
           </div>
@@ -3848,6 +3945,7 @@ export default function App() {
             <Hero filters={filters} setFilters={setFilters} onSearch={handleSearch} />
             <Categories onPick={handleCategoryPick} />
             <Listings listings={listings} loading={loading} error={error} source={source} />
+            <EarlyAccessTeaser />
             <WhyPasmal />
             <TrustSection />
             <Pricing />
