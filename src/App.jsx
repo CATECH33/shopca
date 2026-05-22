@@ -813,6 +813,7 @@ function UserChip({ user, role, onSignOut, onGoAdmin, onNavigate }) {
    Header with multi-view nav
    ============================================================================ */
 function Header({ currentView, setCurrentView, user, role, onSignIn, onPublish, onSignOut, transparent }) {
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
@@ -867,6 +868,12 @@ function Header({ currentView, setCurrentView, user, role, onSignIn, onPublish, 
           {user ? (
             <>
               <NotificationCenter user={user} />
+              <button
+                onClick={() => navigate('/dashboard')}
+                className={`text-sm font-medium transition-colors px-3 py-2 rounded-full ${isOverlay ? 'text-white hover:text-orange-400' : 'text-navy-900 hover:text-orange-600'}`}
+              >
+                Mon espace
+              </button>
               <UserChip user={user} role={role} onSignOut={onSignOut} onGoAdmin={() => setCurrentView('admin')} onNavigate={setCurrentView} />
             </>
           ) : (
@@ -906,7 +913,10 @@ function Header({ currentView, setCurrentView, user, role, onSignIn, onPublish, 
                 <button key={id} onClick={() => { setCurrentView(id); setOpen(false) }} className="block text-navy-900 font-medium w-full text-left">{l}</button>
               ))}
               {user ? (
-                <button onClick={onSignOut} className="w-full text-navy-900 font-medium text-left">Déconnexion</button>
+                <>
+                  <button onClick={() => { navigate('/dashboard'); setOpen(false) }} className="w-full text-navy-900 font-medium text-left">Mon espace</button>
+                  <button onClick={onSignOut} className="w-full text-navy-900 font-medium text-left">Déconnexion</button>
+                </>
               ) : (
                 <button onClick={onSignIn} className="w-full text-navy-900 font-medium text-left">Connexion</button>
               )}
