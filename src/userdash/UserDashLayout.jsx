@@ -15,6 +15,7 @@ const NAV = [
   { to: '/dashboard/subscription', label: 'Abonnement',               icon: I.CreditCard },
   { to: '/dashboard/favorites',    label: 'Favoris',                  icon: I.Heart },
   { to: '/dashboard/profile',     label: 'Mon profil',               icon: I.User  },
+  { to: '/dashboard/crm',        label: 'CRM',                      icon: I.Users },
 ]
 
 export const ThemeContext = React.createContext({ dark: false })

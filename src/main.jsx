@@ -15,6 +15,7 @@ import UDAIInsights from './userdash/UDAIInsights.jsx'
 import UDSubscription from './userdash/UDSubscription.jsx'
 import UDFavorites from './userdash/UDFavorites.jsx'
 import UDProfile from './userdash/UDProfile.jsx'
+import UDCRM from './userdash/UDCRM.jsx'
 import './index.css'
 
 class ErrorBoundary extends React.Component {
@@ -57,6 +58,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <Route path="subscription" element={<UDSubscription />} />
             <Route path="favorites" element={<UDFavorites />} />
             <Route path="profile" element={<UDProfile />} />
+            <Route path="crm" element={<UDCRM />} />
           </Route>
         </Routes>
       </BrowserRouter>
