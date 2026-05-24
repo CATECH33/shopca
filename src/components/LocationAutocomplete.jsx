@@ -30,6 +30,9 @@ export default function LocationAutocomplete({
   const wrapRef  = useRef(null)
   const inputRef = useRef(null)
 
+  /* keep query in sync when value prop changes externally (e.g. cleared by parent) */
+  useEffect(() => { setQuery(value ?? '') }, [value])
+
   /* filter dataset */
   const results = query.trim().length >= 1
     ? franceCities.filter((c) =>
@@ -99,10 +102,6 @@ export default function LocationAutocomplete({
 
       {/* ── input row ─────────────────────────────────────── */}
       <div className="flex items-center gap-2 w-full">
-        <span className="text-orange-500 shrink-0">
-          <MapPin />
-        </span>
-
         <input
           ref={inputRef}
           type="text"
@@ -129,7 +128,7 @@ export default function LocationAutocomplete({
       {/* ── dropdown ──────────────────────────────────────── */}
       {open && results.length > 0 && (
         <div
-          className="absolute left-0 right-0 z-50 mt-2 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden"
+          className="absolute left-0 right-0 z-[200] mt-2 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden"
           style={{ top: 'calc(100% + 6px)' }}
         >
           {results.map((city, i) => {

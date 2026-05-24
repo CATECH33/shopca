@@ -984,8 +984,8 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
 
       <form onSubmit={(e) => { e.preventDefault(); onSearch() }} className="grid grid-cols-2 md:grid-cols-12 gap-2 mt-2">
         <div className="col-span-2 md:col-span-4">
-          <div className="flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-slate-50 transition-colors group">
-            <Icons.MapPin size={20} className="text-orange-600 shrink-0 group-focus-within:scale-110 transition-transform" />
+          <div className="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 hover:bg-slate-50 focus-within:bg-orange-50/40 focus-within:shadow-[0_0_0_2px_rgba(251,146,60,0.22)] group">
+            <Icons.MapPin size={20} className="text-orange-600 shrink-0 group-focus-within:scale-110 transition-transform duration-200" />
             <div className="flex-1 min-w-0">
               <div className="text-[11px] font-semibold text-slate-600 uppercase tracking-wider">Localisation</div>
               <LocationAutocomplete
@@ -994,7 +994,7 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
                 onSelect={(city) => {
                   if (city) {
                     setFilters((f) => ({ ...f, location: city.name }))
-                    fetchListings({ ...filters, location: city.name })
+                    onSearch({ location: city.name })
                   }
                 }}
                 placeholder="Paris, Lyon, Bordeaux…"
@@ -3953,7 +3953,7 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters.type])
 
-  const handleSearch = () => fetchListings(filters)
+  const handleSearch = (overrides = {}) => fetchListings({ ...filters, ...overrides })
   const handleCategoryPick = (propertyType) => {
     const next = { ...filters, propertyType }
     setFilters(next)
