@@ -220,12 +220,107 @@ function KanbanColumn({ col, leads, dark, onOpen }) {
   )
 }
 
+/* ── Kanban Filter Bar ────────────────────────────────── */
+
+function KanbanFilters({ filters, onChange, dark, totalLeads, filteredCount }) {
+  const { search, profile, scoreMin } = filters
+  const hasFilter = search || profile || scoreMin > 0
+
+  const chip = (active) =>
+    active
+      ? 'bg-orange-600 border-orange-600 text-white'
+      : dark
+        ? 'border-white/10 text-white/50 hover:border-white/20 hover:text-white/70'
+        : 'border-slate-200 text-slate-500 hover:border-orange-300 hover:text-orange-600'
+
+  return (
+    <div className={`flex flex-wrap items-center gap-2 mb-4 px-3 py-2.5 rounded-2xl border ${
+      dark ? 'bg-white/[0.02] border-white/10' : 'bg-slate-50 border-slate-200'
+    }`}>
+
+      {/* Search */}
+      <div className={`flex items-center gap-1.5 px-3 h-8 rounded-xl border ${
+        dark ? 'bg-white/5 border-white/10' : 'bg-white border-slate-200'
+      }`}>
+        <I.Search size={13} className={dark ? 'text-white/40' : 'text-slate-400'} />
+        <input
+          value={search}
+          onChange={e => onChange({ ...filters, search: e.target.value })}
+          placeholder="Chercher un lead…"
+          className={`w-32 bg-transparent text-xs focus:outline-none ${
+            dark ? 'text-white placeholder-white/30' : 'text-navy-900 placeholder-slate-400'
+          }`}
+        />
+        {search && (
+          <button onMouseDown={e => { e.preventDefault(); onChange({ ...filters, search: '' }) }}
+            className={dark ? 'text-white/30 hover:text-white/60' : 'text-slate-300 hover:text-slate-500'}>
+            <I.X size={11} />
+          </button>
+        )}
+      </div>
+
+      <div className={`w-px h-5 shrink-0 ${dark ? 'bg-white/10' : 'bg-slate-200'}`} />
+
+      {/* Profile chips */}
+      {Object.entries(PROFILES).map(([k, p]) => (
+        <button key={k}
+          onClick={() => onChange({ ...filters, profile: profile === k ? null : k })}
+          className={`flex items-center gap-1 px-2.5 h-8 rounded-xl text-xs font-semibold border transition ${chip(profile === k)}`}
+        >
+          <span>{p.icon}</span>
+          <span className="hidden sm:inline">{p.label}</span>
+        </button>
+      ))}
+
+      <div className={`w-px h-5 shrink-0 ${dark ? 'bg-white/10' : 'bg-slate-200'}`} />
+
+      {/* Score threshold */}
+      {[{ label: 'Score ≥ 80', val: 80 }, { label: 'Score ≥ 60', val: 60 }].map(({ label, val }) => (
+        <button key={val}
+          onClick={() => onChange({ ...filters, scoreMin: scoreMin === val ? 0 : val })}
+          className={`px-2.5 h-8 rounded-xl text-xs font-semibold border transition ${chip(scoreMin === val)}`}
+        >
+          {label}
+        </button>
+      ))}
+
+      {/* Filtered count + reset */}
+      <div className="ml-auto flex items-center gap-2">
+        {hasFilter && (
+          <span className={`text-[11px] font-semibold ${dark ? 'text-white/40' : 'text-slate-400'}`}>
+            {filteredCount} / {totalLeads}
+          </span>
+        )}
+        {hasFilter && (
+          <button
+            onClick={() => onChange({ search: '', profile: null, scoreMin: 0 })}
+            className={`flex items-center gap-1 px-2.5 h-8 rounded-xl text-xs font-semibold border transition ${
+              dark ? 'border-rose-500/30 text-rose-400 hover:bg-rose-900/20' : 'border-rose-200 text-rose-500 hover:bg-rose-50'
+            }`}
+          >
+            <I.X size={11} /> Réinitialiser
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
+
 /* ── Kanban View ──────────────────────────────────────── */
 
 function KanbanView({ leads, setLeads, dark, onOpen }) {
   const [activeId, setActiveId] = useState(null)
+  const [filters,  setFilters]  = useState({ search: '', profile: null, scoreMin: 0 })
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }))
   const activeLead = leads.find(l => l.id === activeId)
+
+  /* Apply filters for display — DnD always operates on full leads array */
+  const filtered = useMemo(() => leads.filter(l => {
+    if (filters.search   && !l.name.toLowerCase().includes(filters.search.toLowerCase())) return false
+    if (filters.profile  && l.profile !== filters.profile) return false
+    if (filters.scoreMin && l.score < filters.scoreMin) return false
+    return true
+  }), [leads, filters])
 
   /* Live column switch while dragging — card visually moves to target column */
   function handleDragOver({ active, over }) {
@@ -251,29 +346,38 @@ function KanbanView({ leads, setLeads, dark, onOpen }) {
   }
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCorners}
-      onDragStart={({ active }) => setActiveId(active.id)}
-      onDragOver={handleDragOver}
-      onDragEnd={handleDragEnd}
-      onDragCancel={() => setActiveId(null)}
-    >
-      <div className="flex gap-4 overflow-x-auto pb-4" style={{ minHeight: 'calc(100vh - 300px)' }}>
-        {COLS.map(col => (
-          <KanbanColumn
-            key={col.id}
-            col={col}
-            leads={leads.filter(l => l.status === col.id)}
-            dark={dark}
-            onOpen={onOpen}
-          />
-        ))}
-      </div>
-      <DragOverlay>
-        {activeLead && <LeadCard lead={activeLead} dark={dark} onOpen={() => {}} />}
-      </DragOverlay>
-    </DndContext>
+    <>
+      <KanbanFilters
+        filters={filters}
+        onChange={setFilters}
+        dark={dark}
+        totalLeads={leads.length}
+        filteredCount={filtered.length}
+      />
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragStart={({ active }) => setActiveId(active.id)}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+        onDragCancel={() => setActiveId(null)}
+      >
+        <div className="flex gap-4 overflow-x-auto pb-4" style={{ minHeight: 'calc(100vh - 300px)' }}>
+          {COLS.map(col => (
+            <KanbanColumn
+              key={col.id}
+              col={col}
+              leads={filtered.filter(l => l.status === col.id)}
+              dark={dark}
+              onOpen={onOpen}
+            />
+          ))}
+        </div>
+        <DragOverlay>
+          {activeLead && <LeadCard lead={activeLead} dark={dark} onOpen={() => {}} />}
+        </DragOverlay>
+      </DndContext>
+    </>
   )
 }
 
