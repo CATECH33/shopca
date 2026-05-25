@@ -170,7 +170,7 @@ const enrichWithMeta = (l, idx = 0) => {
 const REASONS = [
   { icon: Icons.Zap, title: 'Publication Express', text: 'Mettez votre bien en ligne en moins de 3 minutes grâce à notre éditeur intuitif.' },
   { icon: Icons.Shield, title: 'Paiement Sécurisé', text: 'Transactions protégées par séquestre certifié. Sérénité garantie de A à Z.' },
-  { icon: Icons.Eye, title: 'Visibilité Maximale', text: 'Diffusion premium auprès de 2,4M d’acquéreurs qualifiés chaque mois.' },
+  { icon: Icons.Eye, title: 'Visibilité Maximale', text: "Diffusion premium auprès de 2,4M d'acquéreurs qualifiés chaque mois." },
 ]
 
 const PLANS = [
@@ -194,7 +194,7 @@ const PLANS = [
     price: '9,90',
     period: '€',
     duration: '30 jours en ligne',
-    desc: 'Le plus populaire — jusqu’à 4× plus de contacts qualifiés.',
+    desc: "Le plus populaire — jusqu'à 4× plus de contacts qualifiés.",
     features: [
       '8 photos par annonce',
       'Boost visibilité +200%',
@@ -279,7 +279,7 @@ const AGENCY_PLANS = [
 ]
 
 const TESTIMONIALS = [
-  { name: 'Camille Lefèvre', role: 'Acquéreuse à Paris', text: 'J’ai trouvé mon T3 en 11 jours. L’interface est limpide et les annonces sont vraiment qualitatives.', avatar: unsplash('photo-1494790108377-be9c29b29330', 200), rating: 5 },
+  { name: 'Camille Lefèvre', role: 'Acquéreuse à Paris', text: "J'ai trouvé mon T3 en 11 jours. L'interface est limpide et les annonces sont vraiment qualitatives.", avatar: unsplash('photo-1494790108377-be9c29b29330', 200), rating: 5 },
   { name: 'Julien Moreau', role: 'Propriétaire bailleur', text: 'Pack Visibilité activé un lundi, mon studio loué le vendredi. Rapport qualité-prix imbattable.', avatar: unsplash('photo-1500648767791-00dcc994a43e', 200), rating: 5 },
   { name: 'Sofia Benali', role: 'Investisseuse', text: 'Le seul service Premium qui tient ses promesses. Annonces ciblées, contacts sérieux, zéro spam.', avatar: unsplash('photo-1438761681033-6461ffad8d80', 200), rating: 5 },
 ]
@@ -1228,7 +1228,7 @@ function Listings({ listings, loading, error, source, title = 'Biens à la une',
               <Icons.Search size={24} className="text-orange-600" />
             </div>
             <h3 className="text-lg font-bold text-navy-900 mb-1">Aucun bien ne correspond</h3>
-            <p className="text-slate-600 text-sm">Essayez d’élargir vos critères de recherche.</p>
+            <p className="text-slate-600 text-sm">{"Essayez d'élargir vos critères de recherche."}</p>
           </div>
         ) : (
           <motion.div
@@ -3713,77 +3713,422 @@ function InvestirView({ listings, loading, error, source }) {
 /* ============================================================================
    Publier view (placeholder form when authenticated)
    ============================================================================ */
-function PublierView({ user, onSignIn }) {
+const PROPERTY_TYPES = [
+  { value: 'appartement', label: 'Appartement', Icon: Icons.Building },
+  { value: 'maison',      label: 'Maison',      Icon: Icons.Home },
+  { value: 'studio',      label: 'Studio',      Icon: Icons.Home2 },
+  { value: 'villa',       label: 'Villa',       Icon: Icons.Villa },
+  { value: 'terrain',     label: 'Terrain',     Icon: Icons.Maximize },
+  { value: 'local',       label: 'Local Pro',   Icon: Icons.Warehouse },
+]
+
+const PUBLI_STEPS = ['Type', 'Infos', 'Localisation', 'Photos & Prix']
+
+function PublierField({ label, error, children }) {
   return (
-    <>
-      <PageHero
-        kicker="Espace propriétaires"
-        title="Publiez votre annonce en quelques minutes"
-        subtitle="Diffusion premium auprès de 2,4M d’acquéreurs et locataires qualifiés."
-      />
-      <section className="py-20 bg-white">
-        <div className="max-w-3xl mx-auto px-6 lg:px-10">
-          {user ? (
-            <div className="bg-slate-50 rounded-3xl p-8 md:p-10 border border-slate-100">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-orange-600 text-white flex items-center justify-center">
-                  <Icons.PlusSquare size={22} />
-                </div>
-                <div>
-                  <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Nouvelle annonce</div>
-                  <h2 className="text-xl font-bold text-navy-900">Décrivez votre bien</h2>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Titre</label>
-                  <input className="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/40" placeholder="Studio cosy à Bastille" />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Type</label>
-                    <select className="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/40">
-                      <option>À vendre</option><option>À louer</option><option>Colocation</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Prix</label>
-                    <input type="number" className="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/40" placeholder="350 000" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Pièces</label>
-                    <input type="number" className="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/40" placeholder="3" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Surface (m²)</label>
-                    <input type="number" className="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/40" placeholder="65" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Ville</label>
-                    <input className="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/40" placeholder="Paris" />
-                  </div>
-                </div>
-                <button className="w-full mt-2 py-3.5 rounded-2xl bg-orange-600 hover:bg-orange-700 text-white font-semibold text-sm transition-all hover:-translate-y-0.5 hover:shadow-cardHover">
-                  Publier l'annonce →
-                </button>
-              </div>
-            </div>
-          ) : (
+    <div>
+      <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">{label}</label>
+      {children}
+      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+    </div>
+  )
+}
+
+const inputCls = (err) =>
+  `w-full px-4 py-3 bg-white border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/40 transition ${
+    err ? 'border-red-400' : 'border-slate-200'
+  }`
+
+function PublierView({ user, onSignIn }) {
+  const [step,      setStep]      = useState(1)
+  const [submitted, setSubmitted] = useState(false)
+  const [errors,    setErrors]    = useState({})
+  const [form,      setForm]      = useState({
+    transactionType: 'vente',
+    propertyType:    '',
+    title:           '',
+    description:     '',
+    surface:         '',
+    rooms:           '',
+    floor:           '',
+    yearBuilt:       '',
+    furnished:       false,
+    address:         '',
+    city:            '',
+    zipcode:         '',
+    department:      '',
+    region:          '',
+    price:           '',
+    charges:         '',
+    photos:          [],
+  })
+  const fileRef = useRef(null)
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
+
+  const validate = () => {
+    const e = {}
+    if (step === 1 && !form.propertyType)   e.propertyType = 'Choisissez un type de bien'
+    if (step === 2 && !form.title.trim())   e.title        = 'Le titre est obligatoire'
+    if (step === 2 && !form.surface)        e.surface      = 'La surface est obligatoire'
+    if (step === 3 && !form.city.trim())    e.city         = 'La ville est obligatoire'
+    if (step === 4 && !form.price)          e.price        = 'Le prix est obligatoire'
+    setErrors(e)
+    return Object.keys(e).length === 0
+  }
+
+  const next = () => { if (validate()) setStep(s => Math.min(s + 1, 4)) }
+  const back = () => { setErrors({}); setStep(s => Math.max(s - 1, 1)) }
+  const submit = () => { if (validate()) setSubmitted(true) }
+
+  const handleFiles = (files) => {
+    const urls = [...files].slice(0, 6 - form.photos.length).map(f => URL.createObjectURL(f))
+    set('photos', [...form.photos, ...urls])
+  }
+
+  const handleDrop = (e) => {
+    e.preventDefault()
+    handleFiles(e.dataTransfer.files)
+  }
+
+  if (!user) {
+    return (
+      <>
+        <PageHero kicker="Espace propriétaires" title="Publiez votre annonce en quelques minutes"
+          subtitle="Diffusion premium auprès de 2,4M d'acquéreurs et locataires qualifiés." />
+        <section className="py-20 bg-white">
+          <div className="max-w-lg mx-auto px-6">
             <div className="bg-slate-50 rounded-3xl p-10 text-center border border-slate-100">
               <div className="w-16 h-16 rounded-2xl bg-orange-600 text-white flex items-center justify-center mx-auto mb-5">
                 <Icons.Lock size={28} />
               </div>
               <h2 className="text-2xl font-bold text-navy-900 mb-2">Connectez-vous pour publier</h2>
-              <p className="text-slate-600 mb-6 max-w-md mx-auto">
-                Créez un compte gratuit en moins d'une minute pour déposer votre annonce et accéder à votre tableau de bord.
-              </p>
-              <button onClick={onSignIn} className="inline-flex items-center gap-2 px-7 py-3.5 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-full transition-all hover:-translate-y-0.5 hover:shadow-cardHover">
+              <p className="text-slate-600 mb-6 max-w-md mx-auto">Créez un compte gratuit en moins d'une minute.</p>
+              <button onClick={onSignIn}
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-full transition-all hover:-translate-y-0.5 hover:shadow-cardHover">
                 Créer un compte <Icons.ArrowRight size={16} />
               </button>
             </div>
-          )}
+          </div>
+        </section>
+      </>
+    )
+  }
+
+  if (submitted) {
+    return (
+      <>
+        <PageHero kicker="Félicitations" title="Annonce publiée avec succès !"
+          subtitle="Votre bien est maintenant visible par des milliers d'acquéreurs qualifiés." />
+        <section className="py-20 bg-white">
+          <div className="max-w-lg mx-auto px-6 text-center">
+            <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-6">
+              <Icons.CheckCircle size={40} className="text-emerald-500" />
+            </div>
+            <h2 className="text-2xl font-bold text-navy-900 mb-2">Votre annonce est en ligne</h2>
+            <p className="text-slate-500 mb-2">
+              <span className="font-semibold text-navy-900">{form.title || 'Votre bien'}</span>
+              {form.city && <> · {form.city}</>}
+            </p>
+            {form.price && (
+              <p className="text-xl font-extrabold text-orange-600 mb-6">
+                {Number(form.price).toLocaleString('fr-FR')} €{form.transactionType === 'location' ? '/mois' : ''}
+              </p>
+            )}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center mt-4">
+              <button onClick={() => { setSubmitted(false); setStep(1); setForm(f => ({ ...f, title: '', price: '', photos: [] })) }}
+                className="px-6 py-3 rounded-full border border-slate-200 text-sm font-semibold hover:bg-slate-50 transition">
+                Publier un autre bien
+              </button>
+              <button className="px-6 py-3 rounded-full bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold transition">
+                Gérer mes annonces
+              </button>
+            </div>
+          </div>
+        </section>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <PageHero kicker="Espace propriétaires" title="Publiez votre annonce en quelques minutes"
+        subtitle="Diffusion premium auprès de 2,4M d'acquéreurs et locataires qualifiés." />
+
+      <section className="py-12 bg-white">
+        <div className="max-w-2xl mx-auto px-6 lg:px-10">
+
+          {/* Progress steps */}
+          <div className="flex items-center justify-between mb-10">
+            {PUBLI_STEPS.map((label, i) => {
+              const n = i + 1
+              const done    = step > n
+              const current = step === n
+              return (
+                <React.Fragment key={n}>
+                  <div className="flex flex-col items-center gap-1.5">
+                    <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
+                      done    ? 'bg-emerald-500 text-white' :
+                      current ? 'bg-orange-600 text-white shadow-lg shadow-orange-200' :
+                                'bg-slate-100 text-slate-400'
+                    }`}>
+                      {done ? <Icons.Check size={16} /> : n}
+                    </div>
+                    <span className={`text-[11px] font-medium hidden sm:block ${current ? 'text-orange-600' : done ? 'text-emerald-600' : 'text-slate-400'}`}>
+                      {label}
+                    </span>
+                  </div>
+                  {i < PUBLI_STEPS.length - 1 && (
+                    <div className={`flex-1 h-0.5 mx-2 rounded ${step > n ? 'bg-emerald-400' : 'bg-slate-100'}`} />
+                  )}
+                </React.Fragment>
+              )
+            })}
+          </div>
+
+          {/* Card */}
+          <div className="bg-slate-50 rounded-3xl p-7 md:p-10 border border-slate-100">
+
+            {/* ── Step 1 : Type ─────────────────────────────── */}
+            {step === 1 && (
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-xl font-bold text-navy-900 mb-1">Type de transaction</h2>
+                  <p className="text-sm text-slate-500 mb-4">Vous souhaitez vendre ou mettre en location ?</p>
+                  <div className="flex gap-3">
+                    {[['vente','Vendre'],['location','Louer']].map(([v, l]) => (
+                      <button key={v} onClick={() => set('transactionType', v)}
+                        className={`flex-1 py-3.5 rounded-2xl border-2 text-sm font-bold transition-all ${
+                          form.transactionType === v
+                            ? 'border-orange-500 bg-orange-50 text-orange-700'
+                            : 'border-slate-200 bg-white text-slate-600 hover:border-orange-200'
+                        }`}>
+                        {l}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h2 className="text-xl font-bold text-navy-900 mb-1">Type de bien</h2>
+                  <p className="text-sm text-slate-500 mb-4">Quelle est la nature de votre bien ?</p>
+                  <div className="grid grid-cols-3 gap-3">
+                    {PROPERTY_TYPES.map(({ value, label, Icon }) => (
+                      <button key={value} onClick={() => { set('propertyType', value); setErrors({}) }}
+                        className={`flex flex-col items-center gap-2.5 py-5 rounded-2xl border-2 transition-all ${
+                          form.propertyType === value
+                            ? 'border-orange-500 bg-orange-50 text-orange-700'
+                            : 'border-slate-200 bg-white text-slate-500 hover:border-orange-200 hover:text-slate-700'
+                        }`}>
+                        <Icon size={24} />
+                        <span className="text-xs font-semibold">{label}</span>
+                      </button>
+                    ))}
+                  </div>
+                  {errors.propertyType && <p className="text-red-500 text-xs mt-2">{errors.propertyType}</p>}
+                </div>
+              </div>
+            )}
+
+            {/* ── Step 2 : Informations ─────────────────────── */}
+            {step === 2 && (
+              <div className="space-y-5">
+                <h2 className="text-xl font-bold text-navy-900">Informations essentielles</h2>
+
+                <PublierField label="Titre de l'annonce" error={errors.title}>
+                  <input value={form.title} onChange={e => set('title', e.target.value)}
+                    className={inputCls(errors.title)} placeholder="Beau 3 pièces lumineux proche métro" />
+                </PublierField>
+
+                <PublierField label="Description">
+                  <textarea rows={4} value={form.description} onChange={e => set('description', e.target.value)}
+                    className={`${inputCls()} resize-none`}
+                    placeholder="Décrivez votre bien : atouts, état, environnement…" />
+                </PublierField>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <PublierField label="Surface (m²)" error={errors.surface}>
+                    <input type="number" value={form.surface} onChange={e => set('surface', e.target.value)}
+                      className={inputCls(errors.surface)} placeholder="65" min="1" />
+                  </PublierField>
+                  <PublierField label="Pièces">
+                    <input type="number" value={form.rooms} onChange={e => set('rooms', e.target.value)}
+                      className={inputCls()} placeholder="3" min="1" />
+                  </PublierField>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <PublierField label="Étage">
+                    <input type="number" value={form.floor} onChange={e => set('floor', e.target.value)}
+                      className={inputCls()} placeholder="2" min="0" />
+                  </PublierField>
+                  <PublierField label="Année de construction">
+                    <input type="number" value={form.yearBuilt} onChange={e => set('yearBuilt', e.target.value)}
+                      className={inputCls()} placeholder="1985" min="1800" max="2025" />
+                  </PublierField>
+                </div>
+
+                {form.transactionType === 'location' && (
+                  <label className="flex items-center gap-3 cursor-pointer select-none">
+                    <div onClick={() => set('furnished', !form.furnished)}
+                      className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 ${form.furnished ? 'bg-orange-500' : 'bg-slate-200'}`}>
+                      <div className={`w-5 h-5 bg-white rounded-full shadow transition-transform ${form.furnished ? 'translate-x-5' : 'translate-x-0'}`} />
+                    </div>
+                    <span className="text-sm font-medium text-slate-700">Bien meublé</span>
+                  </label>
+                )}
+              </div>
+            )}
+
+            {/* ── Step 3 : Localisation ─────────────────────── */}
+            {step === 3 && (
+              <div className="space-y-5">
+                <h2 className="text-xl font-bold text-navy-900">Localisation</h2>
+
+                <PublierField label="Adresse">
+                  <input value={form.address} onChange={e => set('address', e.target.value)}
+                    className={inputCls()} placeholder="12 rue de la Paix" />
+                </PublierField>
+
+                <PublierField label="Ville / Code postal" error={errors.city}>
+                  <div className={`flex items-center gap-2 px-4 h-12 bg-white rounded-2xl border transition ${errors.city ? 'border-red-400' : 'border-slate-200 focus-within:border-orange-400 focus-within:shadow-orange-100/60 focus-within:shadow-md'}`}>
+                    <Icons.MapPin size={14} className="text-orange-500 shrink-0" />
+                    <LocationSearch
+                      bare
+                      value={form.city}
+                      onChange={v => set('city', v)}
+                      onSelect={city => {
+                        if (city) {
+                          set('city',       city.name)
+                          set('zipcode',    city.zipcode)
+                          set('department', city.department)
+                          set('region',     city.region)
+                        } else {
+                          set('city', '')
+                          set('zipcode', '')
+                        }
+                        setErrors(e => ({ ...e, city: undefined }))
+                      }}
+                      placeholder="Paris, Lyon, 69000…"
+                    />
+                  </div>
+                </PublierField>
+
+                {form.zipcode && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <PublierField label="Code postal">
+                      <input value={form.zipcode} onChange={e => set('zipcode', e.target.value)}
+                        className={inputCls()} />
+                    </PublierField>
+                    <PublierField label="Département">
+                      <input readOnly value={form.department}
+                        className={`${inputCls()} bg-slate-50 text-slate-500 cursor-default`} />
+                    </PublierField>
+                  </div>
+                )}
+
+                {form.region && (
+                  <PublierField label="Région">
+                    <input readOnly value={form.region}
+                      className={`${inputCls()} bg-slate-50 text-slate-500 cursor-default`} />
+                  </PublierField>
+                )}
+              </div>
+            )}
+
+            {/* ── Step 4 : Photos & Prix ────────────────────── */}
+            {step === 4 && (
+              <div className="space-y-5">
+                <h2 className="text-xl font-bold text-navy-900">Photos & Prix</h2>
+
+                {/* Drop zone */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">
+                    Photos <span className="normal-case font-normal text-slate-400">(max 6)</span>
+                  </label>
+                  <div
+                    onDrop={handleDrop}
+                    onDragOver={e => e.preventDefault()}
+                    onClick={() => fileRef.current?.click()}
+                    className="border-2 border-dashed border-slate-200 hover:border-orange-400 rounded-2xl p-8 flex flex-col items-center gap-3 cursor-pointer transition-colors bg-white hover:bg-orange-50/30">
+                    <Icons.Upload size={28} className="text-slate-300" />
+                    <div className="text-center">
+                      <p className="text-sm font-semibold text-slate-600">Glissez vos photos ici</p>
+                      <p className="text-xs text-slate-400 mt-0.5">ou cliquez pour parcourir</p>
+                    </div>
+                    <input ref={fileRef} type="file" accept="image/*" multiple className="hidden"
+                      onChange={e => handleFiles(e.target.files)} />
+                  </div>
+                  {form.photos.length > 0 && (
+                    <div className="flex gap-2 mt-3 flex-wrap">
+                      {form.photos.map((src, i) => (
+                        <div key={i} className="relative w-20 h-16 rounded-xl overflow-hidden border border-slate-200">
+                          <img src={src} alt="" className="w-full h-full object-cover" />
+                          <button
+                            type="button"
+                            onClick={() => set('photos', form.photos.filter((_, j) => j !== i))}
+                            className="absolute top-0.5 right-0.5 w-5 h-5 bg-black/60 hover:bg-red-500 text-white rounded-full flex items-center justify-center transition">
+                            <Icons.X size={10} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className={form.transactionType === 'location' ? 'grid grid-cols-2 gap-4' : ''}>
+                  <PublierField label={form.transactionType === 'location' ? 'Loyer (€/mois)' : 'Prix de vente (€)'} error={errors.price}>
+                    <input type="number" value={form.price} onChange={e => set('price', e.target.value)}
+                      className={inputCls(errors.price)}
+                      placeholder={form.transactionType === 'location' ? '950' : '350 000'} min="0" />
+                  </PublierField>
+                  {form.transactionType === 'location' && (
+                    <PublierField label="Charges (€/mois)">
+                      <input type="number" value={form.charges} onChange={e => set('charges', e.target.value)}
+                        className={inputCls()} placeholder="80" min="0" />
+                    </PublierField>
+                  )}
+                </div>
+
+                {/* Summary */}
+                <div className="bg-white rounded-2xl border border-slate-100 p-4 text-sm text-slate-600 space-y-1.5">
+                  <div className="font-bold text-navy-900 mb-2">Récapitulatif</div>
+                  {form.title       && <div><span className="text-slate-400">Titre :</span> {form.title}</div>}
+                  {form.propertyType && <div><span className="text-slate-400">Type :</span> {form.propertyType} — {form.transactionType === 'location' ? 'location' : 'vente'}</div>}
+                  {(form.surface || form.rooms) && (
+                    <div>
+                      <span className="text-slate-400">Surface :</span>
+                      {form.surface && ` ${form.surface} m²`}
+                      {form.rooms   && ` · ${form.rooms} pièce${Number(form.rooms) > 1 ? 's' : ''}`}
+                    </div>
+                  )}
+                  {form.city && <div><span className="text-slate-400">Ville :</span> {form.city} {form.zipcode && `(${form.zipcode})`}</div>}
+                </div>
+              </div>
+            )}
+
+            {/* Navigation */}
+            <div className="flex items-center justify-between mt-8 pt-6 border-t border-slate-200">
+              {step > 1 ? (
+                <button onClick={back}
+                  className="flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-navy-900 transition">
+                  <Icons.ChevronLeft size={16} /> Précédent
+                </button>
+              ) : <div />}
+
+              {step < 4 ? (
+                <button onClick={next}
+                  className="flex items-center gap-2 px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-cardHover text-sm">
+                  Suivant <Icons.ChevronRight size={16} />
+                </button>
+              ) : (
+                <button onClick={submit}
+                  className="flex items-center gap-2 px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-cardHover text-sm">
+                  <Icons.Send size={15} /> Publier l'annonce
+                </button>
+              )}
+            </div>
+
+          </div>
         </div>
       </section>
     </>
