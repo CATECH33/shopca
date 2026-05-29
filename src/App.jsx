@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import LocationSearch from './components/LocationSearch.tsx'
 import LocationAutocomplete from './components/LocationAutocomplete.jsx'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { motion, AnimatePresence, useInView, useScroll, useTransform, animate } from 'framer-motion'
 import { TrustGuarantees } from './lib/trustBadges.jsx'
 import AdminPreview from './admin/AdminPreview.jsx'
@@ -820,9 +820,9 @@ function UserChip({ user, role, onSignOut, onGoAdmin, onNavigate }) {
               Dashboard Pro
               <span className="ml-auto text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-orange-50 text-orange-600 ring-1 ring-orange-200">Pro</span>
             </button>
-            <button onClick={() => go('profil')} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50 text-left">
+            <Link to="/account" onClick={() => setOpen(false)} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50">
               <Icons.User size={16} className="text-slate-600" /> Mon profil
-            </button>
+            </Link>
             <button onClick={() => go('messages')} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50 text-left">
               <Icons.Mail size={16} className="text-orange-500" />
               Messages
@@ -859,9 +859,9 @@ function UserChip({ user, role, onSignOut, onGoAdmin, onNavigate }) {
                 <span className="ml-auto text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 ring-1 ring-orange-200">Admin</span>
               </button>
             )}
-            <button onClick={() => { setOpen(false); onSignOut() }} className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 ${isAdmin ? '' : 'border-t border-slate-100'}`}>
+            <Link to="/auth/logout" onClick={() => setOpen(false)} className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 ${isAdmin ? '' : 'border-t border-slate-100'}`}>
               <Icons.LogOut size={16} /> Déconnexion
-            </button>
+            </Link>
           </div>
         </>
       )}
