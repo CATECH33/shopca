@@ -6,7 +6,7 @@ import { motion, AnimatePresence, useInView, useScroll, useTransform, animate } 
 import { TrustGuarantees } from './lib/trustBadges.jsx'
 import AdminPreview from './admin/AdminPreview.jsx'
 import AlertsView          from './alerts/AlertsView.jsx'
-import AuthModal           from './auth/AuthModal.jsx'
+import AuthModal           from './features/auth/components/AuthModal.jsx'
 import NotificationCenter from './notifications/NotificationCenter.jsx'
 import { supabase } from './lib/supabase.js'
 import LoggedInHome          from './components/LoggedInHome.jsx'

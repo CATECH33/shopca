@@ -2,21 +2,11 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import App from './App.jsx'
-import Login from './auth/Login.jsx'
-import Register from './auth/Register.jsx'
-import Forgot from './auth/Forgot.jsx'
-import VerifyPending from './auth/VerifyPending.jsx'
-import EarlyAccessPage from './earlyaccess/EarlyAccessPage.jsx'
-import UserDashLayout from './userdash/UserDashLayout.jsx'
-import UDOverview from './userdash/UDOverview.jsx'
-import UDSavedSearches from './userdash/UDSavedSearches.jsx'
-import UDNotifications from './userdash/UDNotifications.jsx'
-import UDAIInsights from './userdash/UDAIInsights.jsx'
-import UDSubscription from './userdash/UDSubscription.jsx'
-import UDFavorites from './userdash/UDFavorites.jsx'
-import UDProfile from './userdash/UDProfile.jsx'
-import UDCRM from './userdash/UDCRM.jsx'
-import UDMyListings from './userdash/UDMyListings.jsx'
+import LoginPage        from './features/auth/pages/LoginPage.jsx'
+import RegisterPage     from './features/auth/pages/RegisterPage.jsx'
+import ForgotPage       from './features/auth/pages/ForgotPage.jsx'
+import VerifyPendingPage from './features/auth/pages/VerifyPendingPage.jsx'
+import EarlyAccessPage  from './earlyaccess/EarlyAccessPage.jsx'
 import './index.css'
 
 class ErrorBoundary extends React.Component {
@@ -45,23 +35,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <ErrorBoundary>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/auth/login" element={<Login />} />
-          <Route path="/auth/register" element={<Register />} />
-          <Route path="/auth/forgot" element={<Forgot />} />
-          <Route path="/auth/verify-pending" element={<VerifyPending />} />
-          <Route path="/early-access" element={<EarlyAccessPage />} />
-          <Route path="/dashboard" element={<UserDashLayout />}>
-            <Route index element={<UDOverview />} />
-            <Route path="searches" element={<UDSavedSearches />} />
-            <Route path="notifications" element={<UDNotifications />} />
-            <Route path="insights" element={<UDAIInsights />} />
-            <Route path="subscription" element={<UDSubscription />} />
-            <Route path="favorites" element={<UDFavorites />} />
-            <Route path="profile" element={<UDProfile />} />
-            <Route path="crm" element={<UDCRM />} />
-            <Route path="listings" element={<UDMyListings />} />
-          </Route>
+          <Route path="/"                    element={<App />} />
+          <Route path="/auth/login"          element={<LoginPage />} />
+          <Route path="/auth/register"       element={<RegisterPage />} />
+          <Route path="/auth/forgot"         element={<ForgotPage />} />
+          <Route path="/auth/verify-pending" element={<VerifyPendingPage />} />
+          <Route path="/early-access"        element={<EarlyAccessPage />} />
         </Routes>
       </BrowserRouter>
     </ErrorBoundary>
