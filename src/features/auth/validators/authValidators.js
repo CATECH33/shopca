@@ -26,5 +26,7 @@ export function friendlyAuthError(message = '') {
   if (/rate limit|only request this after|too many requests/i.test(message)) return 'Trop de tentatives. Veuillez patienter quelques secondes avant de réessayer.'
   if (/signup.*disabled|registrations.*disabled/i.test(message)) return 'Les inscriptions sont temporairement désactivées.'
   if (/network|fetch|failed to fetch/i.test(message))            return 'Erreur réseau. Vérifiez votre connexion et réessayez.'
+  if (/token.*expired|invalid.*token|expired.*token/i.test(message)) return 'Ce lien a expiré ou est invalide. Veuillez refaire une demande de réinitialisation.'
+  if (/same password|should be different/i.test(message))        return 'Le nouveau mot de passe doit être différent de l\'ancien.'
   return message || 'Une erreur est survenue.'
 }
