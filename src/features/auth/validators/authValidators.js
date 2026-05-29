@@ -19,9 +19,12 @@ export function validateLoginForm({ email, password }) {
 }
 
 export function friendlyAuthError(message = '') {
-  if (/already registered|already exists/i.test(message)) return 'Cet e-mail est déjà utilisé.'
-  if (/invalid login|invalid credentials/i.test(message)) return 'E-mail ou mot de passe incorrect.'
-  if (/password should be at least/i.test(message))       return 'Le mot de passe doit comporter au moins 6 caractères.'
-  if (/email not confirmed/i.test(message))               return 'Vérifiez votre boîte mail pour confirmer votre compte.'
+  if (/already registered|already exists/i.test(message))        return 'Cet e-mail est déjà utilisé.'
+  if (/invalid login|invalid credentials/i.test(message))        return 'E-mail ou mot de passe incorrect.'
+  if (/password should be at least/i.test(message))              return 'Le mot de passe doit comporter au moins 6 caractères.'
+  if (/email not confirmed/i.test(message))                      return 'Vérifiez votre boîte mail pour confirmer votre compte.'
+  if (/rate limit|only request this after|too many requests/i.test(message)) return 'Trop de tentatives. Veuillez patienter quelques secondes avant de réessayer.'
+  if (/signup.*disabled|registrations.*disabled/i.test(message)) return 'Les inscriptions sont temporairement désactivées.'
+  if (/network|fetch|failed to fetch/i.test(message))            return 'Erreur réseau. Vérifiez votre connexion et réessayez.'
   return message || 'Une erreur est survenue.'
 }
