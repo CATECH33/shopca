@@ -132,7 +132,7 @@ export default function CallbackPage() {
   // Countdown + auto-redirect after success
   useEffect(() => {
     if (status !== 'success') return
-    if (countdown === 0) { navigate('/'); return }
+    if (countdown === 0) { navigate('/onboarding'); return }
     const t = setTimeout(() => setCountdown(n => n - 1), 1000)
     return () => clearTimeout(t)
   }, [status, countdown, navigate])
@@ -201,7 +201,7 @@ export default function CallbackPage() {
                     </div>
                   </div>
 
-                  <button onClick={() => navigate('/')}
+                  <button onClick={() => navigate('/onboarding')}
                     className="w-full h-12 flex items-center justify-center gap-2 rounded-xl bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-sm transition-all shadow-lg shadow-orange-200/60 hover:shadow-orange-300/70 hover:-translate-y-0.5">
                     <I.Home size={15} />Accéder à PASMAL
                   </button>
