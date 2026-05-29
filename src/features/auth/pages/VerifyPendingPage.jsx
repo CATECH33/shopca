@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { BrandLogo, I } from '../../../lib/ui.jsx'
 import { supabase } from '../../../lib/supabase.js'
+import { friendlyAuthError } from '../validators/authValidators.js'
 
 const STEPS = [
   { Icon: I.User,        label: 'Compte créé',          done: true  },
@@ -122,13 +123,17 @@ export default function VerifyPendingPage() {
   const email    = location.state?.email || null
   const [sent,    setSent]    = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error,   setError]   = useState('')
 
   const resend = async () => {
     if (!email) return
-    setLoading(true)
+    setLoading(true); setError('')
     try {
-      await supabase.auth.resend({ type: 'signup', email })
+      const { error: err } = await supabase.auth.resend({ type: 'signup', email })
+      if (err) throw err
       setSent(true)
+    } catch (err) {
+      setError(friendlyAuthError(err?.message))
     } finally {
       setLoading(false)
     }
@@ -201,6 +206,16 @@ export default function VerifyPendingPage() {
                   ? <><I.Loader size={16} />Envoi…</>
                   : <>Renvoyer l'e-mail de confirmation</>}
             </button>
+
+            {/* Resend error */}
+            <AnimatePresence>
+              {error && (
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
+                  className="flex items-start gap-2.5 px-4 py-3 mb-3 bg-rose-50 border border-rose-100 text-rose-700 rounded-xl text-sm overflow-hidden text-left">
+                  <I.Alert size={15} className="mt-0.5 shrink-0" /><span>{error}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Gmail shortcut */}
             <a href="https://mail.google.com" target="_blank" rel="noreferrer"
