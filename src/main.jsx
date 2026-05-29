@@ -8,6 +8,7 @@ import ForgotPage       from './features/auth/pages/ForgotPage.jsx'
 import VerifyPendingPage from './features/auth/pages/VerifyPendingPage.jsx'
 import ResetPage          from './features/auth/pages/ResetPage.jsx'
 import CallbackPage       from './features/auth/pages/CallbackPage.jsx'
+import LogoutPage         from './features/auth/pages/LogoutPage.jsx'
 import EarlyAccessPage  from './earlyaccess/EarlyAccessPage.jsx'
 import './index.css'
 
@@ -44,6 +45,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/auth/verify-pending" element={<VerifyPendingPage />} />
           <Route path="/auth/reset"          element={<ResetPage />} />
           <Route path="/auth/callback"      element={<CallbackPage />} />
+          <Route path="/auth/logout"        element={<LogoutPage />} />
           <Route path="/early-access"        element={<EarlyAccessPage />} />
         </Routes>
       </BrowserRouter>

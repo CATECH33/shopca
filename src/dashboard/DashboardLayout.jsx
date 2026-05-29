@@ -33,10 +33,7 @@ export default function DashboardLayout() {
     return () => subscription?.unsubscribe?.()
   }, [])
 
-  const signOut = async () => {
-    await supabase.auth.signOut().catch(() => {})
-    navigate('/')
-  }
+  const signOut = () => navigate('/auth/logout')
 
   // Demo: always allow access (no real auth gate in this prototype scope)
   const displayName = user?.user_metadata?.full_name || 'Jean Kevin PEMOU'
