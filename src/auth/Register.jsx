@@ -1,93 +1,72 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
 import AuthLayout from './AuthLayout.jsx'
-import { FormField, PasswordField } from './components/FormField.jsx'
-import ErrorBanner from './components/ErrorBanner.jsx'
-import { useAuthAction, svc } from './hooks/useAuth.js'
-import { validateRegisterForm } from './validators/authValidators.js'
+import PersonalRegisterForm from './PersonalRegisterForm.jsx'
 import { I } from '../lib/ui.jsx'
 
 export default function Register() {
-  const navigate = useNavigate()
-  const { loading, error, setError, run } = useAuthAction()
+  const [accountType, setAccountType] = useState(null)
 
-  const [accountType, setAccountType] = useState('personal')
-  const [email,       setEmail]       = useState('')
-  const [password,    setPassword]    = useState('')
-
-  const submit = async (e) => {
-    e.preventDefault()
-    const err = validateRegisterForm({ email, password })
-    if (err) { setError(err); return }
-
-    const result = await run(() =>
-      svc.signUp(email, password, { account_type: accountType })
+  /* once an account type is chosen, show its specific form */
+  if (accountType === 'personal') {
+    return (
+      <AuthLayout
+        title="Créer un compte"
+        subtitle="Renseignez vos informations personnelles."
+        footer={<>Déjà inscrit ?{' '}<Link to="/auth/login" className="text-orange-600 font-semibold hover:underline">Se connecter</Link></>}
+      >
+        <PersonalRegisterForm onBack={() => setAccountType(null)} />
+      </AuthLayout>
     )
-    if (result) navigate('/auth/verify-pending', { state: { email } })
   }
 
   return (
     <AuthLayout
       title="Créer un compte"
-      subtitle="Rejoignez PASMAL et trouvez votre bien idéal."
+      subtitle="Choisissez votre type de compte pour commencer."
       footer={<>Déjà inscrit ?{' '}<Link to="/auth/login" className="text-orange-600 font-semibold hover:underline">Se connecter</Link></>}
     >
-      <form onSubmit={submit} className="space-y-5">
-
-        {/* Account type selector */}
-        <div>
-          <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-            Type de compte
-          </label>
-          <div className="grid grid-cols-2 gap-3">
+      <div className="space-y-4">
+        <AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+            className="grid grid-cols-2 gap-4"
+          >
             {[
-              { value: 'personal',     label: 'Particulier',   sub: 'Pour vous',         Icon: I.User     },
-              { value: 'professional', label: 'Professionnel', sub: 'Pour votre agence', Icon: I.Building },
-            ].map(({ value, label, sub, Icon }) => (
-              <button key={value} type="button" onClick={() => setAccountType(value)}
-                className={`rounded-2xl border-2 px-4 py-3 text-left transition-all ${
-                  accountType === value
-                    ? 'border-orange-400 bg-orange-50'
-                    : 'border-slate-200 bg-white hover:border-slate-300'
+              { value: 'personal',     label: 'Particulier',   sub: 'Pour vous',          Icon: I.User,     disabled: false },
+              { value: 'professional', label: 'Professionnel', sub: 'Pour votre agence',  Icon: I.Building, disabled: true  },
+            ].map(({ value, label, sub, Icon, disabled }) => (
+              <button key={value} type="button"
+                onClick={() => !disabled && setAccountType(value)}
+                disabled={disabled}
+                className={`relative rounded-2xl border-2 px-4 py-4 text-left transition-all ${
+                  disabled
+                    ? 'border-slate-100 bg-slate-50 opacity-50 cursor-not-allowed'
+                    : 'border-slate-200 bg-white hover:border-orange-400 hover:bg-orange-50 hover:shadow-sm'
                 }`}>
-                <div className={`w-8 h-8 rounded-xl flex items-center justify-center mb-2 ${
-                  accountType === value ? 'bg-orange-500 text-white' : 'bg-slate-100 text-slate-500'
+                <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-2.5 ${
+                  disabled ? 'bg-slate-100 text-slate-400' : 'bg-slate-100 text-slate-600 group-hover:bg-orange-500 group-hover:text-white'
                 }`}>
-                  <Icon size={16} />
+                  <Icon size={17} />
                 </div>
-                <p className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">{label}</p>
-                <p className="text-sm font-bold text-navy-900">{sub}</p>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">{label}</p>
+                <p className="text-sm font-bold text-navy-900 mt-0.5">{sub}</p>
+                {disabled && (
+                  <span className="absolute top-2 right-2 text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+                    Bientôt
+                  </span>
+                )}
               </button>
             ))}
-          </div>
-        </div>
-
-        {/* Email */}
-        <FormField
-          label="E-mail"
-          type="email"
-          value={email}
-          onChange={setEmail}
-          placeholder="vous@exemple.fr"
-          icon={I.Mail}
-        />
-
-        {/* Password */}
-        <PasswordField value={password} onChange={setPassword} />
-
-        <ErrorBanner msg={error} />
-
-        <button type="submit" disabled={loading}
-          className="w-full h-12 flex items-center justify-center gap-2 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-          {loading ? <I.Loader size={16} /> : <>Continuer <I.ArrowRight size={16} /></>}
-        </button>
-
+          </motion.div>
+        </AnimatePresence>
         <p className="text-center text-xs text-slate-400">
           En continuant, vous acceptez nos{' '}
           <a href="#" className="underline hover:text-navy-900">CGU</a>{' '}et notre{' '}
           <a href="#" className="underline hover:text-navy-900">politique de confidentialité</a>.
         </p>
-      </form>
+      </div>
     </AuthLayout>
   )
 }
