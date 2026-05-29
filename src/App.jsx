@@ -6,8 +6,11 @@ import { motion, AnimatePresence, useInView, useScroll, useTransform, animate } 
 import { TrustGuarantees } from './lib/trustBadges.jsx'
 import AdminPreview from './admin/AdminPreview.jsx'
 import AlertsView          from './alerts/AlertsView.jsx'
+import AuthModal           from './auth/AuthModal.jsx'
 import NotificationCenter from './notifications/NotificationCenter.jsx'
 import { supabase } from './lib/supabase.js'
+import PersonalDashboard     from './components/PersonalDashboard.jsx'
+import ProfessionalDashboard from './components/ProfessionalDashboard.jsx'
 
 /* ============================================================================
    Inline SVG icons (no external lib)
@@ -125,14 +128,14 @@ const unsplash = (id, w = 1200) =>
 const HERO_IMG = unsplash('photo-1600607687939-ce8a6c25118c', 1920)
 
 const FALLBACK_LISTINGS = [
-  { id: 'f1', title: 'Studio cosy lumineux', location: 'Paris 11ᵉ · Bastille', price: 320000, rooms: 1, surface: 28, type: 'acheter', property_type: 'Studio', is_premium: true, image_url: unsplash('photo-1502672260266-1c1ef2d93688', 900) },
-  { id: 'f2', title: 'T3 avec balcon vue dégagée', location: 'Lyon 6ᵉ · Foch', price: 485000, rooms: 3, surface: 65, type: 'acheter', property_type: 'T3', is_premium: true, image_url: unsplash('photo-1560448204-e02f11c3d0e2', 900) },
-  { id: 'f3', title: 'Maison contemporaine', location: 'Bordeaux · Caudéran', price: 780000, rooms: 5, surface: 142, type: 'acheter', property_type: 'Maison', is_premium: true, image_url: unsplash('photo-1564013799919-ab600027ffc6', 900) },
-  { id: 'f4', title: 'Colocation design 4 ch.', location: 'Nantes · Centre', price: 590, rooms: 4, surface: 110, type: 'colocation', property_type: 'Colocation', is_premium: false, image_url: unsplash('photo-1522708323590-d24dbb6b0267', 900) },
-  { id: 'f5', title: 'Loft industriel rénové', location: 'Marseille · Joliette', price: 1450, rooms: 2, surface: 72, type: 'louer', property_type: 'T2', is_premium: true, image_url: unsplash('photo-1493809842364-78817add7ffb', 900) },
-  { id: 'f6', title: 'Appartement haussmannien', location: 'Paris 8ᵉ · Monceau', price: 1250000, rooms: 4, surface: 98, type: 'acheter', property_type: 'T3', is_premium: true, image_url: unsplash('photo-1600585154340-be6161a56a0c', 900) },
-  { id: 'f7', title: 'Studio étudiant moderne', location: 'Toulouse · Capitole', price: 620, rooms: 1, surface: 24, type: 'louer', property_type: 'Studio', is_premium: false, image_url: unsplash('photo-1554995207-c18c203602cb', 900) },
-  { id: 'f8', title: 'Villa avec piscine', location: 'Nice · Cimiez', price: 2100000, rooms: 6, surface: 220, type: 'acheter', property_type: 'Maison', is_premium: true, image_url: unsplash('photo-1613490493576-7fde63acd811', 900) },
+  { id: 'f1', title: 'Studio cosy lumineux',      location: 'Paris 11ᵉ · Bastille', price: 320000,  rooms: 1, surface: 28,  type: 'acheter', property_type: 'Studio',     is_premium: true,                   image_url: unsplash('photo-1502672260266-1c1ef2d93688', 900) },
+  { id: 'f2', title: 'T3 avec balcon vue dégagée', location: 'Lyon 6ᵉ · Foch',      price: 485000,  rooms: 3, surface: 65,  type: 'acheter', property_type: 'T3',         is_exclusive: true,                 image_url: unsplash('photo-1560448204-e02f11c3d0e2', 900) },
+  { id: 'f3', title: 'Maison contemporaine',        location: 'Bordeaux · Caudéran', price: 780000,  rooms: 5, surface: 142, type: 'acheter', property_type: 'Maison',                                         image_url: unsplash('photo-1564013799919-ab600027ffc6', 900) },
+  { id: 'f4', title: 'Colocation design 4 ch.',     location: 'Nantes · Centre',     price: 590,     rooms: 4, surface: 110, type: 'colocation', property_type: 'Colocation',                                  image_url: unsplash('photo-1522708323590-d24dbb6b0267', 900) },
+  { id: 'f5', title: 'Loft industriel rénové',      location: 'Marseille · Joliette',price: 1450,    rooms: 2, surface: 72,  type: 'louer',   property_type: 'T2',         is_premium: true,                   image_url: unsplash('photo-1493809842364-78817add7ffb', 900) },
+  { id: 'f6', title: 'Appartement haussmannien',    location: 'Paris 8ᵉ · Monceau', price: 1250000, rooms: 4, surface: 98,  type: 'acheter', property_type: 'Appartement', is_prestige: true,                  image_url: unsplash('photo-1600585154340-be6161a56a0c', 900) },
+  { id: 'f7', title: 'Studio étudiant moderne',     location: 'Toulouse · Capitole', price: 620,     rooms: 1, surface: 24,  type: 'louer',   property_type: 'Studio',                                         image_url: unsplash('photo-1554995207-c18c203602cb', 900) },
+  { id: 'f8', title: 'Villa avec piscine',           location: 'Nice · Cimiez',      price: 2100000, rooms: 6, surface: 220, type: 'acheter', property_type: 'Villa',       is_prestige: true,                  image_url: unsplash('photo-1613490493576-7fde63acd811', 900) },
 ]
 
 const formatPrice = (l) => {
@@ -321,9 +324,9 @@ const HOME_GUIDES = [
 ]
 
 /* ============================================================================
-   Auth Modal — redesigned with account-type selection
+   Auth Modal — legacy inline version (replaced by src/auth/AuthModal.jsx)
    ============================================================================ */
-function AuthModal({ open, mode: initialMode = 'signup', onClose, onNavigatePro }) {
+function _AuthModalLegacy({ open, mode: initialMode = 'signup', onClose, onNavigatePro }) {
   const [mode,         setMode]         = useState(initialMode)
   const [accountType,  setAccountType]  = useState('personal')
   const [fullName,     setFullName]     = useState('')
@@ -807,6 +810,15 @@ function UserChip({ user, role, onSignOut, onGoAdmin, onNavigate }) {
               <div className="text-xs text-slate-500">Connecté en tant que</div>
               <div className="text-sm font-semibold text-navy-900 truncate">{user?.email || displayName}</div>
             </div>
+            <button onClick={() => go('personal-dash')} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50 text-left">
+              <Icons.Home2 size={16} className="text-orange-500" />
+              Mon tableau de bord
+            </button>
+            <button onClick={() => go('pro-dash')} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50 text-left">
+              <Icons.Building size={16} className="text-orange-500" />
+              Dashboard Pro
+              <span className="ml-auto text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-orange-50 text-orange-600 ring-1 ring-orange-200">Pro</span>
+            </button>
             <button onClick={() => go('profil')} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50 text-left">
               <Icons.User size={16} className="text-slate-600" /> Mon profil
             </button>
@@ -820,6 +832,11 @@ function UserChip({ user, role, onSignOut, onGoAdmin, onNavigate }) {
             </button>
             <button onClick={() => go('mes-annonces')} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50 text-left">
               <Icons.Home size={16} className="text-slate-600" /> Mes annonces
+            </button>
+            <button onClick={() => go('crm')} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50 text-left">
+              <Icons.Users size={16} className="text-orange-500" />
+              CRM Pro
+              <span className="ml-auto text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-orange-50 text-orange-600 ring-1 ring-orange-200">Pro</span>
             </button>
             <button onClick={() => go('verification')} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50 text-left">
               <Icons.BadgeCheck size={16} className="text-emerald-600" />
@@ -872,6 +889,8 @@ function Header({ currentView, setCurrentView, user, role, onSignIn, onPublish, 
     ['acheter', 'Acheter'],
     ['louer', 'Louer'],
     ['investir', 'Investir'],
+    ['neuf', 'Programme Neuf'],
+    ['marche', 'Tendances'],
     ['agences', 'Agences'],
     ['publier', 'Publier une annonce'],
     ['tarifs', 'Tarifs'],
@@ -1521,7 +1540,7 @@ function HomeCities({ onSearch }) {
 /* ============================================================================
    HomeGuides — 3 editorial guides
    ============================================================================ */
-function HomeGuides() {
+function HomeGuides({ onViewAll }) {
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
@@ -1530,9 +1549,9 @@ function HomeGuides() {
             <div className="text-orange-600 font-semibold text-sm tracking-wider uppercase mb-2">Guides & conseils</div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-[#0B1F3A] tracking-tight">L'immobilier, expliqué simplement</h2>
           </div>
-          <a href="#" className="text-navy-700 hover:text-orange-600 font-medium text-sm flex items-center gap-1 transition-colors">
+          <button onClick={onViewAll} className="text-navy-700 hover:text-orange-600 font-medium text-sm flex items-center gap-1 transition-colors">
             Tous nos guides <Icons.ArrowRight size={16} />
-          </a>
+          </button>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {HOME_GUIDES.map(g => (
@@ -2273,7 +2292,11 @@ function Footer({ setCurrentView }) {
               <li><button onClick={() => setCurrentView('acheter')} className="hover:text-orange-500 transition-colors">Acheter</button></li>
               <li><button onClick={() => setCurrentView('louer')} className="hover:text-orange-500 transition-colors">Louer</button></li>
               <li><a href="#" className="hover:text-orange-500 transition-colors">Colocation</a></li>
-              <li><a href="#" className="hover:text-orange-500 transition-colors">Estimation gratuite</a></li>
+              <li><button onClick={() => setCurrentView('estimation')} className="hover:text-orange-500 transition-colors">Estimation gratuite</button></li>
+              <li><button onClick={() => setCurrentView('neuf')} className="hover:text-orange-500 transition-colors">Programme neuf</button></li>
+              <li><button onClick={() => setCurrentView('simulateur')} className="hover:text-orange-500 transition-colors">Simulateur de prêt</button></li>
+              <li><button onClick={() => setCurrentView('guides')} className="hover:text-orange-500 transition-colors">Guides & conseils</button></li>
+              <li><button onClick={() => setCurrentView('marche')} className="hover:text-orange-500 transition-colors">Tendances du marché</button></li>
               <li><button onClick={() => navigate('/early-access')} className="hover:text-orange-500 transition-colors">⚡ Accès anticipé</button></li>
               <li><button onClick={() => navigate('/dashboard')} className="hover:text-orange-500 transition-colors">Mon espace</button></li>
             </ul>
@@ -2385,13 +2408,25 @@ function ProfilView({ user, onPublish }) {
   const memberSince = user?.created_at ? new Date(user.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : '2026'
   const provider = user?.app_metadata?.provider === 'google' ? 'Google' : 'E-mail'
 
-  const [tab,       setTab]       = useState('infos')
-  const [editMode,  setEditMode]  = useState(false)
-  const [editName,  setEditName]  = useState(rawName)
-  const [editPhone, setEditPhone] = useState('')
+  const [tab,           setTab]           = useState('infos')
+  const [editMode,      setEditMode]      = useState(false)
+  const [editName,      setEditName]      = useState(rawName)
+  const [editPhone,     setEditPhone]     = useState('')
+  const [avatarPreview, setAvatarPreview] = useState(null)
+  const [avatarLoading, setAvatarLoading] = useState(false)
+  const avatarInputRef = useRef(null)
   const [notifs, setNotifs] = useState({
     newListings: true, priceDrops: true, messages: true, offers: false, sms: false, push: true,
   })
+
+  function handleAvatarChange(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setAvatarLoading(true)
+    const reader = new FileReader()
+    reader.onload = ev => { setAvatarPreview(ev.target.result); setAvatarLoading(false) }
+    reader.readAsDataURL(file)
+  }
 
   const MOCK_ANNONCES = [
     { id: 'PSM-2441', title: 'T3 lumineux proche Bastille', city: 'Paris 11e', price: 580000, surface: 72, rooms: 3, status: 'active', views: 847, contacts: 12, daysLeft: 22, img: unsplash('photo-1502672260266-1c1ef2d93688', 300) },
@@ -2411,12 +2446,22 @@ function ProfilView({ user, onPublish }) {
     { icon: Icons.Search,    color: 'orange',  text: 'Recherche : Maison Bordeaux avec jardin',    time: 'Il y a 3j' },
     { icon: Icons.Eye,       color: 'indigo',  text: 'Consulté : Maison Bordeaux — PSM-2201',      time: 'Il y a 3j' },
   ]
+  const TRUST_BADGES = [
+    { id: 'email',    label: 'E-mail vérifié',    icon: Icons.Mail,           done: !!email,     desc: 'Adresse confirmée' },
+    { id: 'phone',    label: 'Téléphone',          icon: Icons.Phone,          done: !!editPhone, desc: 'Numéro confirmé' },
+    { id: 'identity', label: 'Identité',           icon: Icons.IdCard,         done: false,       desc: 'Pièce d\'identité' },
+    { id: 'active',   label: 'Membre actif',       icon: Icons.BadgeCheck,     done: true,        desc: 'Compte en règle' },
+    { id: 'seller',   label: 'Certifié PASMAL',    icon: Icons.ShieldCheckBig, done: false,       desc: 'Validation équipe' },
+  ]
+  const trustScore = Math.round((TRUST_BADGES.filter(b => b.done).length / TRUST_BADGES.length) * 100)
+
   const TABS = [
-    { id: 'infos',     label: 'Informations', icon: Icons.User },
-    { id: 'annonces',  label: 'Mes annonces', icon: Icons.Building,    badge: MOCK_ANNONCES.filter(a => a.status === 'active').length },
-    { id: 'favoris',   label: 'Favoris',      icon: Icons.Heart,       badge: MOCK_FAVORIS.length },
-    { id: 'historique',label: 'Historique',   icon: Icons.Eye },
-    { id: 'parametres',label: 'Paramètres',   icon: Icons.Bell },
+    { id: 'infos',        label: 'Informations', icon: Icons.User },
+    { id: 'statistiques', label: 'Statistiques', icon: Icons.TrendingUp },
+    { id: 'annonces',     label: 'Mes annonces', icon: Icons.Building,   badge: MOCK_ANNONCES.filter(a => a.status === 'active').length },
+    { id: 'favoris',      label: 'Favoris',      icon: Icons.Heart,      badge: MOCK_FAVORIS.length },
+    { id: 'historique',   label: 'Historique',   icon: Icons.Eye },
+    { id: 'parametres',   label: 'Paramètres',   icon: Icons.Bell },
   ]
 
   const inputCls2 = 'w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-orange-400 transition text-[#0B1F3A]'
@@ -2428,8 +2473,21 @@ function ProfilView({ user, onPublish }) {
       <div className="bg-gradient-to-br from-[#0B1F3A] via-[#0e2040] to-[#162E52] pt-28 pb-0">
         <div className="max-w-5xl mx-auto px-6 lg:px-10">
           <div className="flex items-end gap-6 pb-0">
-            <div className="w-20 h-20 rounded-2xl bg-orange-500 text-white text-2xl font-extrabold flex items-center justify-center shrink-0 shadow-xl mb-4">
-              {initials}
+            {/* Avatar with upload */}
+            <div className="relative shrink-0 mb-4 group cursor-pointer" onClick={() => avatarInputRef.current?.click()}>
+              <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-xl">
+                {avatarPreview
+                  ? <img src={avatarPreview} alt="avatar" className="w-full h-full object-cover" />
+                  : <div className="w-full h-full bg-orange-500 text-white text-2xl font-extrabold flex items-center justify-center">{initials}</div>
+                }
+              </div>
+              <div className="absolute inset-0 rounded-2xl bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                {avatarLoading
+                  ? <Icons.Loader size={18} className="text-white animate-spin" />
+                  : <Icons.Upload size={16} className="text-white" />
+                }
+              </div>
+              <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
             </div>
             <div className="flex-1 pb-4">
               <div className="text-white text-xl font-extrabold">{rawName || 'Utilisateur'}</div>
@@ -2445,7 +2503,7 @@ function ProfilView({ user, onPublish }) {
               {[
                 { value: MOCK_ANNONCES.filter(a => a.status === 'active').length, label: 'Annonces actives' },
                 { value: MOCK_FAVORIS.length,  label: 'Favoris' },
-                { value: '—',                  label: 'Score confiance' },
+                { value: `${trustScore}%`,     label: 'Score confiance' },
               ].map(s => (
                 <div key={s.label} className="text-center">
                   <div className="text-white text-xl font-extrabold">{s.value}</div>
@@ -2537,6 +2595,41 @@ function ProfilView({ user, onPublish }) {
                   )}
                 </div>
 
+                {/* Trust badges */}
+                <div className="mt-6 bg-white rounded-3xl border border-slate-100 shadow-soft p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="font-bold text-[#0B1F3A] text-sm">Badges de confiance</div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                        <motion.div initial={{ width: 0 }} animate={{ width: `${trustScore}%` }} transition={{ duration: 1, ease: 'easeOut' }}
+                          className="h-full bg-gradient-to-r from-orange-400 to-orange-500 rounded-full" />
+                      </div>
+                      <span className="text-xs font-bold text-orange-500">{trustScore}%</span>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 gap-3">
+                    {TRUST_BADGES.map((b, i) => {
+                      const BIcon = b.icon
+                      return (
+                        <motion.div key={b.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.06 }}
+                          className={`flex items-center gap-3 p-3 rounded-2xl border ${b.done ? 'bg-emerald-50/60 border-emerald-100' : 'bg-slate-50 border-slate-100'}`}>
+                          <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${b.done ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
+                            <BIcon size={15} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className={`text-xs font-semibold ${b.done ? 'text-emerald-700' : 'text-slate-400'}`}>{b.label}</div>
+                            <div className="text-[11px] text-slate-400">{b.desc}</div>
+                          </div>
+                          {b.done
+                            ? <Icons.Check size={14} className="text-emerald-500 shrink-0" />
+                            : <span className="text-[10px] font-semibold text-orange-500 border border-orange-200 px-2 py-0.5 rounded-full shrink-0">Compléter</span>
+                          }
+                        </motion.div>
+                      )
+                    })}
+                  </div>
+                </div>
+
                 {/* Danger zone */}
                 <div className="mt-6 bg-white rounded-3xl border border-rose-100 shadow-soft p-6">
                   <div className="font-bold text-[#0B1F3A] mb-1 text-sm">Zone de danger</div>
@@ -2547,6 +2640,94 @@ function ProfilView({ user, onPublish }) {
                 </div>
               </div>
             )}
+
+            {/* ── Statistiques ── */}
+            {tab === 'statistiques' && (() => {
+              const STAT_KPIS = [
+                { label: 'Biens consultés',    value: 127, icon: Icons.Eye,        color: '#6366f1', bg: '#eef2ff' },
+                { label: 'Recherches faites',  value: 43,  icon: Icons.Search,     color: '#f97316', bg: '#fff7ed' },
+                { label: 'Contacts envoyés',   value: 8,   icon: Icons.Mail,       color: '#0ea5e9', bg: '#f0f9ff' },
+                { label: 'Favoris ajoutés',    value: 12,  icon: Icons.Heart,      color: '#f43f5e', bg: '#fff1f2' },
+              ]
+              const TOP_SEARCHES = [
+                { query: 'T3 Paris 11e ≤ 600 k€',      count: 14, last: 'Il y a 2h' },
+                { query: 'Maison Lyon jardin ≤ 500 k€', count: 9,  last: 'Il y a 1j' },
+                { query: 'Studio meublé Bordeaux',       count: 7,  last: 'Il y a 3j' },
+                { query: 'Appartement Marseille 2p',     count: 5,  last: 'Il y a 5j' },
+              ]
+              /* 30-day activity sparkline — LCG seed */
+              const W = 560; const H = 80; const pts = 30
+              let seed = 42
+              const raw = Array.from({ length: pts }, () => {
+                seed = (seed * 1664525 + 1013904223) & 0xffffffff
+                return 2 + ((seed >>> 0) % 8)
+              })
+              const maxV = Math.max(...raw)
+              const coords = raw.map((v, i) => ({ x: (i / (pts - 1)) * W, y: H - (v / maxV) * (H - 6) }))
+              const pathD = coords.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ')
+              const fillD = `${pathD} L${W},${H} L0,${H} Z`
+              return (
+                <div>
+                  {/* KPI row */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                    {STAT_KPIS.map(k => {
+                      const KIcon = k.icon
+                      return (
+                        <motion.div key={k.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}
+                          className="bg-white rounded-3xl border border-slate-100 shadow-soft p-5">
+                          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: k.bg }}>
+                            <KIcon size={16} style={{ color: k.color }} />
+                          </div>
+                          <div className="text-2xl font-extrabold text-[#0B1F3A]">{k.value}</div>
+                          <div className="text-xs text-slate-400 mt-0.5">{k.label}</div>
+                        </motion.div>
+                      )
+                    })}
+                  </div>
+
+                  {/* Activity chart */}
+                  <div className="bg-white rounded-3xl border border-slate-100 shadow-soft p-6 mb-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="font-bold text-[#0B1F3A] text-sm">Activité — 30 derniers jours</div>
+                      <span className="text-xs text-slate-400">Actions / jour</span>
+                    </div>
+                    <svg viewBox={`0 0 ${W} ${H + 20}`} className="w-full" preserveAspectRatio="none" style={{ height: 80 }}>
+                      <defs>
+                        <linearGradient id="actGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#f97316" stopOpacity="0.25" />
+                          <stop offset="100%" stopColor="#f97316" stopOpacity="0.02" />
+                        </linearGradient>
+                      </defs>
+                      <path d={fillD} fill="url(#actGrad)" />
+                      <path d={pathD} fill="none" stroke="#f97316" strokeWidth="2" strokeLinejoin="round" />
+                      {coords.filter((_, i) => i % 5 === 0).map((p, i) => (
+                        <circle key={i} cx={p.x} cy={p.y} r="3" fill="#f97316" />
+                      ))}
+                    </svg>
+                    <div className="flex justify-between text-[10px] text-slate-300 mt-1">
+                      <span>J-30</span><span>J-20</span><span>J-10</span><span>Auj.</span>
+                    </div>
+                  </div>
+
+                  {/* Top searches */}
+                  <div className="bg-white rounded-3xl border border-slate-100 shadow-soft overflow-hidden">
+                    <div className="px-6 py-4 border-b border-slate-50 font-bold text-[#0B1F3A] text-sm">Recherches les plus fréquentes</div>
+                    <div className="divide-y divide-slate-50">
+                      {TOP_SEARCHES.map((s, i) => (
+                        <div key={i} className="flex items-center gap-4 px-6 py-3.5">
+                          <div className="w-6 h-6 rounded-lg bg-orange-50 flex items-center justify-center shrink-0">
+                            <Icons.Search size={11} className="text-orange-500" />
+                          </div>
+                          <div className="flex-1 text-sm text-[#0B1F3A] font-medium truncate">{s.query}</div>
+                          <span className="text-xs text-slate-400 shrink-0">{s.count}×</span>
+                          <span className="text-[11px] text-slate-300 shrink-0 hidden sm:block">{s.last}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )
+            })()}
 
             {/* ── Annonces ── */}
             {tab === 'annonces' && (
@@ -4119,6 +4300,753 @@ function AdminReviewPanel({ reviewState, setReviewState }) {
             <span className={ok ? 'text-slate-700' : 'text-slate-400'}>{label}</span>
           </div>
         ))}
+      </div>
+    </div>
+  )
+}
+
+/* ============================================================================
+   SellerVerificationView — wizard 4 étapes pour vendeurs particuliers
+   ============================================================================ */
+const SELLER_VER_BENEFITS = [
+  { icon: Icons.BadgeCheck,     color: '#10b981', label: 'Badge certifié',          desc: 'Visible sur toutes vos annonces et votre profil.' },
+  { icon: Icons.TrendingUp,     color: '#f97316', label: '3× plus de contacts',     desc: 'Les acheteurs font davantage confiance aux vendeurs vérifiés.' },
+  { icon: Icons.Shield,         color: '#6366f1', label: 'Annonces prioritaires',   desc: 'Remontée automatique dans les résultats de recherche.' },
+  { icon: Icons.ShieldCheckBig, color: '#0ea5e9', label: 'Transaction sécurisée',   desc: 'Accès à l\'escrow PASMAL et aux outils de signature.' },
+]
+
+const DOC_TYPES = [
+  { id: 'cni',      label: 'Carte d\'identité' },
+  { id: 'passport', label: 'Passeport' },
+  { id: 'permit',   label: 'Permis de conduire' },
+]
+
+/* ============================================================================
+   OnboardingView — wizard 5 étapes pour les nouveaux utilisateurs
+   ============================================================================ */
+const OB_PROJECTS = [
+  { id: 'acheter',   icon: Icons.Home,       label: 'Acheter',    desc: 'Trouver votre résidence principale ou secondaire.' },
+  { id: 'louer',     icon: Icons.Building,   label: 'Louer',      desc: 'Trouver un appartement ou une maison à louer.' },
+  { id: 'vendre',    icon: Icons.Tag,        label: 'Vendre',     desc: 'Publier votre bien et trouver un acheteur.' },
+  { id: 'investir',  icon: Icons.TrendingUp, label: 'Investir',   desc: 'Constituer ou développer votre patrimoine.' },
+]
+
+const OB_CITIES = ['Paris','Lyon','Marseille','Toulouse','Nice','Nantes','Bordeaux','Strasbourg','Lille','Rennes','Montpellier','Grenoble']
+
+function OnboardingView({ user, setCurrentView, setFilters }) {
+  const [step,       setStep]       = useState(0)
+  const [projects,   setProjects]   = useState([])
+  const [budgetMax,  setBudgetMax]  = useState(400000)
+  const [surface,    setSurface]    = useState(40)
+  const [rooms,      setRooms]      = useState(0)
+  const [city,       setCity]       = useState('')
+  const [citySugg,   setCitySugg]   = useState([])
+  const [alertEmail, setAlertEmail] = useState(true)
+  const [alertPush,  setAlertPush]  = useState(true)
+  const [alertFreq,  setAlertFreq]  = useState('immediate')
+
+  const firstName = (user?.user_metadata?.full_name || user?.user_metadata?.name || '').split(' ')[0] || null
+  const isRent    = projects.includes('louer') && !projects.includes('acheter') && !projects.includes('investir')
+  const budgetMax_ = isRent ? 3000  : 1000000
+  const budgetMin_ = isRent ? 300   : 50000
+  const budgetStep = isRent ? 50    : 10000
+  const budgetFmt  = isRent ? `${budgetMax.toLocaleString('fr-FR')} €/mois` : `${budgetMax.toLocaleString('fr-FR')} €`
+
+  function toggleProject(id) {
+    setProjects(prev => prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id])
+  }
+
+  function handleCityInput(v) {
+    setCity(v)
+    if (v.length >= 2) setCitySugg(OB_CITIES.filter(c => c.toLowerCase().startsWith(v.toLowerCase())).slice(0, 6))
+    else setCitySugg([])
+  }
+
+  function finish() {
+    const mainProject = projects[0] || 'acheter'
+    setFilters(f => ({
+      ...f,
+      type:       mainProject,
+      location:   city,
+      priceMax:   String(budgetMax),
+      surfaceMin: surface > 0 ? String(surface) : '',
+      roomsMin:   rooms  > 0 ? String(rooms)   : '',
+    }))
+    setCurrentView('results')
+  }
+
+  const STEPS = ['Bienvenue', 'Projet', 'Critères', 'Alertes', 'Prêt !']
+  const canNext = [true, projects.length > 0, true, true, true]
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white pt-16">
+      {/* Progress */}
+      <div className="sticky top-16 z-10 bg-white/90 backdrop-blur border-b border-slate-100">
+        <div className="max-w-xl mx-auto px-6 py-3 flex items-center gap-2">
+          {STEPS.map((lbl, i) => (
+            <React.Fragment key={i}>
+              <div className={`flex items-center gap-1.5 ${i <= step ? 'text-orange-600' : 'text-slate-300'}`}>
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-extrabold border-2 transition-all shrink-0 ${
+                  i < step  ? 'bg-emerald-500 border-emerald-500 text-white' :
+                  i === step? 'bg-orange-500 border-orange-500 text-white' :
+                              'bg-white border-slate-200 text-slate-400'}`}>
+                  {i < step ? <Icons.Check size={9} /> : i + 1}
+                </div>
+                <span className={`hidden sm:block text-xs font-semibold ${i === step ? 'text-orange-600' : i < step ? 'text-emerald-600' : 'text-slate-300'}`}>{lbl}</span>
+              </div>
+              {i < STEPS.length - 1 && <div className={`flex-1 h-0.5 rounded-full transition-all ${i < step ? 'bg-emerald-400' : 'bg-slate-200'}`} />}
+            </React.Fragment>
+          ))}
+        </div>
+        <div className="h-0.5 bg-slate-100">
+          <motion.div animate={{ width: `${(step / (STEPS.length - 1)) * 100}%` }} transition={{ duration: 0.4, ease: 'easeOut' }}
+            className="h-full bg-gradient-to-r from-orange-400 to-orange-600" />
+        </div>
+      </div>
+
+      <div className="max-w-xl mx-auto px-6 py-10">
+        <AnimatePresence mode="wait">
+
+          {/* ── Step 0 : Bienvenue ── */}
+          {step === 0 && (
+            <motion.div key="ob0" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}>
+              <div className="text-center mb-8">
+                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', bounce: 0.5, delay: 0.1 }}
+                  className="w-20 h-20 rounded-3xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center mx-auto mb-5 shadow-2xl">
+                  <Icons.Home size={36} className="text-white" />
+                </motion.div>
+                <motion.h1 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
+                  className="text-3xl font-extrabold text-[#0B1F3A] mb-2">
+                  Bienvenue{firstName ? `, ${firstName}` : ''} !
+                </motion.h1>
+                <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+                  className="text-slate-500 max-w-sm mx-auto">
+                  En 2 minutes, personnalisez PASMAL pour trouver exactement ce que vous cherchez.
+                </motion.p>
+              </div>
+              <div className="grid grid-cols-1 gap-3 mb-8">
+                {[
+                  { icon: Icons.Search,    color: '#f97316', label: 'Annonces sur mesure',    desc: 'Résultats filtrés selon vos critères dès la première visite.' },
+                  { icon: Icons.Bell,      color: '#6366f1', label: 'Alertes personnalisées', desc: 'Recevez les nouvelles annonces avant tout le monde.' },
+                  { icon: Icons.TrendingUp,color: '#10b981', label: 'Dashboard adapté',       desc: 'Vos favoris, messages et annonces au même endroit.' },
+                ].map((b, i) => {
+                  const BI = b.icon
+                  return (
+                    <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 + i * 0.07 }}
+                      className="flex items-center gap-4 bg-white rounded-2xl border border-slate-100 shadow-soft p-4">
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: b.color + '18' }}>
+                        <BI size={18} style={{ color: b.color }} />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-sm text-[#0B1F3A]">{b.label}</div>
+                        <div className="text-xs text-slate-500">{b.desc}</div>
+                      </div>
+                    </motion.div>
+                  )
+                })}
+              </div>
+              <button onClick={() => setStep(1)}
+                className="w-full py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold text-base rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-xl flex items-center justify-center gap-2">
+                C'est parti ! <Icons.ArrowRight size={18} />
+              </button>
+              <button onClick={() => setCurrentView('home')} className="w-full mt-3 text-xs text-slate-400 hover:text-slate-600 transition py-2">
+                Passer l'onboarding
+              </button>
+            </motion.div>
+          )}
+
+          {/* ── Step 1 : Projet ── */}
+          {step === 1 && (
+            <motion.div key="ob1" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}>
+              <div className="mb-6">
+                <h2 className="text-2xl font-extrabold text-[#0B1F3A] mb-1">Quel est votre projet ?</h2>
+                <p className="text-slate-500 text-sm">Vous pouvez en sélectionner plusieurs.</p>
+              </div>
+              <div className="grid grid-cols-2 gap-3 mb-8">
+                {OB_PROJECTS.map(p => {
+                  const PI = p.icon; const sel = projects.includes(p.id)
+                  return (
+                    <button key={p.id} onClick={() => toggleProject(p.id)}
+                      className={`relative p-5 rounded-2xl border-2 text-left transition-all ${sel ? 'border-orange-500 bg-orange-50 shadow-md' : 'border-slate-200 bg-white hover:border-orange-300 hover:bg-orange-50/50'}`}>
+                      {sel && (
+                        <div className="absolute top-3 right-3 w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center">
+                          <Icons.Check size={10} className="text-white" />
+                        </div>
+                      )}
+                      <PI size={24} className={`mb-3 ${sel ? 'text-orange-500' : 'text-slate-400'}`} />
+                      <div className={`font-extrabold text-base mb-0.5 ${sel ? 'text-orange-700' : 'text-[#0B1F3A]'}`}>{p.label}</div>
+                      <div className="text-xs text-slate-500 leading-snug">{p.desc}</div>
+                    </button>
+                  )
+                })}
+              </div>
+              <div className="flex gap-3">
+                <button onClick={() => setStep(0)} className="px-5 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-2xl transition">
+                  ← Retour
+                </button>
+                <button onClick={() => setStep(2)} disabled={projects.length === 0}
+                  className="flex-1 py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 disabled:opacity-40 text-white font-extrabold rounded-2xl transition-all flex items-center justify-center gap-2">
+                  Suivant <Icons.ArrowRight size={16} />
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ── Step 2 : Critères ── */}
+          {step === 2 && (
+            <motion.div key="ob2" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}>
+              <div className="mb-6">
+                <h2 className="text-2xl font-extrabold text-[#0B1F3A] mb-1">Vos critères</h2>
+                <p className="text-slate-500 text-sm">Nous affinerons les résultats selon vos préférences.</p>
+              </div>
+              <div className="space-y-6">
+                {/* Budget */}
+                {!projects.every(p => p === 'vendre') && (
+                  <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5">
+                    <div className="flex items-center justify-between mb-3">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Budget maximum</label>
+                      <span className="text-sm font-extrabold text-orange-600">{budgetFmt}</span>
+                    </div>
+                    <input type="range" min={budgetMin_} max={budgetMax_} step={budgetStep} value={budgetMax}
+                      onChange={e => setBudgetMax(Number(e.target.value))}
+                      className="w-full accent-orange-500 h-2 rounded-full cursor-pointer" />
+                    <div className="flex justify-between text-[11px] text-slate-400 mt-1">
+                      <span>{budgetMin_.toLocaleString('fr-FR')} €{isRent ? '/mois' : ''}</span>
+                      <span>{budgetMax_.toLocaleString('fr-FR')} €{isRent ? '/mois' : ''}</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Surface */}
+                <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Surface minimum</label>
+                    <span className="text-sm font-extrabold text-orange-600">{surface} m²</span>
+                  </div>
+                  <input type="range" min={10} max={300} step={5} value={surface} onChange={e => setSurface(Number(e.target.value))}
+                    className="w-full accent-orange-500 h-2 rounded-full cursor-pointer" />
+                  <div className="flex justify-between text-[11px] text-slate-400 mt-1">
+                    <span>10 m²</span><span>300 m²</span>
+                  </div>
+                </div>
+
+                {/* Pièces */}
+                <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5">
+                  <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Nombre de pièces</div>
+                  <div className="flex gap-2">
+                    {[{ v: 0, l: 'Peu importe' }, { v: 1, l: 'Studio' }, { v: 2, l: '2P' }, { v: 3, l: '3P' }, { v: 4, l: '4P' }, { v: 5, l: '5P+' }].map(({ v, l }) => (
+                      <button key={v} onClick={() => setRooms(v)}
+                        className={`flex-1 py-2.5 text-xs font-bold rounded-xl transition-all ${rooms === v ? 'bg-orange-500 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+                        {l}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Ville */}
+                <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5 relative">
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Ville ou région</label>
+                  <div className="relative">
+                    <Icons.MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-orange-500" />
+                    <input type="text" value={city} onChange={e => handleCityInput(e.target.value)}
+                      onBlur={() => setTimeout(() => setCitySugg([]), 150)}
+                      placeholder="Paris, Lyon, Bordeaux…"
+                      className="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-orange-400 transition" />
+                  </div>
+                  {citySugg.length > 0 && (
+                    <div className="absolute left-5 right-5 top-full mt-1 bg-white rounded-xl shadow-xl border border-slate-100 z-20 overflow-hidden">
+                      {citySugg.map(s => (
+                        <button key={s} onMouseDown={() => { setCity(s); setCitySugg([]) }}
+                          className="w-full px-4 py-2.5 text-left text-sm hover:bg-orange-50 text-[#0B1F3A] font-medium transition-colors">
+                          <Icons.MapPin size={11} className="text-orange-500 inline mr-2" />{s}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="flex gap-3 mt-8">
+                <button onClick={() => setStep(1)} className="px-5 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-2xl transition">
+                  ← Retour
+                </button>
+                <button onClick={() => setStep(3)}
+                  className="flex-1 py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold rounded-2xl transition-all flex items-center justify-center gap-2">
+                  Suivant <Icons.ArrowRight size={16} />
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ── Step 3 : Alertes ── */}
+          {step === 3 && (
+            <motion.div key="ob3" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}>
+              <div className="mb-6">
+                <h2 className="text-2xl font-extrabold text-[#0B1F3A] mb-1">Comment vous alerter ?</h2>
+                <p className="text-slate-500 text-sm">Soyez le premier informé des nouvelles annonces correspondant à vos critères.</p>
+              </div>
+              <div className="space-y-3 mb-6">
+                {[
+                  { state: alertEmail, setter: setAlertEmail, label: 'Alertes par e-mail',          desc: 'Recevez les nouvelles annonces directement dans votre boîte.' },
+                  { state: alertPush,  setter: setAlertPush,  label: 'Notifications push',           desc: 'Notifications instantanées sur votre navigateur ou téléphone.' },
+                  { state: alertFreq === 'digest', setter: (v) => setAlertFreq(v ? 'daily' : 'immediate'), label: 'Résumé quotidien', desc: 'Un seul e-mail par jour avec toutes les nouvelles annonces.' },
+                ].map(({ state, setter, label, desc }) => (
+                  <div key={label} className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5 flex items-center justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-semibold text-sm text-[#0B1F3A] mb-0.5">{label}</div>
+                      <div className="text-xs text-slate-500">{desc}</div>
+                    </div>
+                    <button onClick={() => setter(s => !s)}
+                      className={`shrink-0 w-11 h-6 rounded-full transition-colors flex items-center px-0.5 ${state ? 'bg-orange-500' : 'bg-slate-200'}`}>
+                      <motion.div animate={{ x: state ? 20 : 0 }} transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                        className="w-5 h-5 bg-white rounded-full shadow" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Fréquence */}
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5 mb-8">
+                <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Fréquence des alertes</div>
+                <div className="flex flex-col gap-2">
+                  {[
+                    { id: 'immediate', label: 'Immédiatement',    desc: 'Dès qu\'une annonce est publiée' },
+                    { id: 'daily',     label: '1 fois par jour',  desc: 'Récapitulatif chaque matin' },
+                    { id: 'weekly',    label: '1 fois par semaine', desc: 'Résumé hebdomadaire le lundi' },
+                  ].map(f => (
+                    <button key={f.id} onClick={() => setAlertFreq(f.id)}
+                      className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left ${alertFreq === f.id ? 'border-orange-500 bg-orange-50' : 'border-slate-100 hover:border-slate-200'}`}>
+                      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${alertFreq === f.id ? 'border-orange-500 bg-orange-500' : 'border-slate-300'}`}>
+                        {alertFreq === f.id && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                      </div>
+                      <div>
+                        <div className={`text-sm font-semibold ${alertFreq === f.id ? 'text-orange-700' : 'text-[#0B1F3A]'}`}>{f.label}</div>
+                        <div className="text-xs text-slate-400">{f.desc}</div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button onClick={() => setStep(2)} className="px-5 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-2xl transition">
+                  ← Retour
+                </button>
+                <button onClick={() => setStep(4)}
+                  className="flex-1 py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold rounded-2xl transition-all flex items-center justify-center gap-2">
+                  Terminer <Icons.Check size={16} />
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ── Step 4 : Prêt ! ── */}
+          {step === 4 && (
+            <motion.div key="ob4" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4, ease: 'backOut' }}
+              className="text-center">
+              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', bounce: 0.5, delay: 0.1 }}
+                className="w-24 h-24 rounded-3xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center mx-auto mb-5 shadow-2xl">
+                <Icons.CheckCircle size={44} className="text-white" />
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
+                <h2 className="text-2xl font-extrabold text-[#0B1F3A] mb-2">Votre profil est prêt !</h2>
+                <p className="text-slate-500 mb-8">Voici un résumé de vos préférences. Vous pouvez les modifier à tout moment dans votre profil.</p>
+              </motion.div>
+
+              {/* Summary */}
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
+                className="bg-white rounded-3xl border border-slate-100 shadow-soft p-6 text-left mb-8">
+                <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Récapitulatif</div>
+                <div className="space-y-3">
+                  {[
+                    { icon: Icons.Home,       label: 'Projet',      value: projects.map(p => OB_PROJECTS.find(op => op.id === p)?.label).join(', ') || '—' },
+                    { icon: Icons.CreditCard, label: 'Budget max',  value: budgetFmt },
+                    { icon: Icons.Maximize,   label: 'Surface min', value: `${surface} m²` },
+                    { icon: Icons.Bed,        label: 'Pièces min',  value: rooms > 0 ? `${rooms}P` : 'Peu importe' },
+                    { icon: Icons.MapPin,     label: 'Ville',       value: city || 'France entière' },
+                    { icon: Icons.Bell,       label: 'Alertes',     value: alertEmail ? `E-mail · ${alertFreq === 'immediate' ? 'Immédiat' : alertFreq === 'daily' ? '1×/jour' : '1×/semaine'}` : 'Désactivées' },
+                  ].map(({ icon: RI, label, value }) => (
+                    <div key={label} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
+                      <div className="flex items-center gap-2 text-slate-500">
+                        <RI size={13} className="text-orange-500 shrink-0" />
+                        <span className="text-xs font-semibold uppercase tracking-wider">{label}</span>
+                      </div>
+                      <span className="text-sm font-semibold text-[#0B1F3A]">{value}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="flex flex-col gap-3">
+                <button onClick={finish}
+                  className="w-full py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold text-base rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-xl flex items-center justify-center gap-2">
+                  <Icons.Search size={18} /> Voir mes annonces personnalisées
+                </button>
+                <button onClick={() => setCurrentView('profil')}
+                  className="w-full py-3.5 bg-white border border-slate-200 hover:border-slate-300 text-[#0B1F3A] font-semibold rounded-2xl transition flex items-center justify-center gap-2">
+                  <Icons.User size={16} /> Accéder à mon profil
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+
+        </AnimatePresence>
+      </div>
+    </div>
+  )
+}
+
+function SellerVerificationView({ setCurrentView }) {
+  const [step,       setStep]       = useState(0)   // 0=intro 1=identité 2=téléphone 3=succès
+  const [docType,    setDocType]    = useState('cni')
+  const [rectoFile,  setRectoFile]  = useState(null)
+  const [versoFile,  setVersoFile]  = useState(null)
+  const [rectoUrl,   setRectoUrl]   = useState(null)
+  const [versoUrl,   setVersoUrl]   = useState(null)
+  const [phone,      setPhone]      = useState('')
+  const [codeSent,   setCodeSent]   = useState(false)
+  const [codeVals,   setCodeVals]   = useState(['','','','','',''])
+  const [codeError,  setCodeError]  = useState(false)
+  const [verifying,  setVerifying]  = useState(false)
+  const rectoRef = useRef(null)
+  const versoRef = useRef(null)
+  const codeRefs = useRef([])
+
+  function pickFile(side, file) {
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = ev => {
+      if (side === 'recto') { setRectoFile(file); setRectoUrl(ev.target.result) }
+      else                  { setVersoFile(file); setVersoUrl(ev.target.result) }
+    }
+    reader.readAsDataURL(file)
+  }
+
+  function handleCodeInput(i, val) {
+    if (!/^\d?$/.test(val)) return
+    const next = [...codeVals]; next[i] = val
+    setCodeVals(next); setCodeError(false)
+    if (val && i < 5) codeRefs.current[i + 1]?.focus()
+  }
+
+  function handleCodeKeyDown(i, e) {
+    if (e.key === 'Backspace' && !codeVals[i] && i > 0) codeRefs.current[i - 1]?.focus()
+  }
+
+  function sendCode() {
+    if (phone.replace(/\s/g,'').length < 10) return
+    setCodeSent(true)
+    setTimeout(() => codeRefs.current[0]?.focus(), 100)
+  }
+
+  function verifyCode() {
+    const code = codeVals.join('')
+    if (code.length < 6) return
+    setVerifying(true)
+    setTimeout(() => {
+      setVerifying(false)
+      setStep(3)
+    }, 1500)
+  }
+
+  const canSubmitId   = rectoUrl && (docType === 'passport' || versoUrl)
+  const canVerifyCode = codeVals.join('').length === 6
+
+  const STEP_LABELS = ['Bienvenue', 'Identité', 'Téléphone', 'Badge obtenu']
+
+  return (
+    <div className="min-h-screen bg-slate-50 pt-16">
+      {/* Progress bar header */}
+      <div className="sticky top-16 z-10 bg-white border-b border-slate-100 shadow-sm">
+        <div className="max-w-2xl mx-auto px-6 py-3 flex items-center gap-3">
+          <button onClick={() => step > 0 ? setStep(s => s - 1) : setCurrentView('home')}
+            className="text-slate-400 hover:text-slate-700 transition shrink-0">
+            <Icons.ChevronLeft size={20} />
+          </button>
+          <div className="flex-1 flex items-center gap-1">
+            {STEP_LABELS.map((lbl, i) => (
+              <React.Fragment key={i}>
+                <div className={`flex items-center gap-1.5 ${i <= step ? 'text-orange-600' : 'text-slate-300'}`}>
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold border-2 transition-all ${
+                    i < step  ? 'bg-emerald-500 border-emerald-500 text-white' :
+                    i === step? 'bg-orange-500 border-orange-500 text-white' :
+                                'bg-white border-slate-200 text-slate-400'
+                  }`}>
+                    {i < step ? <Icons.Check size={9} /> : i + 1}
+                  </div>
+                  <span className={`hidden sm:block text-xs font-semibold ${i === step ? 'text-orange-600' : i < step ? 'text-emerald-600' : 'text-slate-300'}`}>{lbl}</span>
+                </div>
+                {i < STEP_LABELS.length - 1 && (
+                  <div className={`flex-1 h-0.5 rounded-full mx-1 transition-all ${i < step ? 'bg-emerald-400' : 'bg-slate-200'}`} />
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+        {/* Progress fill */}
+        <div className="h-0.5 bg-slate-100">
+          <motion.div animate={{ width: `${(step / 3) * 100}%` }} transition={{ duration: 0.4, ease: 'easeOut' }}
+            className="h-full bg-gradient-to-r from-orange-400 to-orange-600" />
+        </div>
+      </div>
+
+      <div className="max-w-2xl mx-auto px-6 py-10">
+        <AnimatePresence mode="wait">
+
+          {/* ── STEP 0 : Bienvenue ── */}
+          {step === 0 && (
+            <motion.div key="s0" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}>
+              <div className="text-center mb-8">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center mx-auto mb-5 shadow-xl">
+                  <Icons.BadgeCheck size={30} className="text-white" />
+                </div>
+                <h1 className="text-2xl font-extrabold text-[#0B1F3A] mb-2">Devenez vendeur certifié</h1>
+                <p className="text-slate-500 max-w-md mx-auto">Vérifiez votre identité en 2 minutes et obtenez le badge de confiance PASMAL — visible par 2,4 M d'acheteurs.</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                {SELLER_VER_BENEFITS.map((b, i) => {
+                  const BI = b.icon
+                  return (
+                    <motion.div key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}
+                      className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5 flex gap-3 items-start">
+                      <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: b.color + '18' }}>
+                        <BI size={16} style={{ color: b.color }} />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-sm text-[#0B1F3A] mb-0.5">{b.label}</div>
+                        <div className="text-xs text-slate-500 leading-relaxed">{b.desc}</div>
+                      </div>
+                    </motion.div>
+                  )
+                })}
+              </div>
+
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5 mb-6">
+                <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Ce dont vous aurez besoin</div>
+                {[
+                  { icon: Icons.IdCard,  text: 'Pièce d\'identité en cours de validité (CNI, passeport ou permis)' },
+                  { icon: Icons.Phone,   text: 'Votre numéro de téléphone mobile pour recevoir le code SMS' },
+                  { icon: Icons.Loader,  text: 'Environ 2 à 5 minutes de votre temps' },
+                ].map((it, i) => {
+                  const II = it.icon
+                  return (
+                    <div key={i} className="flex items-center gap-3 py-2.5 border-b border-slate-50 last:border-0">
+                      <II size={15} className="text-orange-500 shrink-0" />
+                      <span className="text-sm text-slate-600">{it.text}</span>
+                    </div>
+                  )
+                })}
+              </div>
+
+              <button onClick={() => setStep(1)}
+                className="w-full py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold text-base rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-xl flex items-center justify-center gap-2">
+                Commencer la vérification <Icons.ArrowRight size={18} />
+              </button>
+            </motion.div>
+          )}
+
+          {/* ── STEP 1 : Identité ── */}
+          {step === 1 && (
+            <motion.div key="s1" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}>
+              <div className="mb-6">
+                <h2 className="text-xl font-extrabold text-[#0B1F3A] mb-1">Pièce d'identité</h2>
+                <p className="text-slate-500 text-sm">Choisissez votre type de document et photographiez les deux faces si nécessaire.</p>
+              </div>
+
+              {/* Doc type selector */}
+              <div className="flex gap-2 mb-6">
+                {DOC_TYPES.map(d => (
+                  <button key={d.id} onClick={() => setDocType(d.id)}
+                    className={`flex-1 py-2.5 text-xs font-semibold rounded-xl border transition-all ${
+                      docType === d.id
+                        ? 'bg-orange-500 border-orange-500 text-white shadow-md'
+                        : 'bg-white border-slate-200 text-slate-600 hover:border-orange-300'
+                    }`}>
+                    {d.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Upload zones */}
+              <div className={`grid gap-4 mb-6 ${docType === 'passport' ? 'grid-cols-1' : 'grid-cols-2'}`}>
+                {/* Recto */}
+                {[
+                  { side: 'recto', label: docType === 'passport' ? 'Page principale' : 'Recto', url: rectoUrl, ref: rectoRef, setter: (f) => pickFile('recto', f) },
+                  ...(docType !== 'passport' ? [{ side: 'verso', label: 'Verso', url: versoUrl, ref: versoRef, setter: (f) => pickFile('verso', f) }] : []),
+                ].map(({ side, label, url, ref: fRef, setter }) => (
+                  <div key={side}>
+                    <div className="text-xs font-semibold text-slate-500 mb-2">{label}</div>
+                    <button onClick={() => fRef.current?.click()}
+                      className={`w-full aspect-video rounded-2xl border-2 border-dashed flex flex-col items-center justify-center transition-all overflow-hidden relative ${
+                        url ? 'border-emerald-400 bg-emerald-50' : 'border-slate-300 bg-slate-50 hover:border-orange-400 hover:bg-orange-50'
+                      }`}>
+                      {url
+                        ? <>
+                            <img src={url} alt={label} className="absolute inset-0 w-full h-full object-cover rounded-2xl opacity-80" />
+                            <div className="relative z-10 w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center shadow-lg">
+                              <Icons.Check size={14} className="text-white" />
+                            </div>
+                          </>
+                        : <>
+                            <Icons.Upload size={22} className="text-slate-400 mb-2" />
+                            <span className="text-xs text-slate-500 font-medium">Cliquer ou glisser-déposer</span>
+                            <span className="text-[11px] text-slate-400 mt-1">JPG, PNG, PDF — max 5 Mo</span>
+                          </>
+                      }
+                    </button>
+                    <input ref={fRef} type="file" accept="image/*,.pdf" className="hidden"
+                      onChange={e => setter(e.target.files?.[0])} />
+                  </div>
+                ))}
+              </div>
+
+              <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 mb-6 flex gap-3">
+                <Icons.Info size={15} className="text-blue-500 shrink-0 mt-0.5" />
+                <p className="text-xs text-blue-700 leading-relaxed">
+                  Vos documents sont chiffrés et stockés de manière sécurisée. Ils ne sont accessibles qu'à notre équipe de vérification et sont supprimés après validation.
+                </p>
+              </div>
+
+              <button onClick={() => setStep(2)} disabled={!canSubmitId}
+                className="w-full py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 disabled:opacity-40 text-white font-extrabold text-base rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-xl flex items-center justify-center gap-2">
+                Continuer <Icons.ArrowRight size={18} />
+              </button>
+            </motion.div>
+          )}
+
+          {/* ── STEP 2 : Téléphone ── */}
+          {step === 2 && (
+            <motion.div key="s2" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}>
+              <div className="mb-6">
+                <h2 className="text-xl font-extrabold text-[#0B1F3A] mb-1">Vérification du téléphone</h2>
+                <p className="text-slate-500 text-sm">Entrez votre numéro mobile. Nous vous enverrons un code SMS à 6 chiffres.</p>
+              </div>
+
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 mb-6">
+                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Numéro de téléphone</label>
+                <div className="flex gap-2">
+                  <div className="flex items-center gap-2 px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 shrink-0 font-medium">
+                    🇫🇷 +33
+                  </div>
+                  <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} disabled={codeSent}
+                    placeholder="6 12 34 56 78"
+                    className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-orange-400 transition disabled:opacity-60" />
+                  <button onClick={sendCode} disabled={codeSent || phone.replace(/\s/g,'').length < 9}
+                    className="shrink-0 px-4 py-2.5 bg-orange-500 hover:bg-orange-600 disabled:opacity-40 text-white text-sm font-semibold rounded-xl transition whitespace-nowrap">
+                    {codeSent ? 'Envoyé ✓' : 'Envoyer'}
+                  </button>
+                </div>
+
+                {/* OTP inputs */}
+                <AnimatePresence>
+                  {codeSent && (
+                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} transition={{ duration: 0.3 }}>
+                      <div className="mt-5">
+                        <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Code reçu par SMS</label>
+                        <div className="flex gap-2 justify-center mb-2">
+                          {codeVals.map((v, i) => (
+                            <input key={i} type="text" inputMode="numeric" maxLength={1} value={v}
+                              ref={el => codeRefs.current[i] = el}
+                              onChange={e => handleCodeInput(i, e.target.value)}
+                              onKeyDown={e => handleCodeKeyDown(i, e)}
+                              className={`w-11 h-12 text-center text-lg font-extrabold rounded-xl border-2 transition focus:outline-none bg-slate-50 ${
+                                codeError ? 'border-rose-400 text-rose-600' :
+                                v ? 'border-orange-400 text-orange-600' :
+                                'border-slate-200 focus:border-orange-400 text-[#0B1F3A]'
+                              }`} />
+                          ))}
+                        </div>
+                        {codeError && (
+                          <p className="text-xs text-rose-500 text-center mt-1">Code incorrect. Veuillez réessayer.</p>
+                        )}
+                        <p className="text-[11px] text-slate-400 text-center mt-2">
+                          Code de démonstration : n'importe quel code à 6 chiffres.{' '}
+                          <button onClick={() => { setCodeSent(false); setCodeVals(['','','','','','']) }}
+                            className="text-orange-500 font-semibold hover:underline">
+                            Renvoyer
+                          </button>
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <button onClick={verifyCode} disabled={!canVerifyCode || verifying}
+                className="w-full py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 disabled:opacity-40 text-white font-extrabold text-base rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-xl flex items-center justify-center gap-2">
+                {verifying
+                  ? <><Icons.Loader size={18} className="animate-spin" /> Vérification…</>
+                  : <><Icons.Check size={18} /> Vérifier le code</>
+                }
+              </button>
+            </motion.div>
+          )}
+
+          {/* ── STEP 3 : Succès ── */}
+          {step === 3 && (
+            <motion.div key="s3" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4, ease: 'backOut' }}
+              className="text-center">
+              {/* Animated badge */}
+              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, duration: 0.5, type: 'spring', bounce: 0.5 }}
+                className="w-28 h-28 rounded-3xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center mx-auto mb-6 shadow-2xl">
+                <Icons.BadgeCheck size={52} className="text-white" />
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+                <div className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full mb-4">
+                  <Icons.Check size={12} /> Vendeur certifié PASMAL
+                </div>
+                <h2 className="text-2xl font-extrabold text-[#0B1F3A] mb-3">Félicitations, votre badge est actif !</h2>
+                <p className="text-slate-500 mb-8 max-w-sm mx-auto">Votre identité a été vérifiée. Le badge certifié apparaît désormais sur toutes vos annonces et votre profil.</p>
+
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-4 mb-8">
+                  {[
+                    { val: '3×', label: 'Plus de contacts' },
+                    { val: 'Top', label: 'Dans les résultats' },
+                    { val: '48h', label: 'Délai moyen' },
+                  ].map((s, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 + i * 0.1 }}
+                      className="bg-white rounded-2xl border border-slate-100 shadow-soft py-4">
+                      <div className="text-xl font-extrabold text-orange-500">{s.val}</div>
+                      <div className="text-xs text-slate-400 mt-0.5">{s.label}</div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Badge preview */}
+                <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5 mb-8 text-left">
+                  <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Aperçu sur vos annonces</div>
+                  <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <div className="w-10 h-10 rounded-xl bg-orange-500 text-white font-extrabold flex items-center justify-center text-sm">
+                      {user?.user_metadata?.full_name?.[0]?.toUpperCase() || 'U'}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-semibold text-sm text-[#0B1F3A] truncate">{user?.user_metadata?.full_name || 'Vendeur particulier'}</div>
+                      <div className="flex items-center gap-1 mt-0.5">
+                        <Icons.BadgeCheck size={11} className="text-emerald-500" />
+                        <span className="text-[11px] text-emerald-600 font-semibold">Certifié PASMAL</span>
+                      </div>
+                    </div>
+                    <div className="text-[10px] font-bold text-emerald-600 bg-emerald-100 px-2 py-1 rounded-full">Vérifié</div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button onClick={() => setCurrentView('publier')}
+                    className="flex-1 py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-xl flex items-center justify-center gap-2">
+                    <Icons.PlusSquare size={18} /> Publier une annonce
+                  </button>
+                  <button onClick={() => setCurrentView('profil')}
+                    className="flex-1 py-4 bg-white border border-slate-200 hover:border-slate-300 text-[#0B1F3A] font-semibold rounded-2xl transition-all flex items-center justify-center gap-2">
+                    <Icons.User size={16} /> Voir mon profil
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+
+        </AnimatePresence>
       </div>
     </div>
   )
@@ -7396,15 +8324,58 @@ const ADMIN_TONE = {
    Agences — constants + view
    ============================================================================ */
 const AGENCIES_MOCK = [
-  { id: 'barnes-paris',      name: 'BARNES Paris',         city: 'Paris',     region: 'Île-de-France',       logo: 'BA', color: '#0B1F3A', certified: 'trust',   rating: 4.9, reviews: 284, listings: 142, since: 2018, specialties: ['Luxe', 'Achat', 'Investissement'], desc: "Référence du marché parisien de prestige. Appartements haussmanniens, lofts de caractère, penthouses et propriétés d'exception." },
-  { id: 'foncia-lyon',       name: 'FONCIA Lyon',          city: 'Lyon',      region: 'Auvergne-Rhône-Alpes',logo: 'FO', color: '#1D4ED8', certified: 'partner', rating: 4.5, reviews: 412, listings: 89,  since: 2019, specialties: ['Location', 'Gestion'],              desc: "Leader de la gestion locative à Lyon. Accompagnement propriétaires et locataires, syndic de copropriété." },
-  { id: 'orpi-bordeaux',     name: 'ORPI Bordeaux',        city: 'Bordeaux',  region: 'Nouvelle-Aquitaine',  logo: 'OR', color: '#7C3AED', certified: 'partner', rating: 4.7, reviews: 198, listings: 67,  since: 2020, specialties: ['Achat', 'Vente'],                   desc: "Réseau coopératif implanté au cœur de Bordeaux. Spécialiste des biens anciens, pierres et chartrons bordelais." },
-  { id: 'century21-nice',    name: 'Century 21 Nice',      city: 'Nice',      region: 'PACA',                logo: 'C2', color: '#0F766E', certified: 'trust',   rating: 4.8, reviews: 321, listings: 98,  since: 2017, specialties: ['Luxe', 'Achat', 'Location'],        desc: "Spécialiste niçois de l'immobilier haut de gamme. Appartements vue mer, villas Riviera, propriétés d'exception." },
-  { id: 'guy-hoquet',        name: 'Guy Hoquet Marseille', city: 'Marseille', region: 'PACA',                logo: 'GH', color: '#B45309', certified: 'none',    rating: 4.3, reviews: 156, listings: 54,  since: 2021, specialties: ['Achat', 'Location', 'Neuf'],        desc: "Acteur majeur du marché marseillais, du studio hypercentre aux villas des quartiers résidentiels." },
-  { id: 'laforet-nantes',    name: 'Laforêt Nantes',       city: 'Nantes',    region: 'Pays de la Loire',    logo: 'LF', color: '#047857', certified: 'partner', rating: 4.6, reviews: 134, listings: 45,  since: 2020, specialties: ['Achat', 'Investissement'],           desc: "Cabinet fondé il y a 15 ans, spécialiste du premier achat et de l'investissement locatif nantais." },
-  { id: 'nexity-paris',      name: 'Nexity Paris',         city: 'Paris',     region: 'Île-de-France',       logo: 'NX', color: '#BE123C', certified: 'trust',   rating: 4.4, reviews: 567, listings: 213, since: 2016, specialties: ['Neuf', 'Investissement', 'Gestion'], desc: "Leader national de l'immobilier neuf. Programmes Pinel, LMNP et résidences services en Île-de-France." },
-  { id: 'era-toulouse',      name: 'ERA Toulouse',         city: 'Toulouse',  region: 'Occitanie',           logo: 'ER', color: '#6D28D9', certified: 'partner', rating: 4.5, reviews: 89,  listings: 38,  since: 2022, specialties: ['Achat', 'Location', 'Viager'],      desc: "Référence sur la Ville Rose. Du studio étudiant à la villa avec piscine, en vente comme en location." },
+  { id: 'barnes-paris',   name: 'BARNES Paris',         city: 'Paris',     region: 'Île-de-France',        logo: 'BA', color: '#0B1F3A', certified: 'trust',   rating: 4.9, reviews: 284, listings: 142, since: 2018, responseTime: '1h',  satisfaction: 98, score: 97, specialties: ['Luxe', 'Achat', 'Investissement'], desc: "Référence du marché parisien de prestige. Appartements haussmanniens, lofts de caractère, penthouses et propriétés d'exception.", imgId: 'photo-1502672260266-1c1ef2d93688' },
+  { id: 'foncia-lyon',    name: 'FONCIA Lyon',          city: 'Lyon',      region: 'Auvergne-Rhône-Alpes', logo: 'FO', color: '#1D4ED8', certified: 'partner', rating: 4.5, reviews: 412, listings: 89,  since: 2019, responseTime: '3h',  satisfaction: 91, score: 84, specialties: ['Location', 'Gestion'],              desc: "Leader de la gestion locative à Lyon. Accompagnement propriétaires et locataires, syndic de copropriété.",                   imgId: 'photo-1522708323590-d24dbb6b0267' },
+  { id: 'orpi-bordeaux',  name: 'ORPI Bordeaux',        city: 'Bordeaux',  region: 'Nouvelle-Aquitaine',   logo: 'OR', color: '#7C3AED', certified: 'partner', rating: 4.7, reviews: 198, listings: 67,  since: 2020, responseTime: '2h',  satisfaction: 95, score: 91, specialties: ['Achat', 'Vente'],                   desc: "Réseau coopératif implanté au cœur de Bordeaux. Spécialiste des biens anciens, pierres et chartrons bordelais.",            imgId: 'photo-1600585154340-be6161a56a0c' },
+  { id: 'century21-nice', name: 'Century 21 Nice',      city: 'Nice',      region: 'PACA',                 logo: 'C2', color: '#0F766E', certified: 'trust',   rating: 4.8, reviews: 321, listings: 98,  since: 2017, responseTime: '2h',  satisfaction: 96, score: 94, specialties: ['Luxe', 'Achat', 'Location'],        desc: "Spécialiste niçois de l'immobilier haut de gamme. Appartements vue mer, villas Riviera, propriétés d'exception.",           imgId: 'photo-1493809842364-78817add7ffb' },
+  { id: 'guy-hoquet',     name: 'Guy Hoquet Marseille', city: 'Marseille', region: 'PACA',                 logo: 'GH', color: '#B45309', certified: 'none',    rating: 4.3, reviews: 156, listings: 54,  since: 2021, responseTime: '6h',  satisfaction: 86, score: 73, specialties: ['Achat', 'Location', 'Neuf'],        desc: "Acteur majeur du marché marseillais, du studio hypercentre aux villas des quartiers résidentiels.",                          imgId: 'photo-1560448204-e02f11c3d0e2' },
+  { id: 'laforet-nantes', name: 'Laforêt Nantes',       city: 'Nantes',    region: 'Pays de la Loire',     logo: 'LF', color: '#047857', certified: 'partner', rating: 4.6, reviews: 134, listings: 45,  since: 2020, responseTime: '4h',  satisfaction: 92, score: 87, specialties: ['Achat', 'Investissement'],           desc: "Cabinet fondé il y a 15 ans, spécialiste du premier achat et de l'investissement locatif nantais.",                         imgId: 'photo-1484154218962-a197022b5858' },
+  { id: 'nexity-paris',   name: 'Nexity Paris',         city: 'Paris',     region: 'Île-de-France',        logo: 'NX', color: '#BE123C', certified: 'trust',   rating: 4.4, reviews: 567, listings: 213, since: 2016, responseTime: '2h',  satisfaction: 89, score: 88, specialties: ['Neuf', 'Investissement', 'Gestion'], desc: "Leader national de l'immobilier neuf. Programmes Pinel, LMNP et résidences services en Île-de-France.",                     imgId: 'photo-1556909114-f6e7ad7d3136' },
+  { id: 'era-toulouse',   name: 'ERA Toulouse',         city: 'Toulouse',  region: 'Occitanie',            logo: 'ER', color: '#6D28D9', certified: 'partner', rating: 4.5, reviews: 89,  listings: 38,  since: 2022, responseTime: '5h',  satisfaction: 90, score: 80, specialties: ['Achat', 'Location', 'Viager'],      desc: "Référence sur la Ville Rose. Du studio étudiant à la villa avec piscine, en vente comme en location.",                       imgId: 'photo-1564013799919-ab600027ffc6' },
 ]
+
+const AGENCY_REVIEWS_MAP = {
+  'barnes-paris':   [
+    { author: 'Marie T.',       rating: 5, date: 'Mars 2026',  text: 'Équipe très professionnelle, transaction rapide et sans accroc. Je recommande vivement !' },
+    { author: 'Jean-Paul R.',   rating: 5, date: 'Fév. 2026',  text: 'Excellent suivi, disponibles à toute heure. Mon appartement vendu en 3 semaines.' },
+    { author: 'Isabelle M.',    rating: 4, date: 'Jan. 2026',  text: 'Très bonne agence pour le marché parisien de luxe. Quelques délais de réponse à améliorer.' },
+  ],
+  'foncia-lyon':    [
+    { author: 'Thomas B.',      rating: 5, date: 'Avr. 2026',  text: 'Gestion locative impeccable depuis 3 ans. Jamais eu de souci.' },
+    { author: 'Sophie L.',      rating: 4, date: 'Mars 2026',  text: 'Réactifs et compétents. Légèrement cher mais le service le vaut.' },
+    { author: 'Marc D.',        rating: 4, date: 'Fév. 2026',  text: 'Bonne agence, dossier traité rapidement.' },
+  ],
+  'orpi-bordeaux':  [
+    { author: 'Claire V.',      rating: 5, date: 'Avr. 2026',  text: 'Achat de notre maison bordelaise géré avec professionnalisme. Merci !' },
+    { author: 'Pierre N.',      rating: 5, date: 'Mars 2026',  text: 'Excellent conseil pour notre premier achat. On se sentait accompagnés.' },
+    { author: 'Aurélie P.',     rating: 4, date: 'Jan. 2026',  text: 'Très bonne expérience, bien à l\'écoute de notre projet.' },
+  ],
+  'century21-nice': [
+    { author: 'Hélène R.',      rating: 5, date: 'Avr. 2026',  text: 'Villa trouvée en moins d\'un mois. Service haut de gamme à tous les niveaux.' },
+    { author: 'Laurent C.',     rating: 5, date: 'Mars 2026',  text: 'Connaissance parfaite du marché niçois. Conseillers très disponibles.' },
+    { author: 'Nathalie B.',    rating: 5, date: 'Fév. 2026',  text: 'Prestation irréprochable, résultat au-delà de nos attentes.' },
+  ],
+  'guy-hoquet':     [
+    { author: 'David K.',       rating: 4, date: 'Mars 2026',  text: 'Bon accompagnement dans l\'ensemble. Quelques délais un peu longs.' },
+    { author: 'Sandra F.',      rating: 4, date: 'Fév. 2026',  text: 'Équipe sympathique et professionnelle. Je recommande.' },
+    { author: 'Éric M.',        rating: 3, date: 'Jan. 2026',  text: 'Service correct, mais j\'ai dû relancer plusieurs fois.' },
+  ],
+  'laforet-nantes': [
+    { author: 'Céline G.',      rating: 5, date: 'Mars 2026',  text: 'Premier achat réalisé sereinement grâce à l\'équipe Laforêt. Super expérience !' },
+    { author: 'François A.',    rating: 5, date: 'Fév. 2026',  text: 'Très à l\'écoute, ils ont trouvé exactement ce que je cherchais.' },
+    { author: 'Julie T.',       rating: 4, date: 'Jan. 2026',  text: 'Bonne agence, rapport qualité-prix satisfaisant.' },
+  ],
+  'nexity-paris':   [
+    { author: 'Alain B.',       rating: 5, date: 'Avr. 2026',  text: 'Investissement Pinel géré de A à Z. Très professionnel.' },
+    { author: 'Camille P.',     rating: 4, date: 'Mars 2026',  text: 'Programme neuf livré en temps et en heure. Bon suivi.' },
+    { author: 'Bruno L.',       rating: 4, date: 'Fév. 2026',  text: 'Bonne expérience avec le service Nexity Paris.' },
+  ],
+  'era-toulouse':   [
+    { author: 'Manon S.',       rating: 5, date: 'Mars 2026',  text: 'Vente de notre maison conclue en 5 semaines. Super équipe !' },
+    { author: 'Julien M.',      rating: 4, date: 'Fév. 2026',  text: 'Bon conseil, agence sérieuse et disponible.' },
+    { author: 'Christine B.',   rating: 5, date: 'Jan. 2026',  text: 'Très satisfaite, viager bien expliqué et bien géré.' },
+  ],
+}
 
 const AGENCY_CERT = {
   trust:   { label: 'PASMAL Trust', bg: 'bg-orange-100', text: 'text-orange-600' },
@@ -7437,6 +8408,8 @@ function StarRow({ rating }) {
 function AgencesView() {
   const [search,    setSearch]    = useState('')
   const [filter,    setFilter]    = useState('Toutes')
+  const [sortBy,    setSortBy]    = useState('score')
+  const [viewMode,  setViewMode]  = useState('grid')
   const [selected,  setSelected]  = useState(null)
   const [contacted, setContacted] = useState(false)
   const [msgName,   setMsgName]   = useState('')
@@ -7444,14 +8417,20 @@ function AgencesView() {
   const [msgText,   setMsgText]   = useState('')
 
   const filtered = useMemo(() => {
-    return AGENCIES_MOCK.filter(a => {
+    const list = AGENCIES_MOCK.filter(a => {
       const matchSearch = search.trim() === '' ||
         a.name.toLowerCase().includes(search.toLowerCase()) ||
         a.city.toLowerCase().includes(search.toLowerCase())
       const matchFilter = filter === 'Toutes' || a.specialties.includes(filter)
       return matchSearch && matchFilter
     })
-  }, [search, filter])
+    if (sortBy === 'rating')   list.sort((a, b) => b.rating   - a.rating)
+    if (sortBy === 'listings') list.sort((a, b) => b.listings - a.listings)
+    if (sortBy === 'reviews')  list.sort((a, b) => b.reviews  - a.reviews)
+    if (sortBy === 'score')    list.sort((a, b) => b.score    - a.score)
+    if (sortBy === 'response') list.sort((a, b) => parseInt(a.responseTime) - parseInt(b.responseTime))
+    return list
+  }, [search, filter, sortBy])
 
   const handleContact = (e) => { e.preventDefault(); setContacted(true) }
 
@@ -7492,30 +8471,55 @@ function AgencesView() {
 
       {/* ── Search + filters ─────────────────────────── */}
       <div className="bg-white border-b border-slate-100 shadow-sm sticky top-20 z-30">
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-4 flex flex-col sm:flex-row items-center gap-4">
-          <div className="relative flex-1 w-full max-w-md">
-            <Icons.Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              value={search} onChange={e => setSearch(e.target.value)}
-              placeholder="Rechercher une agence ou une ville…"
-              className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-orange-400 transition"
-            />
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-4 space-y-3">
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <div className="relative flex-1 w-full">
+              <Icons.Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input value={search} onChange={e => setSearch(e.target.value)}
+                placeholder="Rechercher une agence ou une ville…"
+                className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-orange-400 transition" />
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <select value={sortBy} onChange={e => setSortBy(e.target.value)}
+                className="h-10 pl-3 pr-8 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:border-orange-400 appearance-none cursor-pointer">
+                <option value="score">Score PASMAL</option>
+                <option value="rating">Note clients</option>
+                <option value="listings">Annonces actives</option>
+                <option value="reviews">Nombre d'avis</option>
+                <option value="response">Temps de réponse</option>
+              </select>
+              <div className="flex items-center gap-0.5 p-1 bg-slate-50 border border-slate-200 rounded-xl">
+                {[
+                  { id: 'grid', icon: <><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></> },
+                  { id: 'list', icon: <><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></> },
+                ].map(v => (
+                  <button key={v.id} onClick={() => setViewMode(v.id)}
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center transition ${viewMode === v.id ? 'bg-[#0B1F3A] text-white' : 'text-slate-400 hover:text-slate-600'}`}>
+                    <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">{v.icon}</svg>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
           <div className="flex gap-1.5 flex-wrap">
             {AGENCY_FILTERS.map(f => (
               <button key={f} onClick={() => setFilter(f)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
                   filter === f ? 'bg-orange-500 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}>
-                {f}
-              </button>
+                }`}>{f}</button>
             ))}
           </div>
         </div>
       </div>
 
-      {/* ── Agency grid ──────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 py-12">
+      {/* ── Agency results ───────────────────────────── */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 py-10">
+        {/* Count */}
+        <div className="flex items-center gap-2 mb-6">
+          <span className="text-lg font-extrabold text-[#0B1F3A]">{filtered.length}</span>
+          <span className="text-sm text-slate-500">agence{filtered.length !== 1 ? 's' : ''} trouvée{filtered.length !== 1 ? 's' : ''}</span>
+        </div>
+
         {filtered.length === 0 ? (
           <div className="bg-white rounded-3xl p-16 text-center shadow-soft">
             <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
@@ -7524,61 +8528,116 @@ function AgencesView() {
             <p className="text-[#0B1F3A] font-semibold">Aucune agence trouvée</p>
             <p className="text-slate-400 text-sm mt-1">Essayez un autre filtre ou une autre ville.</p>
           </div>
-        ) : (
+        ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {filtered.map((agency, i) => {
               const cert = AGENCY_CERT[agency.certified]
               return (
-                <motion.div key={agency.id}
-                  initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
+                <motion.div key={agency.id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
                   onClick={() => setSelected(agency)}
-                  className="group bg-white rounded-3xl border border-slate-100 shadow-soft hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer overflow-hidden"
-                >
-                  {/* Top band */}
+                  className="group bg-white rounded-3xl border border-slate-100 shadow-soft hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer overflow-hidden">
                   <div className="h-2" style={{ background: agency.color }} />
-
                   <div className="p-5">
-                    {/* Logo + cert badge */}
                     <div className="flex items-start justify-between mb-4">
-                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-sm font-extrabold shadow-sm"
-                        style={{ background: agency.color }}>
+                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-sm font-extrabold shadow-sm" style={{ background: agency.color }}>
                         {agency.logo}
                       </div>
-                      {cert && (
-                        <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${cert.bg} ${cert.text}`}>
-                          {cert.label}
-                        </span>
-                      )}
+                      {cert && <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${cert.bg} ${cert.text}`}>{cert.label}</span>}
                     </div>
-
-                    {/* Name + city */}
                     <div className="font-extrabold text-[#0B1F3A] text-base mb-0.5 group-hover:text-orange-600 transition-colors">{agency.name}</div>
                     <div className="text-xs text-slate-500 flex items-center gap-1 mb-3">
                       <Icons.MapPin size={11} className="text-orange-500" /> {agency.city}
                     </div>
-
-                    {/* Specialties */}
-                    <div className="flex flex-wrap gap-1 mb-4">
+                    <div className="flex flex-wrap gap-1 mb-3">
                       {agency.specialties.map(s => (
                         <span key={s} className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">{s}</span>
                       ))}
                     </div>
-
-                    {/* Rating + stats */}
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-1.5">
                         <StarRow rating={agency.rating} />
                         <span className="text-xs font-bold text-[#0B1F3A]">{agency.rating}</span>
                         <span className="text-xs text-slate-400">({agency.reviews})</span>
                       </div>
-                      <span className="text-xs text-slate-500 font-medium">{agency.listings} annonces</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-[11px] text-slate-500 mb-3">
+                      <span className="flex items-center gap-1"><Icons.Mail size={10} className="text-orange-500" /> Rép. {agency.responseTime}</span>
+                      <span className="flex items-center gap-1"><Icons.Check size={10} className="text-emerald-500" /> {agency.satisfaction}% satisf.</span>
+                    </div>
+                    {/* Score bar */}
+                    <div className="mb-1 flex items-center justify-between">
+                      <span className="text-[10px] text-slate-400 font-semibold">Score PASMAL</span>
+                      <span className="text-[11px] font-extrabold text-orange-600">{agency.score}/100</span>
+                    </div>
+                    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                      <motion.div initial={{ width: 0 }} whileInView={{ width: `${agency.score}%` }} viewport={{ once: true }} transition={{ duration: 0.9, delay: i * 0.05, ease: 'easeOut' }}
+                        className="h-full rounded-full" style={{ background: `linear-gradient(90deg, ${agency.color}, #f97316)` }} />
                     </div>
                   </div>
-
                   <div className="px-5 pb-4">
                     <div className="w-full py-2 rounded-xl text-xs font-semibold text-orange-600 bg-orange-50 group-hover:bg-orange-500 group-hover:text-white transition-all text-center">
                       Voir le profil →
+                    </div>
+                  </div>
+                </motion.div>
+              )
+            })}
+          </div>
+        ) : (
+          /* List view */
+          <div className="space-y-4">
+            {filtered.map((agency, i) => {
+              const cert = AGENCY_CERT[agency.certified]
+              return (
+                <motion.div key={agency.id} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}
+                  onClick={() => setSelected(agency)}
+                  className="group bg-white rounded-3xl border border-slate-100 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all cursor-pointer overflow-hidden flex">
+                  {/* Color strip */}
+                  <div className="w-1.5 shrink-0 rounded-l-3xl" style={{ background: agency.color }} />
+                  {/* Listing photo */}
+                  <div className="w-32 sm:w-44 shrink-0 overflow-hidden">
+                    <img src={unsplash(agency.imgId, 320)} alt={agency.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  </div>
+                  <div className="flex-1 p-5 flex flex-col justify-between min-w-0">
+                    <div>
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <div className="flex items-center gap-2 flex-wrap min-w-0">
+                          <span className="font-extrabold text-[#0B1F3A] text-base group-hover:text-orange-600 transition-colors truncate">{agency.name}</span>
+                          {cert && <span className={`shrink-0 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${cert.bg} ${cert.text}`}>{cert.label}</span>}
+                        </div>
+                        <div className="shrink-0 text-right">
+                          <div className="text-lg font-extrabold text-orange-600">{agency.score}</div>
+                          <div className="text-[10px] text-slate-400">/ 100</div>
+                        </div>
+                      </div>
+                      <div className="text-xs text-slate-500 flex items-center gap-1 mb-2">
+                        <Icons.MapPin size={11} className="text-orange-500" /> {agency.city} · {agency.region}
+                      </div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <StarRow rating={agency.rating} />
+                        <span className="text-xs font-bold text-[#0B1F3A]">{agency.rating}</span>
+                        <span className="text-xs text-slate-400">({agency.reviews} avis)</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1 mb-2">
+                        {agency.specialties.map(s => (
+                          <span key={s} className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">{s}</span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 mt-1 flex-wrap">
+                      <span className="text-xs text-slate-500 flex items-center gap-1"><Icons.Building size={11} /> {agency.listings} annonces</span>
+                      <span className="text-xs text-slate-500 flex items-center gap-1"><Icons.Mail size={11} className="text-orange-500" /> Rép. {agency.responseTime}</span>
+                      <span className="text-xs text-slate-500 flex items-center gap-1"><Icons.Check size={11} className="text-emerald-500" /> {agency.satisfaction}% satisf.</span>
+                      <div className="ml-auto flex gap-2 shrink-0">
+                        <button onClick={e => { e.stopPropagation(); setSelected(agency); }}
+                          className="text-xs font-semibold px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-xl transition">
+                          Contacter
+                        </button>
+                        <button onClick={e => { e.stopPropagation(); setSelected(agency); }}
+                          className="text-xs font-semibold px-3 py-1.5 border border-slate-200 hover:border-orange-400 text-slate-600 hover:text-orange-600 rounded-xl transition">
+                          Voir annonces →
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -7670,12 +8729,34 @@ function AgencesView() {
                   </div>
                 </div>
 
+                {/* Score de performance */}
+                <div className="bg-gradient-to-r from-[#0B1F3A] to-[#162E52] rounded-2xl p-4 mb-5 flex items-center gap-4">
+                  <div className="relative w-16 h-16 shrink-0">
+                    <svg viewBox="0 0 36 36" className="w-16 h-16 -rotate-90">
+                      <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="3" />
+                      <motion.circle cx="18" cy="18" r="15" fill="none" stroke="#f97316" strokeWidth="3"
+                        strokeDasharray={`${(selected.score / 100) * 94.2} 94.2`} strokeLinecap="round"
+                        initial={{ strokeDasharray: '0 94.2' }}
+                        animate={{ strokeDasharray: `${(selected.score / 100) * 94.2} 94.2` }}
+                        transition={{ duration: 1, ease: 'easeOut' }} />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-white font-extrabold text-sm">{selected.score}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-white font-extrabold text-sm mb-0.5">Score PASMAL</div>
+                    <div className="text-white/60 text-xs">Sur 100 — basé sur la réactivité, les avis et les performances.</div>
+                  </div>
+                </div>
+
                 {/* Stats strip */}
-                <div className="grid grid-cols-3 gap-3 mb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                   {[
-                    { label: 'Annonces actives', value: selected.listings },
+                    { label: 'Annonces actives',  value: selected.listings },
                     { label: 'Sur PASMAL depuis', value: selected.since },
-                    { label: 'Avis clients', value: selected.reviews },
+                    { label: 'Temps de réponse',  value: selected.responseTime },
+                    { label: 'Satisfaction',       value: `${selected.satisfaction}%` },
                   ].map(s => (
                     <div key={s.label} className="bg-slate-50 rounded-2xl p-4 text-center border border-slate-100">
                       <div className="text-xl font-extrabold text-[#0B1F3A]">{s.value}</div>
@@ -7709,6 +8790,42 @@ function AgencesView() {
                     ))}
                   </div>
                 </div>
+
+                {/* Avis clients */}
+                {(() => {
+                  const revs = AGENCY_REVIEWS_MAP[selected.id] || []
+                  return revs.length > 0 && (
+                    <div className="mb-6">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="text-sm font-bold text-[#0B1F3A]">Avis clients</div>
+                        <div className="flex items-center gap-1.5">
+                          <StarRow rating={selected.rating} />
+                          <span className="text-sm font-bold text-[#0B1F3A]">{selected.rating}</span>
+                          <span className="text-xs text-slate-400">({selected.reviews} avis)</span>
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        {revs.map((r, ri) => (
+                          <div key={ri} className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                <div className="w-7 h-7 rounded-full bg-orange-100 flex items-center justify-center text-xs font-extrabold text-orange-600">
+                                  {r.author[0]}
+                                </div>
+                                <span className="text-sm font-semibold text-[#0B1F3A]">{r.author}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <StarRow rating={r.rating} />
+                                <span className="text-[11px] text-slate-400">{r.date}</span>
+                              </div>
+                            </div>
+                            <p className="text-sm text-slate-600 leading-relaxed">"{r.text}"</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                })()}
 
                 {/* Contact form */}
                 <div className="bg-slate-50 rounded-2xl border border-slate-100 p-5">
@@ -7758,7 +8875,7 @@ const MOCK_CONVERSATIONS = [
   {
     id: 'c1',
     contact: { name: 'BARNES Paris', initials: 'BA', color: '#0B1F3A', isAgency: true },
-    listing: { title: 'T3 lumineux Bastille', ref: 'PSM-2441', img: unsplash('photo-1502672260266-1c1ef2d93688', 120) },
+    listing: { title: 'T3 lumineux Bastille', ref: 'PSM-2441', img: unsplash('photo-1502672260266-1c1ef2d93688', 120), price: 580000, surface: 72, rooms: 3, city: 'Paris 11e', dpe: 'C' },
     unread: 2,
     messages: [
       { id: 'm1', from: 'them', text: 'Bonjour, merci pour votre intérêt pour notre bien au Bastille. Comment puis-je vous aider ?', time: '09:14', date: '24 mai' },
@@ -7771,7 +8888,7 @@ const MOCK_CONVERSATIONS = [
   {
     id: 'c2',
     contact: { name: 'FONCIA Lyon', initials: 'FO', color: '#1D4ED8', isAgency: true },
-    listing: { title: 'Studio meublé Croix-Rousse', ref: 'PSM-2389', img: unsplash('photo-1522708323590-d24dbb6b0267', 120) },
+    listing: { title: 'Studio meublé Croix-Rousse', ref: 'PSM-2389', img: unsplash('photo-1522708323590-d24dbb6b0267', 120), price: 950, surface: 28, rooms: 1, city: 'Lyon 4e', dpe: 'B', isLocation: true },
     unread: 0,
     messages: [
       { id: 'm1', from: 'me', text: 'Bonjour, le studio est-il encore disponible pour une entrée en septembre ?', time: '15:30', date: '22 mai' },
@@ -7783,7 +8900,7 @@ const MOCK_CONVERSATIONS = [
   {
     id: 'c3',
     contact: { name: 'Thomas M.', initials: 'TM', color: '#7C3AED', isAgency: false },
-    listing: { title: 'Maison Bordeaux 115 m²', ref: 'PSM-2201', img: unsplash('photo-1600585154340-be6161a56a0c', 120) },
+    listing: { title: 'Maison Bordeaux 115 m²', ref: 'PSM-2201', img: unsplash('photo-1600585154340-be6161a56a0c', 120), price: 412000, surface: 115, rooms: 5, city: 'Bordeaux', dpe: 'D' },
     unread: 1,
     messages: [
       { id: 'm1', from: 'me', text: "Bonjour, je suis vendeur pour la maison de Bordeaux. Avez-vous des questions ?", time: '14:00', date: '25 mai' },
@@ -7794,7 +8911,7 @@ const MOCK_CONVERSATIONS = [
   {
     id: 'c4',
     contact: { name: 'Nexity Paris', initials: 'NX', color: '#BE123C', isAgency: true },
-    listing: { title: 'Appartement haussmannien 98 m²', ref: 'PSM-1840', img: unsplash('photo-1560448204-e02f11c3d0e2', 120) },
+    listing: { title: 'Appartement haussmannien 98 m²', ref: 'PSM-1840', img: unsplash('photo-1560448204-e02f11c3d0e2', 120), price: 1150000, surface: 98, rooms: 4, city: 'Paris 8e', dpe: 'E' },
     unread: 0,
     messages: [
       { id: 'm1', from: 'me', text: 'Bonjour, pouvez-vous me transmettre les diagnostics immobiliers du bien ?', time: '10:15', date: '20 mai' },
@@ -7806,7 +8923,7 @@ const MOCK_CONVERSATIONS = [
   {
     id: 'c5',
     contact: { name: 'Laforêt Nantes', initials: 'LF', color: '#047857', isAgency: true },
-    listing: { title: 'T2 moderne Île de Nantes', ref: 'PSM-1762', img: unsplash('photo-1493809842364-78817add7ffb', 120) },
+    listing: { title: 'T2 moderne Île de Nantes', ref: 'PSM-1762', img: unsplash('photo-1493809842364-78817add7ffb', 120), price: 245000, surface: 48, rooms: 2, city: 'Nantes', dpe: 'B' },
     unread: 0,
     messages: [
       { id: 'm1', from: 'them', text: 'Bonjour, suite à votre demande de contact — ce T2 est encore disponible et une visite peut être planifiée dès cette semaine.', time: '08:55', date: '18 mai' },
@@ -7814,59 +8931,107 @@ const MOCK_CONVERSATIONS = [
   },
 ]
 
-function MessagesView({ user }) {
-  const [convs,    setConvs]    = useState(MOCK_CONVERSATIONS)
-  const [activeId, setActiveId] = useState('c1')
-  const [input,    setInput]    = useState('')
-  const [search,   setSearch]   = useState('')
-  const [mobileThread, setMobileThread] = useState(false)
-  const endRef = React.useRef(null)
+const AUTO_REPLIES = {
+  c1: ['Je vous confirme samedi à 10h ! À bientôt.', 'Parfait, je note votre visite — à samedi !'],
+  c2: ['Voici les créneaux disponibles : lundi 16h ou mercredi 11h. Lequel vous convient ?', 'Bonne journée !'],
+  c3: ['Je suis ouvert à la discussion. Quel est votre délai de signature ?', 'C\'est noté, je reviens vers vous rapidement.'],
+  c4: ['N\'hésitez pas, je reste disponible pour toute question.', 'Bonne continuation !'],
+  c5: ['Merci pour votre réponse, à bientôt !', 'Avec plaisir.'],
+}
 
-  const active   = convs.find(c => c.id === activeId)
-  const filtered = convs.filter(c =>
+function MessagesView({ user }) {
+  const [convs,        setConvs]        = useState(() => MOCK_CONVERSATIONS.map(c => ({ ...c, archived: false })))
+  const [activeId,     setActiveId]     = useState('c1')
+  const [input,        setInput]        = useState('')
+  const [search,       setSearch]       = useState('')
+  const [filter,       setFilter]       = useState('all')
+  const [mobileThread, setMobileThread] = useState(false)
+  const [infoOpen,     setInfoOpen]     = useState(false)
+  const [showNewMsg,   setShowNewMsg]   = useState(false)
+  const [typing,       setTyping]       = useState(false)
+  const [reactions,    setReactions]    = useState({})
+  const [hoveredMsg,   setHoveredMsg]   = useState(null)
+  const [attachFile,   setAttachFile]   = useState(null)
+  const attachInputRef = useRef(null)
+  const endRef         = useRef(null)
+
+  const active     = convs.find(c => c.id === activeId)
+  const totalUnread = convs.filter(c => !c.archived).reduce((s, c) => s + c.unread, 0)
+
+  const filtered = convs.filter(c => {
+    if (filter === 'archived') return c.archived
+    if (filter === 'unread')   return !c.archived && c.unread > 0
+    return !c.archived
+  }).filter(c =>
     !search ||
     c.contact.name.toLowerCase().includes(search.toLowerCase()) ||
     c.listing.title.toLowerCase().includes(search.toLowerCase())
   )
 
-  const openConv = (id) => {
+  function openConv(id) {
     setActiveId(id)
     setMobileThread(true)
+    setInfoOpen(false)
     setConvs(prev => prev.map(c => c.id === id ? { ...c, unread: 0 } : c))
   }
 
-  const sendMsg = (e) => {
+  function sendMsg(e) {
     e.preventDefault()
     const text = input.trim()
-    if (!text) return
-    const now = new Date()
+    if (!text && !attachFile) return
+    const now  = new Date()
     const time = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
-    setConvs(prev => prev.map(c => c.id === activeId ? {
-      ...c,
-      messages: [...c.messages, { id: `m${Date.now()}`, from: 'me', text, time, date: 'Aujourd\'hui' }]
-    } : c))
-    setInput('')
+    const newMsg = { id: `m${Date.now()}`, from: 'me', text: text || '', time, date: "Aujourd'hui",
+      ...(attachFile ? { attachment: { name: attachFile.name, size: attachFile.size } } : {}) }
+    setConvs(prev => prev.map(c => c.id === activeId ? { ...c, messages: [...c.messages, newMsg] } : c))
+    setInput(''); setAttachFile(null)
+    setTyping(true)
+    const pool = AUTO_REPLIES[activeId] || ['Merci pour votre message !', 'Je reviens vers vous rapidement.']
+    const replyText = pool[Math.floor(Math.random() * pool.length)]
+    setTimeout(() => {
+      setTyping(false)
+      const rt = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+      setConvs(prev => prev.map(c => c.id === activeId
+        ? { ...c, messages: [...c.messages, { id: `m${Date.now()}`, from: 'them', text: replyText, time: rt, date: "Aujourd'hui" }] }
+        : c
+      ))
+    }, 1800)
   }
 
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [active?.messages?.length])
+  function toggleReaction(msgId, emoji) {
+    setReactions(prev => ({ ...prev, [msgId]: prev[msgId] === emoji ? null : emoji }))
+  }
+
+  function archiveConv(id) {
+    setConvs(prev => prev.map(c => c.id === id ? { ...c, archived: true } : c))
+    if (activeId === id) {
+      const next = convs.find(c => c.id !== id && !c.archived)
+      setActiveId(next?.id || null)
+    }
+  }
+
+  function markUnread(id) {
+    setConvs(prev => prev.map(c => c.id === id ? { ...c, unread: 1 } : c))
+  }
+
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [active?.messages?.length, typing])
 
   const lastMsg = (c) => c.messages[c.messages.length - 1]
+  const dpeColors = { A: '#22c55e', B: '#84cc16', C: '#eab308', D: '#f97316', E: '#ef4444', F: '#dc2626', G: '#991b1b' }
 
   return (
     <div className="pt-16 h-screen flex flex-col bg-slate-50">
+
       {/* Page header */}
       <div className="bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           <h1 className="text-xl font-extrabold text-navy-900">Messagerie</h1>
-          {convs.reduce((s,c) => s + c.unread, 0) > 0 && (
-            <span className="bg-orange-500 text-white text-xs font-extrabold w-5 h-5 rounded-full flex items-center justify-center">
-              {convs.reduce((s,c) => s + c.unread, 0)}
-            </span>
+          {totalUnread > 0 && (
+            <span className="bg-orange-500 text-white text-xs font-extrabold w-5 h-5 rounded-full flex items-center justify-center">{totalUnread}</span>
           )}
         </div>
-        <button className="flex items-center gap-1.5 text-sm font-semibold text-orange-600 hover:text-orange-700 transition-colors">
+        <button onClick={() => setShowNewMsg(true)}
+          className="flex items-center gap-1.5 text-sm font-semibold text-orange-600 hover:text-orange-700 transition-colors">
           <svg viewBox="0 0 24 24" style={{ width:16,height:16 }} fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -7883,47 +9048,80 @@ function MessagesView({ user }) {
             <div className="relative">
               <Icons.Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
               <input value={search} onChange={e => setSearch(e.target.value)}
-                placeholder="Rechercher une conversation…"
+                placeholder="Rechercher…"
                 className="w-full pl-8 pr-3 py-2 bg-slate-50 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/30 border border-slate-100" />
             </div>
+          </div>
+
+          {/* Filter tabs */}
+          <div className="flex border-b border-slate-100 shrink-0">
+            {[
+              { id: 'all',      label: 'Tous' },
+              { id: 'unread',   label: 'Non lus', badge: convs.filter(c => !c.archived && c.unread > 0).length },
+              { id: 'archived', label: 'Archivés' },
+            ].map(f => (
+              <button key={f.id} onClick={() => setFilter(f.id)}
+                className={`flex-1 py-2 text-xs font-semibold flex items-center justify-center gap-1 border-b-2 transition-all ${
+                  filter === f.id ? 'border-orange-500 text-orange-600' : 'border-transparent text-slate-400 hover:text-slate-600'
+                }`}>
+                {f.label}
+                {f.badge > 0 && <span className="bg-orange-500 text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center">{f.badge}</span>}
+              </button>
+            ))}
           </div>
 
           {/* List */}
           <div className="flex-1 overflow-y-auto">
             {filtered.length === 0 && (
-              <div className="p-6 text-center text-slate-400 text-sm">Aucune conversation trouvée.</div>
+              <div className="p-6 text-center text-slate-400 text-sm">
+                {filter === 'unread' ? 'Aucun message non lu.' : filter === 'archived' ? 'Aucune conversation archivée.' : 'Aucune conversation trouvée.'}
+              </div>
             )}
             {filtered.map(c => {
               const lm    = lastMsg(c)
               const isAct = c.id === activeId
               return (
-                <button key={c.id} onClick={() => openConv(c.id)}
-                  className={`w-full text-left px-4 py-3.5 border-b border-slate-50 hover:bg-slate-50 transition-colors flex gap-3 items-start ${isAct ? 'bg-orange-50 border-l-2 border-l-orange-500' : ''}`}>
-                  {/* Avatar */}
-                  <div className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white text-xs font-extrabold"
-                    style={{ background: c.contact.color }}>
-                    {c.contact.initials}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between mb-0.5">
-                      <span className={`text-sm truncate ${c.unread > 0 ? 'font-extrabold text-navy-900' : 'font-semibold text-slate-700'}`}>
-                        {c.contact.name}
-                      </span>
-                      <span className="text-[10px] text-slate-400 shrink-0 ml-2">{lm?.date}</span>
+                <div key={c.id} className={`group relative border-b border-slate-50 ${isAct ? 'bg-orange-50 border-l-2 border-l-orange-500' : ''}`}>
+                  <button onClick={() => openConv(c.id)}
+                    className="w-full text-left px-4 py-3.5 hover:bg-slate-50 transition-colors flex gap-3 items-start">
+                    <div className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white text-xs font-extrabold"
+                      style={{ background: c.contact.color }}>
+                      {c.contact.initials}
                     </div>
-                    <div className="text-xs text-slate-400 truncate">{c.listing.ref} · {c.listing.title}</div>
-                    <div className="flex items-center justify-between mt-0.5">
-                      <span className={`text-xs truncate ${c.unread > 0 ? 'text-navy-900 font-medium' : 'text-slate-400'}`}>
-                        {lm?.from === 'me' ? 'Vous : ' : ''}{lm?.text}
-                      </span>
-                      {c.unread > 0 && (
-                        <span className="ml-2 shrink-0 bg-orange-500 text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center">
-                          {c.unread}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between mb-0.5">
+                        <span className={`text-sm truncate ${c.unread > 0 ? 'font-extrabold text-navy-900' : 'font-semibold text-slate-700'}`}>
+                          {c.contact.name}
                         </span>
-                      )}
+                        <span className="text-[10px] text-slate-400 shrink-0 ml-2">{lm?.date}</span>
+                      </div>
+                      <div className="text-xs text-slate-400 truncate">{c.listing.ref} · {c.listing.title}</div>
+                      <div className="flex items-center justify-between mt-0.5">
+                        <span className={`text-xs truncate ${c.unread > 0 ? 'text-navy-900 font-medium' : 'text-slate-400'}`}>
+                          {lm?.from === 'me' ? 'Vous : ' : ''}{lm?.text}
+                        </span>
+                        {c.unread > 0 && (
+                          <span className="ml-2 shrink-0 bg-orange-500 text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center">
+                            {c.unread}
+                          </span>
+                        )}
+                      </div>
                     </div>
+                  </button>
+                  {/* Context actions */}
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 hidden group-hover:flex gap-1">
+                    <button onClick={() => markUnread(c.id)} title="Marquer non lu"
+                      className="w-6 h-6 bg-white border border-slate-200 rounded-lg flex items-center justify-center hover:bg-slate-50 transition shadow-sm">
+                      <Icons.Eye size={10} className="text-slate-400" />
+                    </button>
+                    {!c.archived && (
+                      <button onClick={() => archiveConv(c.id)} title="Archiver"
+                        className="w-6 h-6 bg-white border border-slate-200 rounded-lg flex items-center justify-center hover:bg-slate-50 transition shadow-sm">
+                        <Icons.FileText size={10} className="text-slate-400" />
+                      </button>
+                    )}
                   </div>
-                </button>
+                </div>
               )
             })}
           </div>
@@ -7942,7 +9140,12 @@ function MessagesView({ user }) {
                 {active.contact.initials}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="font-bold text-navy-900 text-sm">{active.contact.name}</div>
+                <div className="font-bold text-navy-900 text-sm flex items-center gap-1.5">
+                  {active.contact.name}
+                  {active.contact.isAgency && (
+                    <span className="text-[9px] font-bold bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded-full">Agence</span>
+                  )}
+                </div>
                 <div className="text-xs text-slate-400 truncate flex items-center gap-1.5">
                   <img src={active.listing.img} alt="" className="w-4 h-4 rounded object-cover inline-block" />
                   {active.listing.ref} · {active.listing.title}
@@ -7952,87 +9155,199 @@ function MessagesView({ user }) {
                 <button className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 flex items-center justify-center transition-colors">
                   <Icons.Phone size={14} className="text-slate-500" />
                 </button>
-                <button className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 flex items-center justify-center transition-colors">
-                  <Icons.Info size={14} className="text-slate-500" />
+                <button onClick={() => setInfoOpen(o => !o)}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${infoOpen ? 'bg-orange-100' : 'bg-slate-50 hover:bg-slate-100'}`}>
+                  <Icons.Info size={14} className={infoOpen ? 'text-orange-600' : 'text-slate-500'} />
                 </button>
               </div>
             </div>
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-5 py-5 space-y-1" style={{ background:'#F8FAFC' }}>
-              {active.messages.map((msg, i) => {
-                const isMe   = msg.from === 'me'
-                const prev   = active.messages[i - 1]
-                const showDate = !prev || prev.date !== msg.date
-                return (
-                  <React.Fragment key={msg.id}>
-                    {showDate && (
-                      <div className="text-center text-[10px] text-slate-400 font-medium py-2">{msg.date}</div>
-                    )}
-                    <div className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                      {!isMe && (
-                        <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[9px] font-extrabold shrink-0 mr-2 mt-0.5 self-end"
-                          style={{ background: active.contact.color }}>
-                          {active.contact.initials}
-                        </div>
+            <div className="flex flex-1 min-h-0">
+              {/* Messages */}
+              <div className="flex-1 overflow-y-auto px-5 py-5 space-y-1" style={{ background:'#F8FAFC' }}>
+                {active.messages.map((msg, i) => {
+                  const isMe     = msg.from === 'me'
+                  const prev     = active.messages[i - 1]
+                  const showDate = !prev || prev.date !== msg.date
+                  const reaction = reactions[msg.id]
+                  return (
+                    <React.Fragment key={msg.id}>
+                      {showDate && (
+                        <div className="text-center text-[10px] text-slate-400 font-medium py-2">{msg.date}</div>
                       )}
-                      <div className={`max-w-xs lg:max-w-sm xl:max-w-md group`}>
-                        <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
-                          isMe
-                            ? 'bg-orange-600 text-white rounded-br-sm'
-                            : 'bg-white text-slate-800 shadow-sm rounded-bl-sm border border-slate-100'
-                        }`}>
-                          {msg.text}
-                        </div>
-                        <div className={`text-[10px] text-slate-400 mt-1 ${isMe ? 'text-right' : 'text-left'}`}>
-                          {msg.time}
-                          {isMe && (
-                            <span className="ml-1 text-slate-300">
-                              <svg viewBox="0 0 24 24" style={{ width:10,height:10,display:'inline' }} fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <div className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}
+                        onMouseEnter={() => setHoveredMsg(msg.id)} onMouseLeave={() => setHoveredMsg(null)}>
+                        {!isMe && (
+                          <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[9px] font-extrabold shrink-0 mr-2 mt-0.5 self-end"
+                            style={{ background: active.contact.color }}>
+                            {active.contact.initials}
+                          </div>
+                        )}
+                        <div className="relative max-w-xs lg:max-w-sm xl:max-w-md">
+                          <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
+                            isMe ? 'bg-orange-600 text-white rounded-br-sm' : 'bg-white text-slate-800 shadow-sm rounded-bl-sm border border-slate-100'
+                          }`}>
+                            {msg.text}
+                            {msg.attachment && (
+                              <div className="mt-2 flex items-center gap-2 bg-white/20 rounded-xl px-3 py-2">
+                                <Icons.FileText size={13} className={isMe ? 'text-white/70' : 'text-slate-400'} />
+                                <span className={`text-xs truncate ${isMe ? 'text-white/90' : 'text-slate-600'}`}>{msg.attachment.name}</span>
+                              </div>
+                            )}
+                          </div>
+                          <div className={`text-[10px] text-slate-400 mt-1 flex items-center gap-1 ${isMe ? 'justify-end' : 'justify-start'}`}>
+                            {msg.time}
+                            {isMe && (
+                              <svg viewBox="0 0 24 24" style={{ width:10,height:10 }} fill="none" stroke="#94a3b8" strokeWidth="2.5">
                                 <path d="M20 6 9 17l-5-5"/>
                               </svg>
-                            </span>
+                            )}
+                          </div>
+                          {/* Emoji reaction */}
+                          {reaction && (
+                            <div className="absolute -bottom-2 right-2 bg-white border border-slate-100 rounded-full px-1.5 text-sm shadow-sm cursor-pointer"
+                              onClick={() => toggleReaction(msg.id, reaction)}>
+                              {reaction}
+                            </div>
+                          )}
+                          {/* Reaction picker on hover */}
+                          {hoveredMsg === msg.id && !reaction && (
+                            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                              className={`absolute -top-8 ${isMe ? 'right-0' : 'left-0'} bg-white border border-slate-100 rounded-full px-2 py-1 flex gap-1.5 shadow-md z-10`}>
+                              {['👍','❤️','😂','😮','🙏'].map(em => (
+                                <button key={em} onClick={() => toggleReaction(msg.id, em)} className="text-base hover:scale-125 transition-transform">{em}</button>
+                              ))}
+                            </motion.div>
                           )}
                         </div>
                       </div>
+                    </React.Fragment>
+                  )
+                })}
+
+                {/* Typing indicator */}
+                {typing && (
+                  <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="flex items-end gap-2">
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[9px] font-extrabold shrink-0"
+                      style={{ background: active.contact.color }}>
+                      {active.contact.initials}
                     </div>
-                  </React.Fragment>
-                )
-              })}
-              <div ref={endRef} />
+                    <div className="bg-white border border-slate-100 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm flex gap-1 items-center">
+                      {[0,1,2].map(i => (
+                        <motion.span key={i} animate={{ y: [0,-4,0] }} transition={{ repeat: Infinity, duration: 0.8, delay: i * 0.15 }}
+                          className="w-1.5 h-1.5 bg-slate-400 rounded-full block" />
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+
+                <div ref={endRef} />
+              </div>
+
+              {/* ── Info panel ─────────────────────────────── */}
+              <AnimatePresence>
+                {infoOpen && (
+                  <motion.div initial={{ width: 0, opacity: 0 }} animate={{ width: 260, opacity: 1 }} exit={{ width: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="bg-white border-l border-slate-100 overflow-hidden shrink-0 flex flex-col">
+                    <div className="p-4 border-b border-slate-50">
+                      <div className="font-bold text-sm text-[#0B1F3A] mb-0.5">Annonce concernée</div>
+                      <div className="text-xs text-slate-400">{active.listing.ref}</div>
+                    </div>
+                    <div className="overflow-y-auto flex-1">
+                      <img src={active.listing.img.replace('?auto', '?w=520&auto')} alt={active.listing.title}
+                        className="w-full aspect-video object-cover" />
+                      <div className="p-4">
+                        <div className="font-bold text-sm text-[#0B1F3A] mb-1 leading-snug">{active.listing.title}</div>
+                        <div className="text-xs text-slate-500 flex items-center gap-1 mb-3">
+                          <Icons.MapPin size={10} className="text-orange-500" /> {active.listing.city}
+                        </div>
+                        <div className="text-lg font-extrabold text-[#0B1F3A] mb-3">
+                          {(active.listing.price || 0).toLocaleString('fr-FR')} €{active.listing.isLocation ? '/mois' : ''}
+                        </div>
+                        <div className="grid grid-cols-3 gap-2 mb-4">
+                          {[
+                            { icon: Icons.Maximize, val: `${active.listing.surface} m²` },
+                            { icon: Icons.Bed,      val: `${active.listing.rooms} p.` },
+                            { icon: Icons.Building, val: active.listing.dpe || '—' },
+                          ].map((stat, i) => {
+                            const SI = stat.icon
+                            return (
+                              <div key={i} className="bg-slate-50 rounded-xl flex flex-col items-center py-2 gap-0.5">
+                                <SI size={12} className="text-slate-400" />
+                                <span className="text-[11px] font-semibold text-[#0B1F3A]"
+                                  style={i === 2 ? { color: dpeColors[active.listing.dpe] || '#64748b' } : {}}>
+                                  {stat.val}
+                                </span>
+                              </div>
+                            )
+                          })}
+                        </div>
+                        <button className="w-full py-2.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold rounded-xl transition">
+                          Voir l'annonce →
+                        </button>
+                      </div>
+                      {/* Shared files placeholder */}
+                      <div className="mx-4 mb-4 p-3 bg-slate-50 rounded-2xl">
+                        <div className="text-xs font-semibold text-slate-500 mb-2">Fichiers partagés</div>
+                        {[{ name: 'Diagnostics DPE.pdf', size: '1.2 Mo' }, { name: 'Plan du bien.pdf', size: '840 Ko' }].map(f => (
+                          <div key={f.name} className="flex items-center gap-2 py-1.5">
+                            <Icons.FileText size={12} className="text-orange-500 shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <div className="text-xs text-[#0B1F3A] truncate">{f.name}</div>
+                              <div className="text-[10px] text-slate-400">{f.size}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Input */}
-            <form onSubmit={sendMsg}
-              className="bg-white border-t border-slate-100 px-4 py-3 flex gap-3 items-end shrink-0">
-              <button type="button" className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 flex items-center justify-center transition-colors shrink-0">
-                <svg viewBox="0 0 24 24" style={{ width:15,height:15 }} fill="none" stroke="#64748B" strokeWidth="2">
-                  <rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/>
-                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
-                </svg>
-              </button>
-              <div className="flex-1 relative">
-                <textarea
-                  rows={1}
-                  value={input}
-                  onChange={e => setInput(e.target.value)}
-                  onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(e) } }}
-                  placeholder="Écrivez un message…"
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:border-orange-400 resize-none leading-relaxed"
-                  style={{ maxHeight:120 }}
-                />
-              </div>
-              <button type="submit" disabled={!input.trim()}
-                className="w-9 h-9 bg-orange-600 hover:bg-orange-700 disabled:opacity-40 rounded-full flex items-center justify-center transition-colors shrink-0">
-                <svg viewBox="0 0 24 24" style={{ width:15,height:15 }} fill="none" stroke="white" strokeWidth="2">
-                  <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-                </svg>
-              </button>
-            </form>
+            <div className="bg-white border-t border-slate-100 shrink-0">
+              {attachFile && (
+                <div className="px-4 pt-3 flex items-center gap-2">
+                  <div className="flex items-center gap-2 bg-orange-50 border border-orange-200 rounded-xl px-3 py-1.5">
+                    <Icons.FileText size={12} className="text-orange-600" />
+                    <span className="text-xs text-orange-700 font-medium">{attachFile.name}</span>
+                    <button onClick={() => setAttachFile(null)} className="text-orange-400 hover:text-orange-600 ml-1">
+                      <Icons.X size={11} />
+                    </button>
+                  </div>
+                </div>
+              )}
+              <form onSubmit={sendMsg} className="px-4 py-3 flex gap-3 items-end">
+                <button type="button" onClick={() => attachInputRef.current?.click()}
+                  className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 flex items-center justify-center transition-colors shrink-0">
+                  <svg viewBox="0 0 24 24" style={{ width:15,height:15 }} fill="none" stroke="#64748B" strokeWidth="2">
+                    <rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/>
+                    <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                  </svg>
+                </button>
+                <input ref={attachInputRef} type="file" className="hidden"
+                  onChange={e => setAttachFile(e.target.files?.[0] || null)} />
+                <div className="flex-1 relative">
+                  <textarea rows={1} value={input} onChange={e => setInput(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(e) } }}
+                    placeholder="Écrivez un message…"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:border-orange-400 resize-none leading-relaxed"
+                    style={{ maxHeight: 120 }} />
+                </div>
+                <button type="submit" disabled={!input.trim() && !attachFile}
+                  className="w-9 h-9 bg-orange-600 hover:bg-orange-700 disabled:opacity-40 rounded-full flex items-center justify-center transition-colors shrink-0">
+                  <svg viewBox="0 0 24 24" style={{ width:15,height:15 }} fill="none" stroke="white" strokeWidth="2">
+                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                  </svg>
+                </button>
+              </form>
+            </div>
           </div>
         )}
 
-        {/* Empty state (no active on desktop) */}
+        {/* Empty state */}
         {!active && (
           <div className="hidden md:flex flex-1 items-center justify-center bg-slate-50">
             <div className="text-center">
@@ -8044,6 +9359,49 @@ function MessagesView({ user }) {
           </div>
         )}
       </div>
+
+      {/* ── Nouveau message modal ───────────────────────── */}
+      <AnimatePresence>
+        {showNewMsg && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+            onClick={() => setShowNewMsg(false)}>
+            <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 20 }}
+              className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden"
+              onClick={e => e.stopPropagation()}>
+              <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
+                <div className="font-bold text-[#0B1F3A]">Nouveau message</div>
+                <button onClick={() => setShowNewMsg(false)} className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition">
+                  <Icons.X size={13} className="text-slate-500" />
+                </button>
+              </div>
+              <div className="p-4 border-b border-slate-50">
+                <div className="relative">
+                  <Icons.Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input placeholder="Rechercher un contact ou une annonce…"
+                    className="w-full pl-8 pr-3 py-2 bg-slate-50 rounded-xl text-sm focus:outline-none border border-slate-100" />
+                </div>
+              </div>
+              <div className="divide-y divide-slate-50 max-h-72 overflow-y-auto">
+                {MOCK_CONVERSATIONS.map(c => (
+                  <button key={c.id} onClick={() => { openConv(c.id); setShowNewMsg(false) }}
+                    className="w-full text-left px-5 py-3.5 hover:bg-slate-50 transition flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-extrabold shrink-0"
+                      style={{ background: c.contact.color }}>
+                      {c.contact.initials}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-semibold text-sm text-[#0B1F3A]">{c.contact.name}</div>
+                      <div className="text-xs text-slate-400 truncate">{c.listing.title}</div>
+                    </div>
+                    <Icons.ChevronRight size={14} className="text-slate-300 shrink-0" />
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
@@ -8243,6 +9601,7 @@ export default function App() {
       const u = session?.user ?? null
       setUser(u)
       fetchRole(u?.id)
+      if (_event === 'SIGNED_UP') setCurrentView('onboarding')
     })
 
     return () => subscription?.unsubscribe?.()
@@ -8266,8 +9625,10 @@ export default function App() {
     }
   }, [user, currentView])
 
-  const openSignIn = () => navigate('/auth/login')
-  const openSignUp = () => navigate('/auth/register')
+  const [authModal, setAuthModal] = useState({ open: false, mode: 'login' })
+  const openSignIn  = () => setAuthModal({ open: true, mode: 'login'    })
+  const openSignUp  = () => setAuthModal({ open: true, mode: 'register' })
+  const closeAuth   = () => setAuthModal(o => ({ ...o, open: false }))
   const handleSignOut = async () => {
     await supabase.auth.signOut().catch(() => {})
     setUser(null)
@@ -8276,7 +9637,7 @@ export default function App() {
   }
   const handlePublish = () => {
     if (!user) {
-      navigate('/auth/register')
+      setAuthModal({ open: true, mode: 'register' })
     } else {
       setCurrentView('publier')
     }
@@ -8368,6 +9729,12 @@ export default function App() {
   const [selectedListing, setSelectedListing] = useState(null)
   const [selectedListingIdx, setSelectedListingIdx] = useState(0)
   const [prevView, setPrevView] = useState('home')
+  const [compareList, setCompareList] = useState([])
+  const handleCompare = (raw) => setCompareList(prev =>
+    prev.find(l => l.id === raw.id)
+      ? prev.filter(l => l.id !== raw.id)
+      : prev.length >= 3 ? prev : [...prev, raw]
+  )
 
   const handleOpenListing = (raw, idx = 0) => {
     setSelectedListing(raw)
@@ -8415,7 +9782,7 @@ export default function App() {
             <Pricing />
             <AgencyPricing />
             <Testimonials />
-            <HomeGuides />
+            <HomeGuides onViewAll={() => setCurrentView('guides')} />
             <TrustGuarantees />
             <CTA onPublish={handlePublish} />
           </>
@@ -8432,6 +9799,17 @@ export default function App() {
             onSearch={handleSearch}
             onBack={() => setCurrentView('home')}
             onSelect={handleOpenListing}
+            onCompare={handleCompare}
+            compareList={compareList}
+          />
+        )}
+
+        {currentView === 'comparer' && (
+          <ComparerView
+            compareList={compareList}
+            setCompareList={setCompareList}
+            onBack={() => setCurrentView(prevView)}
+            onOpenListing={handleOpenListing}
           />
         )}
 
@@ -8500,11 +9878,51 @@ export default function App() {
         )}
 
         {currentView === 'verification' && (
-          <AgencyVerificationView setCurrentView={setCurrentView} />
+          <SellerVerificationView setCurrentView={setCurrentView} user={user} />
+        )}
+
+        {currentView === 'onboarding' && (
+          <OnboardingView user={user} setCurrentView={setCurrentView} setFilters={setFilters} />
+        )}
+
+        {currentView === 'estimation' && (
+          <EstimationView setCurrentView={setCurrentView} user={user} />
+        )}
+
+        {currentView === 'guides' && (
+          <GuidesView setCurrentView={setCurrentView} />
+        )}
+
+        {currentView === 'marche' && (
+          <MarcheView setCurrentView={setCurrentView} />
+        )}
+
+        {currentView === 'simulateur' && (
+          <SimulateurView setCurrentView={setCurrentView} />
+        )}
+
+        {currentView === 'monespace' && (
+          <MonEspaceView setCurrentView={setCurrentView} />
+        )}
+
+        {currentView === 'crm' && (
+          <CrmView setCurrentView={setCurrentView} />
+        )}
+
+        {currentView === 'neuf' && (
+          <NeufView setCurrentView={setCurrentView} />
         )}
 
         {currentView === 'alerts' && (
           <AlertsView user={user} />
+        )}
+
+        {currentView === 'personal-dash' && (
+          <PersonalDashboard onExit={() => setCurrentView('home')} />
+        )}
+
+        {currentView === 'pro-dash' && (
+          <ProfessionalDashboard onExit={() => setCurrentView('home')} />
         )}
       </main>
 
@@ -8514,7 +9932,13 @@ export default function App() {
       <MobileStickyCTA onPublish={handlePublish} visible={currentView !== 'publier'} />
       <MobileBottomNav currentView={currentView} setCurrentView={setCurrentView} onPublish={handlePublish} />
 
-      {/* AuthModal removed — auth is now handled by /auth/login and /auth/register pages */}
+      <AuthModal
+        isOpen={authModal.open}
+        onClose={closeAuth}
+        initialMode={authModal.mode}
+      />
+
+      <CompareBar compareList={compareList} setCompareList={setCompareList} setCurrentView={setCurrentView} />
     </div>
   )
 }
@@ -8553,7 +9977,7 @@ function ResultsSkeleton({ viewMode }) {
   )
 }
 
-function ResultsGrid({ listings, onSelect }) {
+function ResultsGrid({ listings, onSelect, onCompare, compareList = [] }) {
   return (
     <motion.div
       initial="hidden" animate="show"
@@ -8601,6 +10025,15 @@ function ResultsGrid({ listings, onSelect }) {
                 </div>
               </div>
               <div className="text-[11px] text-slate-400 mt-2">{l.agency}</div>
+              {onCompare && (
+                <button
+                  onClick={e => { e.stopPropagation(); onCompare(raw) }}
+                  className={`mt-2.5 w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-[11px] font-semibold border transition-all ${compareList.some(c => c.id === raw.id) ? 'bg-orange-50 border-orange-300 text-orange-600' : 'bg-slate-50 border-slate-200 text-slate-500 hover:border-orange-300 hover:text-orange-600'}`}>
+                  {compareList.some(c => c.id === raw.id)
+                    ? <><Icons.Check size={11} /> Ajouté à la comparaison</>
+                    : <>+ Comparer ce bien</>}
+                </button>
+              )}
             </div>
           </motion.article>
         )
@@ -8609,7 +10042,7 @@ function ResultsGrid({ listings, onSelect }) {
   )
 }
 
-function ResultsList({ listings, onSelect }) {
+function ResultsList({ listings, onSelect, onCompare, compareList = [] }) {
   return (
     <div className="space-y-3">
       {listings.map((raw, idx) => {
@@ -8651,10 +10084,17 @@ function ResultsList({ listings, onSelect }) {
                 <div className="text-[11px] text-slate-400 mt-1">{l.agency}</div>
               </div>
             </div>
-            <div className="flex items-center pr-4">
+            <div className="flex flex-col items-center justify-center gap-2 pr-4">
               <div className="w-9 h-9 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-orange-600 group-hover:text-white transition-all">
                 <Icons.ArrowRight size={15} />
               </div>
+              {onCompare && (
+                <button
+                  onClick={e => { e.stopPropagation(); onCompare(raw) }}
+                  className={`text-[10px] font-semibold px-2 py-1 rounded-lg border transition-all whitespace-nowrap ${compareList.some(c => c.id === raw.id) ? 'bg-orange-50 border-orange-300 text-orange-600' : 'bg-slate-50 border-slate-200 text-slate-400 hover:border-orange-300 hover:text-orange-600'}`}>
+                  {compareList.some(c => c.id === raw.id) ? '✓ Ajouté' : '+ Comparer'}
+                </button>
+              )}
             </div>
           </motion.article>
         )
@@ -8663,7 +10103,7 @@ function ResultsList({ listings, onSelect }) {
   )
 }
 
-function SearchResultsPage({ listings, loading, error, source, filters, setFilters, onSearch, onBack, onSelect }) {
+function SearchResultsPage({ listings, loading, error, source, filters, setFilters, onSearch, onBack, onSelect, onCompare, compareList }) {
   const [sortBy,    setSortBy]    = useState('relevance')
   const [viewMode,  setViewMode]  = useState('grid')
   const [page,      setPage]      = useState(1)
@@ -8672,19 +10112,44 @@ function SearchResultsPage({ listings, loading, error, source, filters, setFilte
   const [fPriceMax, setFPriceMax] = useState('')
   const [fSurface,  setFSurface]  = useState('')
   const [fRooms,    setFRooms]    = useState(0)
-  const [fType,     setFType]     = useState('')
-  const [fDPE,      setFDPE]      = useState([])
+  const [fType,      setFType]      = useState('')
+  const [fDPE,       setFDPE]       = useState([])
+  const [fParking,   setFParking]   = useState(false)
+  const [fElevator,  setFElevator]  = useState(false)
+  const [fCellar,    setFCellar]    = useState(false)
+  const [fFloorMin,  setFFloorMin]  = useState('')
+  const [fNewOnly,   setFNewOnly]   = useState(false)
+  const [animCount,  setAnimCount]  = useState(0)
   const PER_PAGE = 9
   const DPE_COLORS = { A:'#00A651', B:'#51B948', C:'#BECE00', D:'#FECB00', E:'#FB7A08', F:'#EE3424', G:'#C50D13' }
 
   const filtered = useMemo(() => listings.filter(l => {
-    if (fPriceMin && (l.price||0) < Number(fPriceMin)) return false
-    if (fPriceMax && (l.price||0) > Number(fPriceMax)) return false
-    if (fSurface  && (l.surface||0) < Number(fSurface)) return false
-    if (fRooms    && (l.rooms||0) < fRooms)             return false
-    if (fType     && (l.type||'').toLowerCase() !== fType.toLowerCase()) return false
+    if (fPriceMin  && (l.price||0)   < Number(fPriceMin))  return false
+    if (fPriceMax  && (l.price||0)   > Number(fPriceMax))  return false
+    if (fSurface   && (l.surface||0) < Number(fSurface))   return false
+    if (fRooms     && (l.rooms||0)   < fRooms)             return false
+    if (fType      && (l.type||'').toLowerCase() !== fType.toLowerCase()) return false
+    if (fDPE.length > 0 && !fDPE.includes(l.dpe))         return false
+    if (fParking   && !l.parking)   return false
+    if (fElevator  && !l.elevator)  return false
+    if (fCellar    && !l.cellar)    return false
+    if (fFloorMin  && (l.floor||0)  < Number(fFloorMin))   return false
+    if (fNewOnly   && !l.is_new)    return false
     return true
-  }), [listings, fPriceMin, fPriceMax, fSurface, fRooms, fType])
+  }), [listings, fPriceMin, fPriceMax, fSurface, fRooms, fType, fDPE, fParking, fElevator, fCellar, fFloorMin, fNewOnly])
+
+  useEffect(() => {
+    let start = animCount
+    const end = filtered.length
+    if (start === end) return
+    const step = Math.ceil(Math.abs(end - start) / 12)
+    const timer = setInterval(() => {
+      start = start < end ? Math.min(start + step, end) : Math.max(start - step, end)
+      setAnimCount(start)
+      if (start === end) clearInterval(timer)
+    }, 30)
+    return () => clearInterval(timer)
+  }, [filtered.length])
 
   const sorted = useMemo(() => {
     const arr = [...filtered]
@@ -8699,18 +10164,30 @@ function SearchResultsPage({ listings, loading, error, source, filters, setFilte
 
   useEffect(() => setPage(1), [sortBy, fPriceMin, fPriceMax, fSurface, fRooms, fType, fDPE, listings])
 
-  const activeLocalCount = [fPriceMin, fPriceMax, fSurface, fRooms > 0 ? 'x' : '', fType].filter(Boolean).length
-  const resetLocal = () => { setFPriceMin(''); setFPriceMax(''); setFSurface(''); setFRooms(0); setFType(''); setFDPE([]) }
+  const activeLocalCount = [fPriceMin, fPriceMax, fSurface, fRooms > 0 ? 'x' : '', fType, fDPE.length > 0 ? 'x' : '', fParking ? 'x' : '', fElevator ? 'x' : '', fCellar ? 'x' : '', fFloorMin, fNewOnly ? 'x' : ''].filter(Boolean).length
+  const resetLocal = () => { setFPriceMin(''); setFPriceMax(''); setFSurface(''); setFRooms(0); setFType(''); setFDPE([]); setFParking(false); setFElevator(false); setFCellar(false); setFFloorMin(''); setFNewOnly(false) }
 
   const chips = [
-    filters.location     && { key: 'location',    label: filters.location,                                           reset: { location: '' } },
-    filters.propertyType && { key: 'propertyType', label: filters.propertyType,                                       reset: { propertyType: '' } },
-    filters.priceMax     && { key: 'priceMax',     label: `≤ ${Number(filters.priceMax).toLocaleString('fr-FR')} €`, reset: { priceMax: '' } },
-    filters.surfaceMin   && { key: 'surfaceMin',   label: `≥ ${filters.surfaceMin} m²`,                              reset: { surfaceMin: '' } },
-    filters.roomsMin     && { key: 'roomsMin',     label: `${filters.roomsMin}+ pièces`,                             reset: { roomsMin: '' } },
+    filters.location     && { key: 'location',    label: filters.location,                                           type: 'global', reset: { location: '' } },
+    filters.propertyType && { key: 'propertyType', label: filters.propertyType,                                       type: 'global', reset: { propertyType: '' } },
+    filters.priceMax     && { key: 'priceMax',     label: `≤ ${Number(filters.priceMax).toLocaleString('fr-FR')} €`, type: 'global', reset: { priceMax: '' } },
+    filters.surfaceMin   && { key: 'surfaceMin',   label: `≥ ${filters.surfaceMin} m²`,                              type: 'global', reset: { surfaceMin: '' } },
+    filters.roomsMin     && { key: 'roomsMin',     label: `${filters.roomsMin}+ pièces`,                             type: 'global', reset: { roomsMin: '' } },
+    fRooms > 0            && { key: 'fRooms',      label: `${fRooms}+ pièces`,   type: 'local', fn: () => setFRooms(0) },
+    fDPE.length > 0       && { key: 'fDPE',        label: `DPE : ${fDPE.join(',')}`, type: 'local', fn: () => setFDPE([]) },
+    fParking              && { key: 'fParking',    label: 'Parking',             type: 'local', fn: () => setFParking(false) },
+    fElevator             && { key: 'fElevator',   label: 'Ascenseur',           type: 'local', fn: () => setFElevator(false) },
+    fCellar               && { key: 'fCellar',     label: 'Cave',                type: 'local', fn: () => setFCellar(false) },
+    fFloorMin             && { key: 'fFloorMin',   label: `≥ étage ${fFloorMin}`, type: 'local', fn: () => setFFloorMin('') },
+    fNewOnly              && { key: 'fNewOnly',    label: 'Neuf seulement',      type: 'local', fn: () => setFNewOnly(false) },
+    fPriceMin             && { key: 'fPriceMin',   label: `≥ ${Number(fPriceMin).toLocaleString('fr-FR')} €`, type: 'local', fn: () => setFPriceMin('') },
+    (fPriceMax && !filters.priceMax) && { key: 'fPriceMax', label: `≤ ${Number(fPriceMax).toLocaleString('fr-FR')} €`, type: 'local', fn: () => setFPriceMax('') },
   ].filter(Boolean)
 
-  const removeChip = ({ reset }) => { const next = { ...filters, ...reset }; setFilters(next); onSearch(reset) }
+  const removeChip = (chip) => {
+    if (chip.type === 'local') { chip.fn?.() }
+    else { const next = { ...filters, ...chip.reset }; setFilters(next); onSearch(chip.reset) }
+  }
   const resetAll   = () => {
     const next = { ...filters, location: '', propertyType: '', priceMax: '', surfaceMin: '', roomsMin: '' }
     setFilters(next); onSearch(next); resetLocal()
@@ -8790,6 +10267,40 @@ function SearchResultsPage({ listings, loading, error, source, filters, setFilte
               </button>
             )
           })}
+        </div>
+      </div>
+
+      <div>
+        <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2.5">Étage minimum</div>
+        <div className="flex gap-1">
+          {[['', 'Tt'], ['1', '1'], ['2', '2'], ['3', '3+'], ['5', '5+'], ['10', '10+']].map(([v, lbl]) => (
+            <button key={v} onClick={() => setFFloorMin(v)}
+              className={`flex-1 h-8 rounded-xl text-xs font-bold transition-all ${
+                fFloorMin === v ? 'bg-orange-500 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}>{lbl}</button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2.5">Équipements</div>
+        <div className="space-y-2">
+          {[
+            { state: fParking,  setter: setFParking,  label: 'Parking / Garage' },
+            { state: fElevator, setter: setFElevator, label: 'Ascenseur' },
+            { state: fCellar,   setter: setFCellar,   label: 'Cave / Sous-sol' },
+            { state: fNewOnly,  setter: setFNewOnly,  label: 'Programme neuf uniquement' },
+          ].map(({ state, setter, label }) => (
+            <button key={label} onClick={() => setter(s => !s)}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl border text-sm font-medium transition-all ${
+                state ? 'bg-orange-50 border-orange-300 text-orange-700' : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-slate-300'
+              }`}>
+              {label}
+              <div className={`w-9 h-5 rounded-full transition-colors flex items-center px-0.5 ${state ? 'bg-orange-500' : 'bg-slate-200'}`}>
+                <div className={`w-4 h-4 bg-white rounded-full shadow transition-transform ${state ? 'translate-x-4' : ''}`} />
+              </div>
+            </button>
+          ))}
         </div>
       </div>
     </div>
@@ -8907,14 +10418,34 @@ function SearchResultsPage({ listings, loading, error, source, filters, setFilte
               </div>
             </div>
 
+            {/* Quick filter pills */}
+            <div className="flex flex-wrap gap-2 mb-4">
+              {[
+                { label: 'DPE A-B', active: fDPE.includes('A') && fDPE.includes('B'), fn: () => setFDPE(prev => (prev.includes('A') && prev.includes('B')) ? prev.filter(d => d !== 'A' && d !== 'B') : [...new Set([...prev, 'A', 'B'])]) },
+                { label: 'Parking',   active: fParking,  fn: () => setFParking(s => !s) },
+                { label: 'Ascenseur', active: fElevator, fn: () => setFElevator(s => !s) },
+                { label: 'Cave',      active: fCellar,   fn: () => setFCellar(s => !s) },
+                { label: 'Neuf',      active: fNewOnly,  fn: () => setFNewOnly(s => !s) },
+                { label: 'Étage 2+',  active: fFloorMin === '2', fn: () => setFFloorMin(v => v === '2' ? '' : '2') },
+              ].map(({ label, active, fn }) => (
+                <button key={label} onClick={fn}
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                    active ? 'bg-[#0B1F3A] text-white border-[#0B1F3A]' : 'bg-white text-slate-600 border-slate-200 hover:border-orange-400 hover:text-orange-600'
+                  }`}>
+                  {active && <Icons.Check size={10} />} {label}
+                </button>
+              ))}
+            </div>
+
             {/* Active chips */}
             {chips.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-5">
+              <div className="flex flex-wrap gap-2 mb-4">
                 {chips.map(chip => (
-                  <button key={chip.key} onClick={() => removeChip(chip)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0B1F3A] hover:bg-orange-600 text-white text-xs font-semibold rounded-full transition-colors">
+                  <motion.button key={chip.key} layout initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+                    onClick={() => removeChip(chip)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-full transition-colors">
                     {chip.label} <Icons.X size={11} />
-                  </button>
+                  </motion.button>
                 ))}
                 {chips.length > 1 && (
                   <button onClick={resetAll}
@@ -8922,6 +10453,15 @@ function SearchResultsPage({ listings, loading, error, source, filters, setFilte
                     Tout effacer
                   </button>
                 )}
+              </div>
+            )}
+
+            {/* Animated result count */}
+            {!loading && (
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-lg font-extrabold text-[#0B1F3A]">{animCount}</span>
+                <span className="text-sm text-slate-500">bien{animCount !== 1 ? 's' : ''} {typeLabel}</span>
+                {activeLocalCount > 0 && <span className="text-xs text-orange-600 font-semibold">· {activeLocalCount} filtre{activeLocalCount !== 1 ? 's' : ''} actif{activeLocalCount !== 1 ? 's' : ''}</span>}
               </div>
             )}
 
@@ -8951,9 +10491,9 @@ function SearchResultsPage({ listings, loading, error, source, filters, setFilte
             ) : viewMode === 'map' ? (
               <MapView />
             ) : viewMode === 'grid' ? (
-              <ResultsGrid listings={paginated} onSelect={onSelect} />
+              <ResultsGrid listings={paginated} onSelect={onSelect} onCompare={onCompare} compareList={compareList} />
             ) : (
-              <ResultsList listings={paginated} onSelect={onSelect} />
+              <ResultsList listings={paginated} onSelect={onSelect} onCompare={onCompare} compareList={compareList} />
             )}
 
             {/* Pagination */}
@@ -9057,6 +10597,478 @@ const _DETAIL_DESCS = [
   "Coup de cœur assuré pour ce bien soigneusement rénové avec des matériaux nobles. Architecture élégante, intérieur design et moderne, à deux pas des commerces et transports.",
   "Dans une résidence sécurisée à l'architecture contemporaine, ce bien bénéficie de finitions haut de gamme et d'espaces parfaitement agencés. Idéal pour une première acquisition.",
 ]
+
+/* ─── Étape 38: Estimateur de valeur ─────────────────────────────────── */
+const EST_PROPERTY_TYPES = [
+  { id:'appartement', label:'Appartement', icon: Icons.Building2 },
+  { id:'maison',      label:'Maison',       icon: Icons.Home      },
+  { id:'studio',      label:'Studio',       icon: Icons.Building  },
+  { id:'villa',       label:'Villa',        icon: Icons.Villa     },
+]
+const EST_CITIES = [
+  'Paris','Lyon','Marseille','Toulouse','Nice','Nantes','Bordeaux',
+  'Strasbourg','Lille','Rennes','Montpellier','Grenoble','Toulon',
+  'Angers','Tours','Dijon','Reims','Brest','Saint-Étienne','Le Havre',
+]
+const BASE_M2_EST = {
+  Paris:10200,Lyon:4800,Marseille:3200,Bordeaux:4500,Nice:4700,Toulouse:3700,
+  Nantes:3600,Strasbourg:3300,Lille:2900,Rennes:3400,Montpellier:3500,
+  Grenoble:2800,Toulon:2800,Angers:2700,Tours:2700,Dijon:2600,
+  Reims:2400,Brest:2300,'Saint-Étienne':1900,'Le Havre':2100,
+}
+const EST_DPE_COLORS = { A:'#047857',B:'#10B981',C:'#84CC16',D:'#F59E0B',E:'#F97316',F:'#EF4444',G:'#991B1B' }
+const EST_ETATS = [
+  { id:'renove',  label:'Rénové / Neuf',  desc:'Travaux récents ou programme neuf', mult:1.08 },
+  { id:'bon',     label:'Bon état',        desc:'Entretenu, habitable sans travaux',  mult:1.0  },
+  { id:'travaux', label:'À rénover',       desc:'Rafraîchissement nécessaire',         mult:0.85 },
+]
+const EST_STEPS = ['Type', 'Localisation', 'Caractéristiques', 'Atouts', 'Résultat']
+
+function EstimationView({ setCurrentView }) {
+  const [step,        setStep]        = useState(0)
+  const [propType,    setPropType]    = useState('')
+  const [city,        setCity]        = useState('')
+  const [cityInput,   setCityInput]   = useState('')
+  const [showCList,   setShowCList]   = useState(false)
+  const [surface,     setSurface]     = useState(60)
+  const [rooms,       setRooms]       = useState(3)
+  const [yearBuilt,   setYearBuilt]   = useState(1990)
+  const [dpe,         setDpe]         = useState('C')
+  const [hasParking,  setHasParking]  = useState(false)
+  const [hasCellar,   setHasCellar]   = useState(false)
+  const [hasBalcony,  setHasBalcony]  = useState(false)
+  const [hasTerrace,  setHasTerrace]  = useState(false)
+  const [hasElevator, setHasElevator] = useState(false)
+  const [hasView,     setHasView]     = useState(false)
+  const [etat,        setEtat]        = useState('bon')
+  const [loading,     setLoading]     = useState(false)
+  const [animPrice,   setAnimPrice]   = useState(0)
+
+  /* ── Price estimation ────────────────── */
+  const cityBase = BASE_M2_EST[city] || 3200
+  let ppm = cityBase
+  if (propType === 'studio') ppm *= 1.08
+  if (propType === 'villa')  ppm *= 1.30
+  if (propType === 'maison') ppm *= 0.92
+  const DPE_ADJ = { A:1.05,B:1.03,C:1.0,D:0.97,E:0.93,F:0.87,G:0.81 }
+  ppm *= (DPE_ADJ[dpe] || 1.0)
+  if (hasParking)  ppm += 90
+  if (hasTerrace)  ppm += 140
+  if (hasBalcony)  ppm += 70
+  if (hasElevator) ppm += 40
+  if (hasCellar)   ppm += 25
+  if (hasView)     ppm += 180
+  ppm *= (EST_ETATS.find(e => e.id === etat)?.mult || 1)
+  const age = 2026 - yearBuilt
+  if (age > 30) ppm *= 0.97
+  if (age > 60) ppm *= 0.95
+  const estMid  = Math.round(surface * ppm / 5000) * 5000
+  const estMin  = Math.round(estMid * 0.87 / 5000) * 5000
+  const estMax  = Math.round(estMid * 1.13 / 5000) * 5000
+  const estPpm  = Math.round(ppm)
+  const ppmDiff = Math.round((estPpm - cityBase) / cityBase * 100)
+  const confidence = Math.min(95, 70 + (city?8:0) + (propType?5:0) + (yearBuilt>1950?5:0) + (dpe!=='C'?4:0) + (etat!=='bon'?3:0))
+  const sellDays   = etat === 'renove' ? 32 : etat === 'travaux' ? 87 : 55
+
+  /* ── Animate price count-up ──────────── */
+  useEffect(() => {
+    if (step !== 4) return
+    setLoading(true)
+    setAnimPrice(0)
+    const t = setTimeout(() => {
+      setLoading(false)
+      const end = estMid; const t0 = performance.now(); const dur = 1100
+      const tick = (now) => {
+        const p = Math.min((now - t0) / dur, 1)
+        setAnimPrice(Math.round((1 - Math.pow(1-p, 3)) * end))
+        if (p < 1) requestAnimationFrame(tick)
+      }
+      requestAnimationFrame(tick)
+    }, 750)
+    return () => clearTimeout(t)
+  }, [step])
+
+  const filteredCities = cityInput.length > 0
+    ? EST_CITIES.filter(c => c.toLowerCase().startsWith(cityInput.toLowerCase())).slice(0, 6)
+    : EST_CITIES.slice(0, 6)
+
+  const canNext = ([!!propType, !!city, surface >= 10, true][step]) ?? true
+
+  const goNext = () => { setStep(s => Math.min(4, s+1)); window.scrollTo({ top:0, behavior:'smooth' }) }
+  const goBack = () => { setStep(s => Math.max(0, s-1)); window.scrollTo({ top:0, behavior:'smooth' }) }
+
+  return (
+    <div className="min-h-screen bg-slate-50 pb-20">
+
+      {/* Hero */}
+      <section className="bg-gradient-to-br from-navy-900 via-[#0e1f3a] to-[#162E52] pt-28 pb-14 relative overflow-hidden">
+        <div className="absolute -top-24 -right-24 w-[500px] h-[500px] rounded-full bg-orange-600/15 blur-3xl pointer-events-none" />
+        <div className="absolute inset-0 opacity-[0.04]"
+          style={{ backgroundImage:'linear-gradient(rgba(255,255,255,.6) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.6) 1px,transparent 1px)', backgroundSize:'48px 48px' }} />
+        <div className="relative max-w-2xl mx-auto px-6 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-widest mb-5">
+            <Icons.Sparkles size={12} /> Estimation gratuite
+          </div>
+          <h1 className="text-white text-3xl md:text-4xl font-extrabold tracking-tight mb-3">
+            Quelle est la valeur<br /><span className="text-orange-400">de votre bien ?</span>
+          </h1>
+          <p className="text-white/60 text-sm md:text-base">
+            Estimation personnalisée basée sur les données du marché et les caractéristiques de votre bien.
+          </p>
+        </div>
+      </section>
+
+      {/* Step progress */}
+      <div className="bg-white border-b border-slate-100 sticky top-0 z-20">
+        <div className="max-w-2xl mx-auto px-6 py-4">
+          <div className="flex items-center gap-1">
+            {EST_STEPS.map((label, i) => (
+              <React.Fragment key={label}>
+                <div className="flex flex-col items-center gap-1 min-w-0">
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                    i < step ? 'bg-emerald-500 text-white'
+                    : i === step ? 'bg-orange-500 text-white ring-4 ring-orange-200'
+                    : 'bg-slate-100 text-slate-400'
+                  }`}>
+                    {i < step ? <Icons.Check size={13} /> : i+1}
+                  </div>
+                  <span className={`text-[10px] font-medium hidden sm:block ${i === step ? 'text-orange-600' : 'text-slate-400'}`}>{label}</span>
+                </div>
+                {i < EST_STEPS.length-1 && (
+                  <div className="flex-1 h-0.5 rounded-full mb-3" style={{ background: i < step ? '#10B981' : '#E2E8F0' }} />
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-2xl mx-auto px-6 py-8">
+        <AnimatePresence mode="wait">
+
+          {/* Step 0 — Type de bien */}
+          {step === 0 && (
+            <motion.div key="est0" initial={{ opacity:0, x:32 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:-32 }}>
+              <h2 className="text-xl font-extrabold text-navy-900 mb-1">Type de bien</h2>
+              <p className="text-slate-500 text-sm mb-6">Sélectionnez le type de votre propriété.</p>
+              <div className="grid grid-cols-2 gap-4">
+                {EST_PROPERTY_TYPES.map(t => {
+                  const Ic = t.icon; const active = propType === t.id
+                  return (
+                    <button key={t.id} onClick={() => setPropType(t.id)}
+                      className={`p-6 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all hover:-translate-y-0.5 ${active ? 'border-orange-500 bg-orange-50' : 'border-slate-200 bg-white hover:border-orange-200'}`}>
+                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors ${active ? 'bg-orange-500 text-white' : 'bg-slate-100 text-slate-500'}`}>
+                        <Ic size={24} />
+                      </div>
+                      <span className={`font-semibold text-sm ${active ? 'text-orange-600' : 'text-navy-900'}`}>{t.label}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Step 1 — Localisation */}
+          {step === 1 && (
+            <motion.div key="est1" initial={{ opacity:0, x:32 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:-32 }}>
+              <h2 className="text-xl font-extrabold text-navy-900 mb-1">Localisation</h2>
+              <p className="text-slate-500 text-sm mb-6">Dans quelle ville se situe votre bien ?</p>
+              <div className="relative mb-3">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Icons.MapPin size={16} /></div>
+                <input type="text" placeholder="Tapez une ville…" value={cityInput}
+                  onChange={e => { setCityInput(e.target.value); setCity(''); setShowCList(true) }}
+                  onFocus={() => setShowCList(true)}
+                  className="w-full bg-white border-2 border-slate-200 focus:border-orange-400 rounded-2xl pl-10 pr-4 py-3.5 text-sm font-medium outline-none transition-colors" />
+                {city && <div className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-500"><Icons.Check size={16} /></div>}
+              </div>
+              {showCList && (
+                <div className="bg-white rounded-2xl border border-slate-100 shadow-md overflow-hidden mb-4">
+                  {filteredCities.length > 0 ? filteredCities.map(c => (
+                    <button key={c} onClick={() => { setCity(c); setCityInput(c); setShowCList(false) }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-orange-50 text-left transition-colors ${c === city ? 'bg-orange-50 text-orange-600 font-semibold' : 'text-navy-900'}`}>
+                      <Icons.MapPin size={13} className="text-slate-400 shrink-0" />
+                      {c}
+                      {BASE_M2_EST[c] && <span className="ml-auto text-xs text-slate-400">{BASE_M2_EST[c].toLocaleString('fr-FR')} €/m²</span>}
+                    </button>
+                  )) : <div className="px-4 py-4 text-sm text-slate-400 text-center">Aucune ville trouvée</div>}
+                </div>
+              )}
+              {city && (
+                <motion.div initial={{ opacity:0, y:6 }} animate={{ opacity:1, y:0 }}
+                  className="bg-emerald-50 border border-emerald-100 rounded-2xl px-5 py-4 flex items-center gap-3">
+                  <Icons.MapPin size={18} className="text-emerald-600 shrink-0" />
+                  <div>
+                    <div className="font-semibold text-emerald-800">{city}</div>
+                    <div className="text-xs text-emerald-600">Prix moyen : {(BASE_M2_EST[city]||3200).toLocaleString('fr-FR')} €/m²</div>
+                  </div>
+                </motion.div>
+              )}
+            </motion.div>
+          )}
+
+          {/* Step 2 — Caractéristiques */}
+          {step === 2 && (
+            <motion.div key="est2" initial={{ opacity:0, x:32 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:-32 }} className="space-y-4">
+              <div>
+                <h2 className="text-xl font-extrabold text-navy-900 mb-1">Caractéristiques</h2>
+                <p className="text-slate-500 text-sm">Renseignez les détails de votre bien.</p>
+              </div>
+              {/* Surface */}
+              <div className="bg-white rounded-2xl p-5 shadow-soft">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="font-semibold text-navy-900 text-sm">Surface habitable</span>
+                  <span className="text-2xl font-extrabold text-orange-500">{surface} <span className="text-base font-normal text-slate-400">m²</span></span>
+                </div>
+                <input type="range" min={10} max={400} step={5} value={surface}
+                  onChange={e => setSurface(Number(e.target.value))}
+                  className="w-full h-2 rounded-full accent-orange-500 cursor-pointer" />
+                <div className="flex justify-between mt-2 text-xs text-slate-300"><span>10 m²</span><span>200 m²</span><span>400 m²</span></div>
+              </div>
+              {/* Rooms */}
+              <div className="bg-white rounded-2xl p-5 shadow-soft flex items-center justify-between">
+                <span className="font-semibold text-navy-900 text-sm">Nombre de pièces</span>
+                <div className="flex items-center gap-3">
+                  <button onClick={() => setRooms(r => Math.max(1, r-1))}
+                    className="w-9 h-9 rounded-full bg-slate-100 hover:bg-orange-100 flex items-center justify-center text-slate-600 hover:text-orange-600 transition-colors text-lg font-bold leading-none">−</button>
+                  <span className="text-xl font-extrabold text-navy-900 w-8 text-center">{rooms}</span>
+                  <button onClick={() => setRooms(r => Math.min(12, r+1))}
+                    className="w-9 h-9 rounded-full bg-slate-100 hover:bg-orange-100 flex items-center justify-center text-slate-600 hover:text-orange-600 transition-colors text-lg font-bold leading-none">+</button>
+                </div>
+              </div>
+              {/* Year built */}
+              <div className="bg-white rounded-2xl p-5 shadow-soft">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="font-semibold text-navy-900 text-sm">Année de construction</span>
+                  <span className="text-2xl font-extrabold text-navy-900">{yearBuilt}</span>
+                </div>
+                <input type="range" min={1880} max={2024} step={1} value={yearBuilt}
+                  onChange={e => setYearBuilt(Number(e.target.value))}
+                  className="w-full h-2 rounded-full accent-indigo-500 cursor-pointer" />
+                <div className="flex justify-between mt-2 text-xs text-slate-300"><span>1880</span><span>1950</span><span>2000</span><span>2024</span></div>
+              </div>
+              {/* DPE */}
+              <div className="bg-white rounded-2xl p-5 shadow-soft">
+                <div className="font-semibold text-navy-900 text-sm mb-3">Classe DPE</div>
+                <div className="flex gap-2 flex-wrap">
+                  {['A','B','C','D','E','F','G'].map(d => (
+                    <button key={d} onClick={() => setDpe(d)}
+                      className={`w-11 h-11 rounded-xl font-extrabold text-sm border-2 transition-all ${dpe===d ? 'text-white border-transparent scale-110 shadow-md' : 'bg-white border-slate-200 text-slate-600 hover:scale-105'}`}
+                      style={{ background: dpe===d ? EST_DPE_COLORS[d] : undefined }}>
+                      {d}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Step 3 — Atouts */}
+          {step === 3 && (
+            <motion.div key="est3" initial={{ opacity:0, x:32 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:-32 }} className="space-y-4">
+              <div>
+                <h2 className="text-xl font-extrabold text-navy-900 mb-1">Atouts du bien</h2>
+                <p className="text-slate-500 text-sm">Sélectionnez les équipements et précisez l'état général.</p>
+              </div>
+              <div className="bg-white rounded-2xl p-5 shadow-soft">
+                <div className="font-semibold text-navy-900 text-sm mb-4">Équipements et prestations</div>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { key:'parking',  label:'Parking',    state:hasParking,  set:setHasParking  },
+                    { key:'balcony',  label:'Balcon',     state:hasBalcony,  set:setHasBalcony  },
+                    { key:'terrace',  label:'Terrasse',   state:hasTerrace,  set:setHasTerrace  },
+                    { key:'cellar',   label:'Cave',       state:hasCellar,   set:setHasCellar   },
+                    { key:'elevator', label:'Ascenseur',  state:hasElevator, set:setHasElevator },
+                    { key:'view',     label:'Belle vue',  state:hasView,     set:setHasView     },
+                  ].map(f => (
+                    <button key={f.key} onClick={() => f.set(v => !v)}
+                      className={`flex items-center gap-3 p-3.5 rounded-xl border-2 text-sm font-medium transition-all ${f.state ? 'border-orange-400 bg-orange-50 text-orange-700' : 'border-slate-200 bg-white text-slate-600 hover:border-orange-200'}`}>
+                      <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all ${f.state ? 'bg-orange-500 border-orange-500' : 'border-slate-300'}`}>
+                        {f.state && <Icons.Check size={11} className="text-white" />}
+                      </div>
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="bg-white rounded-2xl p-5 shadow-soft">
+                <div className="font-semibold text-navy-900 text-sm mb-4">État général du bien</div>
+                <div className="space-y-2.5">
+                  {EST_ETATS.map(e => (
+                    <button key={e.id} onClick={() => setEtat(e.id)}
+                      className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all ${etat===e.id ? 'border-orange-400 bg-orange-50' : 'border-slate-200 bg-white hover:border-orange-200'}`}>
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${etat===e.id ? 'border-orange-500 bg-orange-500' : 'border-slate-300'}`}>
+                        {etat===e.id && <div className="w-2 h-2 rounded-full bg-white" />}
+                      </div>
+                      <div>
+                        <div className={`font-semibold text-sm ${etat===e.id ? 'text-orange-700' : 'text-navy-900'}`}>{e.label}</div>
+                        <div className="text-xs text-slate-400 mt-0.5">{e.desc}</div>
+                      </div>
+                      <div className="ml-auto text-xs font-bold shrink-0" style={{ color: e.mult >= 1 ? '#10B981' : '#EF4444' }}>
+                        {e.mult >= 1 ? `+${Math.round((e.mult-1)*100)}%` : `${Math.round((e.mult-1)*100)}%`}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Step 4 — Résultat */}
+          {step === 4 && (
+            <motion.div key="est4" initial={{ opacity:0, x:32 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:-32 }} className="space-y-4">
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-20 gap-4">
+                  <div className="w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center">
+                    <Icons.Loader size={32} className="text-orange-500" />
+                  </div>
+                  <div className="text-navy-900 font-semibold">Analyse en cours…</div>
+                  <div className="text-slate-400 text-sm">Données marché · DPE · Prestations</div>
+                </div>
+              ) : (
+                <>
+                  {/* Main price card */}
+                  <div className="bg-gradient-to-br from-navy-900 to-[#162E52] rounded-2xl p-7 text-center relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-52 h-52 bg-orange-500/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl pointer-events-none" />
+                    <div className="text-white/60 text-sm mb-2">Valeur estimée</div>
+                    <div className="text-5xl font-extrabold tracking-tight mb-1" style={{ color:'#FB923C' }}>
+                      {animPrice.toLocaleString('fr-FR')} <span className="text-2xl font-semibold" style={{ color:'rgba(255,255,255,0.5)' }}>€</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-6 mt-5">
+                      <div className="text-center">
+                        <div className="text-white/40 text-xs">Fourchette basse</div>
+                        <div className="text-white/80 font-bold text-sm mt-0.5">{estMin.toLocaleString('fr-FR')} €</div>
+                      </div>
+                      <div className="w-px h-8 bg-white/20" />
+                      <div className="text-center">
+                        <div className="text-white/40 text-xs">Fourchette haute</div>
+                        <div className="text-white/80 font-bold text-sm mt-0.5">{estMax.toLocaleString('fr-FR')} €</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Key metrics */}
+                  <div className="grid grid-cols-3 gap-3">
+                    {[
+                      { label:'Prix/m²', value:`${estPpm.toLocaleString('fr-FR')} €`, sub: ppmDiff > 0 ? `+${ppmDiff}% moy.` : `${ppmDiff}% moy.`, color: ppmDiff >= 0 ? '#10B981' : '#EF4444' },
+                      { label:'Fiabilité', value:`${confidence}%`, sub:'confiance', color: confidence>=85 ? '#10B981' : '#F97316' },
+                      { label:'Délai vente', value:`${sellDays}j`, sub:'estimé', color:'#6366F1' },
+                    ].map(m => (
+                      <div key={m.label} className="bg-white rounded-2xl p-4 text-center shadow-soft">
+                        <div className="text-xs text-slate-400 mb-1">{m.label}</div>
+                        <div className="font-extrabold text-lg" style={{ color:m.color }}>{m.value}</div>
+                        <div className="text-xs text-slate-400 mt-0.5">{m.sub}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Market comparison */}
+                  {city && (
+                    <div className="bg-white rounded-2xl p-5 shadow-soft">
+                      <div className="font-semibold text-navy-900 text-sm mb-4">Comparaison marché — {city}</div>
+                      {[
+                        { label:'Votre bien', value:estPpm, color:'#F97316' },
+                        { label:`Moy. ${city}`,  value:cityBase, color:'#6366F1' },
+                      ].map(bar => {
+                        const max = Math.max(estPpm, cityBase) * 1.15
+                        return (
+                          <div key={bar.label} className="mb-3 last:mb-0">
+                            <div className="flex justify-between text-xs text-slate-500 mb-1.5">
+                              <span>{bar.label}</span>
+                              <span className="font-bold">{bar.value.toLocaleString('fr-FR')} €/m²</span>
+                            </div>
+                            <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
+                              <motion.div className="h-full rounded-full"
+                                initial={{ width:0 }} animate={{ width:`${(bar.value/max)*100}%` }}
+                                transition={{ duration:0.9, ease:'easeOut', delay:0.2 }}
+                                style={{ background:bar.color }} />
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+
+                  {/* Confidence gauge */}
+                  <div className="bg-white rounded-2xl p-5 shadow-soft">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-semibold text-navy-900 text-sm">Indice de fiabilité</span>
+                      <span className="text-lg font-extrabold" style={{ color: confidence>=85 ? '#10B981' : '#F97316' }}>{confidence}%</span>
+                    </div>
+                    <div className="h-3 bg-slate-100 rounded-full overflow-hidden mb-2">
+                      <motion.div className="h-full rounded-full"
+                        initial={{ width:0 }} animate={{ width:`${confidence}%` }}
+                        transition={{ duration:1, ease:'easeOut', delay:0.5 }}
+                        style={{ background: confidence>=85 ? '#10B981' : '#F97316' }} />
+                    </div>
+                    <p className="text-xs text-slate-400">Basé sur {city ? `les données de ${city}` : 'les données nationales'}, les caractéristiques saisies et les tendances du marché.</p>
+                  </div>
+
+                  {/* Summary */}
+                  <div className="bg-white rounded-2xl p-5 shadow-soft">
+                    <div className="font-semibold text-navy-900 text-sm mb-3">Récapitulatif</div>
+                    <div className="grid grid-cols-2 gap-y-3 gap-x-4">
+                      {[
+                        ['Type',    EST_PROPERTY_TYPES.find(t => t.id===propType)?.label || '—'],
+                        ['Ville',   city || '—'],
+                        ['Surface', `${surface} m²`],
+                        ['Pièces',  rooms],
+                        ['Construit', yearBuilt],
+                        ['DPE',     dpe],
+                        ['État',    EST_ETATS.find(e => e.id===etat)?.label || '—'],
+                        ['Atouts',  [hasParking&&'Parking',hasBalcony&&'Balcon',hasTerrace&&'Terrasse',hasCellar&&'Cave',hasElevator&&'Ascenseur',hasView&&'Vue'].filter(Boolean).join(', ')||'Aucun'],
+                      ].map(([k,v]) => (
+                        <div key={k}>
+                          <div className="text-xs text-slate-400">{k}</div>
+                          <div className="text-sm font-semibold text-navy-900 truncate">{v}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* CTAs */}
+                  <div className="space-y-3 pt-1">
+                    <button onClick={() => setCurrentView('publier')}
+                      className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 rounded-2xl transition-colors flex items-center justify-center gap-2 text-sm">
+                      <Icons.PlusSquare size={16} /> Publier mon annonce sur PASMAL
+                    </button>
+                    <button onClick={() => setCurrentView('simulateur')}
+                      className="w-full bg-white border-2 border-slate-200 hover:border-orange-300 text-navy-900 font-semibold py-3.5 rounded-2xl transition-colors text-sm flex items-center justify-center gap-2">
+                      <Icons.CreditCard size={15} /> Simuler mon financement
+                    </button>
+                    <button onClick={() => setCurrentView('home')}
+                      className="w-full bg-white border-2 border-slate-200 hover:border-orange-300 text-navy-900 font-semibold py-3.5 rounded-2xl transition-colors text-sm">
+                      Retour à l'accueil
+                    </button>
+                  </div>
+
+                  <p className="text-center text-xs text-slate-400 leading-relaxed">
+                    Estimation indicative non contractuelle. Basée sur les données de marché disponibles et les informations saisies.
+                  </p>
+                </>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Nav buttons */}
+        {step < 4 && (
+          <div className="flex items-center gap-3 mt-8">
+            {step > 0 && (
+              <button onClick={goBack}
+                className="flex items-center gap-2 px-5 py-3 rounded-2xl border-2 border-slate-200 text-slate-600 font-semibold text-sm hover:border-slate-300 transition-colors">
+                <Icons.ChevronLeft size={16} /> Retour
+              </button>
+            )}
+            <button onClick={goNext} disabled={!canNext}
+              className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-sm transition-all ${canNext ? 'bg-orange-600 hover:bg-orange-700 text-white hover:-translate-y-0.5' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}`}>
+              {step === 3 ? 'Voir mon estimation' : 'Continuer'} <Icons.ArrowRight size={16} />
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
 
 const _DETAIL_FEATURES = [
   ['Double vitrage', 'Parquet bois', 'Cuisine équipée', 'Interphone vidéo'],
@@ -9654,6 +11666,2560 @@ function PropertyDetailPage({ listing: raw, idx = 0, onBack, onOpenListing, simi
             </div>
           </div>
 
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ─── Étape 40: Guides & Conseils ────────────────────────────────────── */
+const ALL_GUIDES = [
+  { id:'primo',       cat:'Achat',          featured:true,
+    title:'Primo-accédants : le guide complet 2026',
+    excerpt:'Budget, apport, PTZ, frais de notaire... tout ce qu\'il faut savoir avant de signer.',
+    img:unsplash('photo-1554224155-6726b3ff858f', 900), time:'8 min', date:'12 mai 2026', author:'Sophie Marchand',
+    content:[
+      { h:'Définir votre budget',     p:'Calculez votre capacité d\'emprunt : le taux d\'endettement ne doit pas dépasser 35 % de vos revenus nets. Consultez un courtier pour comparer les offres de plusieurs banques et simuler votre mensualité.' },
+      { h:'Le Prêt à Taux Zéro',      p:'Le PTZ peut financer jusqu\'à 40 % du prix selon la zone géographique. Réservé aux primo-accédants achetant leur résidence principale, il ne nécessite pas de remboursement d\'intérêts et s\'ajoute à votre prêt principal.' },
+      { h:'Les frais de notaire',      p:'Prévoyez 7-8 % du prix dans l\'ancien (2-3 % dans le neuf). Ces frais incluent droits de mutation, honoraires du notaire et débours. Négligeables dans le neuf, ils pèsent lourd dans l\'ancien.' },
+      { h:'Checklist avant signature', p:'Vérifiez le DPE, les charges de copropriété, la taxe foncière, les travaux votés et le règlement de copropriété. Un diagnostiqueur professionnel peut vous éviter de mauvaises surprises.' },
+    ],
+  },
+  { id:'bail',        cat:'Location',
+    title:'Comprendre le bail de location en 5 points',
+    excerpt:'Durée, dépôt de garantie, charges récupérables : vos droits et obligations.',
+    img:unsplash('photo-1560518883-ce09059eeffa', 900), time:'5 min', date:'8 mai 2026', author:'Lucas Dupont',
+    content:[
+      { h:'Durée du bail',             p:'Un bail non meublé est conclu pour 3 ans, 1 an en meublé. À l\'échéance, renouvellement automatique sauf congé donné dans les délais : 3 mois côté bailleur, 1 mois côté locataire en zone tendue.' },
+      { h:'Le dépôt de garantie',      p:'Limité à 1 mois en location vide, 2 mois en meublé. Il doit être restitué dans les 2 mois suivant la restitution des clés, déductions de réparations justifiées.' },
+      { h:'Les charges récupérables',  p:'Le bailleur peut récupérer entretien des parties communes, eau, chauffage collectif... La liste exhaustive est fixée par décret. Un décompte annuel doit être envoyé au locataire.' },
+    ],
+  },
+  { id:'lmnp',        cat:'Investissement',
+    title:'LMNP : amortir son bien et réduire ses impôts',
+    excerpt:'Le statut LMNP offre des avantages fiscaux puissants souvent méconnus des investisseurs.',
+    img:unsplash('photo-1486325212027-8081e485255e', 900), time:'6 min', date:'3 mai 2026', author:'Marie Lefèvre',
+    content:[
+      { h:'Qu\'est-ce que le LMNP ?',  p:'La Location Meublée Non Professionnelle permet de louer un bien meublé avec une fiscalité avantageuse. Vous devez percevoir moins de 23 000 € de loyers annuels ou que ceux-ci représentent moins de 50 % de vos revenus globaux.' },
+      { h:'L\'amortissement comptable', p:'Au régime réel, vous amortissez le bien sur 25-40 ans et les meubles sur 7-10 ans. Cet amortissement vient en déduction des loyers et peut réduire votre imposition à zéro sur de nombreuses années.' },
+      { h:'Micro-BIC vs réel',         p:'Le micro-BIC offre un abattement de 50 %. Le régime réel est plus avantageux si vos charges (crédit, travaux, amortissement) dépassent 50 % des recettes. Un expert-comptable peut vous accompagner.' },
+    ],
+  },
+  { id:'taux',        cat:'Financement',
+    title:'Comment négocier le meilleur taux immobilier',
+    excerpt:'Apport, dossier solide, courtier... les leviers pour décrocher les meilleures conditions.',
+    img:unsplash('photo-1560472354-b33ff0c44a43', 900), time:'7 min', date:'28 avr. 2026', author:'Pierre Morel',
+    content:[
+      { h:'Construire un dossier solide', p:'Les banques regardent : stabilité professionnelle (CDI préféré), taux d\'endettement, apport (idéalement 10-20 %), comportement bancaire (pas de découvert, épargne régulière). Préparez 3 mois de relevés et vos 3 dernières fiches de paie.' },
+      { h:'Faire appel à un courtier',    p:'Un courtier compare les offres de nombreuses banques et négocie en votre nom. Sa rémunération est en général à la charge de la banque retenue. Economies potentielles : plusieurs milliers d\'euros.' },
+      { h:'L\'assurance emprunteur',      p:'Depuis la loi Lemoine, vous pouvez changer d\'assurance emprunteur à tout moment. La délégation d\'assurance peut vous économiser 30 à 70 % sur ce poste, soit plusieurs dizaines de milliers sur la durée du prêt.' },
+    ],
+  },
+  { id:'vendre',      cat:'Vente',
+    title:'Vendre au meilleur prix : les 7 règles d\'or',
+    excerpt:'Estimation, home staging, timing de mise en vente... les secrets des vendeurs performants.',
+    img:unsplash('photo-1600585154340-be6161a56a0c', 900), time:'6 min', date:'22 avr. 2026', author:'Sophie Marchand',
+    content:[
+      { h:'Bien estimer son bien',  p:'Une surestimation fera fuir les acheteurs et rallongera les délais. Consultez plusieurs agents et les bases notariales pour les ventes récentes dans votre quartier. PASMAL propose une estimation gratuite en ligne.' },
+      { h:'Le home staging',        p:'La valorisation immobilière permet de vendre 10-15 % plus cher et 2-3× plus vite. Dépersonnalisez, désencombrez, rafraîchissez les peintures et soignez les photos (lumière naturelle, grand angle).' },
+      { h:'Choisir le bon moment',  p:'Le printemps (mars-juin) est la meilleure période de mise en vente pour les résidences principales. Évitez les fêtes et l\'été. Une annonce publiée un jeudi obtient en moyenne 22 % de contacts supplémentaires.' },
+    ],
+  },
+  { id:'dpe',         cat:'Travaux & DPE',
+    title:'DPE F et G : les aides à la rénovation en 2026',
+    excerpt:'MaPrimeRénov\', CEE, éco-PTZ... tour d\'horizon des dispositifs disponibles pour rénover.',
+    img:unsplash('photo-1558618666-fcd25c85cd64', 900), time:'9 min', date:'15 avr. 2026', author:'Lucas Dupont',
+    content:[
+      { h:'L\'urgence énergétique',  p:'Les logements G sont interdits à la location depuis 2025. Les F suivront en 2028. La rénovation thermique n\'est plus seulement un choix mais une nécessité pour les propriétaires bailleurs.' },
+      { h:'MaPrimeRénov\'',          p:'Ce dispositif de l\'ANAH finance jusqu\'à 70 % des travaux pour les ménages les plus modestes. Isolation, pompe à chaleur, ventilation... sont éligibles. Les démarches se font sur maprimerenov.gouv.fr.' },
+      { h:'L\'éco-PTZ',              p:'Jusqu\'à 50 000 € sans intérêts pour un bouquet de travaux de rénovation. Cumulable avec MaPrimeRénov\' et accessible sans conditions de ressources depuis 2022. Durée de remboursement jusqu\'à 20 ans.' },
+    ],
+  },
+  { id:'copro',       cat:'Achat',
+    title:'Acheter en copropriété : les pièges à éviter',
+    excerpt:'Charges, travaux votés, syndic, règlement... ce qu\'il faut absolument vérifier avant de signer.',
+    img:unsplash('photo-1484154218962-a197022b5858', 900), time:'6 min', date:'5 avr. 2026', author:'Pierre Morel',
+    content:[
+      { h:'Les documents à analyser', p:'Exigez les 3 derniers PV d\'assemblée générale, le règlement de copropriété, le carnet d\'entretien et les relevés de charges des 3 dernières années pour cerner la santé financière de la copropriété.' },
+      { h:'Les travaux votés',        p:'Des travaux votés mais non payés seront à votre charge après la vente. Le diagnostic technique global (DTG) alerte sur les travaux à prévoir sur 10 ans. Demandez-le systématiquement.' },
+    ],
+  },
+  { id:'meuble',      cat:'Location',
+    title:'Location meublée : équipements obligatoires et avantages',
+    excerpt:'Liste du mobilier imposé, loyer majoré, bail mobilité : tout ce qu\'il faut savoir.',
+    img:unsplash('photo-1493809842364-78817add7ffb', 900), time:'4 min', date:'1 avr. 2026', author:'Sophie Marchand',
+    content:[
+      { h:'Le mobilier obligatoire', p:'La liste réglementaire inclut : literie, volets/rideaux en chambre, plaques de cuisson, four ou micro-ondes, réfrigérateur, table et sièges, étagères de rangement, luminaires et matériel d\'entretien ménager.' },
+      { h:'Les avantages fiscaux',   p:'En régime LMNP, l\'amortissement comptable peut annuler l\'imposition sur les loyers. Le micro-BIC offre 50 % d\'abattement contre 30 % en location nue. Un avantage fiscal significatif sur le long terme.' },
+    ],
+  },
+  { id:'rendement',   cat:'Investissement',
+    title:'Calculer le rendement locatif net-net d\'un investissement',
+    excerpt:'Rendement brut, net, net-net : les vraies formules pour comparer des biens objectivement.',
+    img:unsplash('photo-1556909114-f6e7ad7d3136', 900), time:'5 min', date:'25 mar. 2026', author:'Marie Lefèvre',
+    content:[
+      { h:'Le rendement brut',     p:'Rendement brut = (loyer annuel / prix d\'achat) × 100. Simple à calculer mais peu représentatif de la réalité car il ignore les charges, la fiscalité et les frais d\'acquisition.' },
+      { h:'Le rendement net',      p:'Rendement net = ((loyer annuel – charges) / (prix + frais)) × 100. Plus précis, il intègre les charges locatives, la taxe foncière, les frais d\'acquisition et l\'assurance.' },
+      { h:'Le rendement net-net',  p:'Le rendement net-net intègre également la fiscalité applicable (TMI + prélèvements sociaux, ou régime LMNP). C\'est la seule mesure vraiment comparable entre deux investissements à régimes fiscaux différents.' },
+    ],
+  },
+]
+const GUIDE_CATS = ['Tous', 'Achat', 'Location', 'Vente', 'Investissement', 'Financement', 'Travaux & DPE']
+const GUIDE_CAT_COLORS = { Achat:'#F97316', Location:'#6366F1', Vente:'#10B981', Investissement:'#0EA5E9', Financement:'#F59E0B', 'Travaux & DPE':'#8B5CF6' }
+
+function GuidesView({ setCurrentView }) {
+  const [searchQ,  setSearchQ]  = useState('')
+  const [cat,      setCat]      = useState('Tous')
+  const [openId,   setOpenId]   = useState(null)
+
+  const filtered = ALL_GUIDES.filter(g => {
+    const matchCat  = cat === 'Tous' || g.cat === cat
+    const matchQ    = !searchQ || g.title.toLowerCase().includes(searchQ.toLowerCase()) || g.excerpt.toLowerCase().includes(searchQ.toLowerCase())
+    return matchCat && matchQ
+  })
+  const featured  = filtered.find(g => g.featured) || filtered[0]
+  const rest       = filtered.filter(g => g !== featured)
+  const openGuide  = ALL_GUIDES.find(g => g.id === openId)
+
+  return (
+    <div className="min-h-screen bg-slate-50 pb-20">
+
+      {/* Hero */}
+      <section className="bg-gradient-to-br from-navy-900 via-[#0e1f3a] to-[#162E52] pt-28 pb-16 relative overflow-hidden">
+        <div className="absolute -top-24 -right-24 w-[500px] h-[500px] rounded-full bg-orange-600/15 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-indigo-600/10 blur-3xl pointer-events-none" />
+        <div className="absolute inset-0 opacity-[0.04]"
+          style={{ backgroundImage:'linear-gradient(rgba(255,255,255,.6) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.6) 1px,transparent 1px)', backgroundSize:'48px 48px' }} />
+        <div className="relative max-w-4xl mx-auto px-6 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/20 border border-orange-500/30 text-orange-400 text-xs font-bold uppercase tracking-widest mb-5">
+            <Icons.FileText size={12} /> Guides & conseils
+          </div>
+          <h1 className="text-white text-3xl md:text-5xl font-extrabold tracking-tight mb-4">
+            L'immobilier,<br /><span className="text-orange-400">expliqué simplement.</span>
+          </h1>
+          <p className="text-white/60 text-base md:text-lg max-w-2xl mx-auto mb-8">
+            Tous les guides dont vous avez besoin pour acheter, louer, vendre et investir en toute confiance.
+          </p>
+          {/* Search */}
+          <div className="relative max-w-xl mx-auto">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Icons.Search size={17} /></div>
+            <input type="text" placeholder="Rechercher un guide..." value={searchQ}
+              onChange={e => setSearchQ(e.target.value)}
+              className="w-full bg-white/10 backdrop-blur border border-white/20 text-white placeholder-white/40 rounded-2xl pl-11 pr-4 py-3.5 text-sm outline-none focus:bg-white/15 focus:border-white/40 transition-all" />
+          </div>
+          {/* Stats */}
+          <div className="flex items-center justify-center gap-8 flex-wrap mt-8">
+            {[
+              { value:`${ALL_GUIDES.length}`, label:'guides disponibles' },
+              { value:'4–9 min', label:'temps de lecture' },
+              { value:'100 %', label:'gratuit' },
+            ].map(s => (
+              <div key={s.label} className="text-center">
+                <div className="text-white text-xl font-extrabold">{s.value}</div>
+                <div className="text-white/50 text-xs mt-0.5">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Category filters */}
+      <div className="bg-white border-b border-slate-100 sticky top-0 z-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-3.5 flex items-center gap-2 overflow-x-auto">
+          {GUIDE_CATS.map(c => (
+            <button key={c} onClick={() => setCat(c)}
+              className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${cat === c ? 'text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+              style={{ background: cat === c ? (GUIDE_CAT_COLORS[c] || '#0B1F3A') : undefined }}>
+              {c}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-10 space-y-12">
+
+        {filtered.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <div className="w-14 h-14 rounded-2xl bg-orange-50 flex items-center justify-center mb-4">
+              <Icons.Search size={24} className="text-orange-400" />
+            </div>
+            <div className="font-bold text-navy-900 mb-2">Aucun guide trouvé</div>
+            <div className="text-slate-400 text-sm mb-4">Essayez d'autres mots-clés ou une autre catégorie.</div>
+            <button onClick={() => { setSearchQ(''); setCat('Tous') }}
+              className="px-4 py-2 bg-orange-600 text-white rounded-xl text-sm font-semibold">Réinitialiser</button>
+          </div>
+        ) : (
+          <>
+            {/* Featured article */}
+            {featured && (
+              <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }}
+                className="group bg-white rounded-3xl overflow-hidden shadow-soft hover:shadow-card transition-all cursor-pointer"
+                onClick={() => setOpenId(featured.id)}>
+                <div className="grid grid-cols-1 lg:grid-cols-2">
+                  <div className="relative overflow-hidden" style={{ minHeight:280 }}>
+                    <img src={featured.img} alt={featured.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 absolute inset-0"
+                      onError={e => { e.currentTarget.src = unsplash('photo-1560448204-e02f11c3d0e2', 900) }} />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-white/10 pointer-events-none" />
+                    <div className="absolute top-4 left-4 flex items-center gap-2">
+                      <span className="bg-orange-600 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">À la une</span>
+                      <span className="text-white text-[10px] font-semibold px-2.5 py-1 rounded-full"
+                        style={{ background: GUIDE_CAT_COLORS[featured.cat] || '#0B1F3A' }}>{featured.cat}</span>
+                    </div>
+                  </div>
+                  <div className="p-8 lg:p-10 flex flex-col justify-center">
+                    <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                      <span>{featured.date}</span>
+                      <span className="w-1 h-1 rounded-full bg-slate-300" />
+                      <span>{featured.time} de lecture</span>
+                      <span className="w-1 h-1 rounded-full bg-slate-300" />
+                      <span>{featured.author}</span>
+                    </div>
+                    <h2 className="text-2xl md:text-3xl font-extrabold text-navy-900 mb-4 group-hover:text-orange-600 transition-colors leading-snug">{featured.title}</h2>
+                    <p className="text-slate-500 text-sm leading-relaxed mb-6">{featured.excerpt}</p>
+                    <div className="flex items-center gap-2 text-orange-600 font-semibold text-sm group-hover:gap-3 transition-all">
+                      Lire le guide <Icons.ArrowRight size={16} />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Article grid */}
+            {rest.length > 0 && (
+              <div>
+                <h2 className="text-xl font-extrabold text-navy-900 mb-6">
+                  {cat === 'Tous' ? 'Tous les guides' : `Guides — ${cat}`}
+                </h2>
+                <motion.div
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                  initial="hidden" animate="show"
+                  variants={{ hidden:{}, show:{ transition:{ staggerChildren:0.07 } } }}>
+                  {rest.map(g => (
+                    <motion.article key={g.id}
+                      variants={{ hidden:{ opacity:0, y:16 }, show:{ opacity:1, y:0 } }}
+                      onClick={() => setOpenId(g.id)}
+                      className="group bg-white rounded-3xl overflow-hidden shadow-soft hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer">
+                      <div className="relative overflow-hidden aspect-video">
+                        <img src={g.img} alt={g.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          onError={e => { e.currentTarget.src = unsplash('photo-1560448204-e02f11c3d0e2', 600) }} />
+                        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+                        <span className="absolute top-3 left-3 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
+                          style={{ background: GUIDE_CAT_COLORS[g.cat] || '#0B1F3A' }}>{g.cat}</span>
+                      </div>
+                      <div className="p-5">
+                        <div className="flex items-center gap-2 text-xs text-slate-400 mb-2.5">
+                          <span>{g.time} de lecture</span>
+                          <span className="w-1 h-1 rounded-full bg-slate-300" />
+                          <span>{g.date}</span>
+                        </div>
+                        <h3 className="font-bold text-navy-900 text-sm leading-snug group-hover:text-orange-600 transition-colors mb-2">{g.title}</h3>
+                        <p className="text-xs text-slate-400 leading-relaxed line-clamp-2">{g.excerpt}</p>
+                        <div className="flex items-center gap-1.5 text-orange-600 text-xs font-semibold mt-4 group-hover:gap-2.5 transition-all">
+                          Lire <Icons.ArrowRight size={13} />
+                        </div>
+                      </div>
+                    </motion.article>
+                  ))}
+                </motion.div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Article detail overlay */}
+      <AnimatePresence>
+        {openGuide && (
+          <>
+            <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
+              className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm"
+              onClick={() => setOpenId(null)} />
+            <motion.div
+              initial={{ opacity:0, y:40, scale:0.97 }} animate={{ opacity:1, y:0, scale:1 }} exit={{ opacity:0, y:20, scale:0.97 }}
+              transition={{ type:'spring', damping:30, stiffness:300 }}
+              className="fixed inset-x-4 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 sm:w-full sm:max-w-2xl top-16 bottom-4 z-[110] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+              {/* Header image */}
+              <div className="relative h-48 shrink-0 overflow-hidden">
+                <img src={openGuide.img} alt={openGuide.title} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <button onClick={() => setOpenId(null)}
+                  className="absolute top-4 right-4 w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white transition-colors backdrop-blur-sm">
+                  <Icons.X size={16} />
+                </button>
+                <div className="absolute bottom-4 left-5 flex items-center gap-2">
+                  <span className="text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
+                    style={{ background: GUIDE_CAT_COLORS[openGuide.cat] || '#0B1F3A' }}>{openGuide.cat}</span>
+                  <span className="text-white/80 text-xs">{openGuide.time} de lecture</span>
+                </div>
+              </div>
+              {/* Content */}
+              <div className="flex-1 overflow-y-auto p-6">
+                <div className="flex items-center gap-2 text-xs text-slate-400 mb-3">
+                  <span>{openGuide.author}</span>
+                  <span className="w-1 h-1 rounded-full bg-slate-300" />
+                  <span>{openGuide.date}</span>
+                </div>
+                <h1 className="text-2xl font-extrabold text-navy-900 leading-snug mb-4">{openGuide.title}</h1>
+                <p className="text-slate-500 text-sm leading-relaxed mb-6 border-l-4 border-orange-200 pl-4 italic">{openGuide.excerpt}</p>
+                <div className="space-y-6">
+                  {openGuide.content.map((section, i) => (
+                    <motion.div key={i}
+                      initial={{ opacity:0, y:8 }} animate={{ opacity:1, y:0 }}
+                      transition={{ delay: i*0.08 }}>
+                      <h2 className="font-bold text-navy-900 mb-2 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-lg flex items-center justify-center text-white text-xs font-extrabold shrink-0"
+                          style={{ background: GUIDE_CAT_COLORS[openGuide.cat] || '#0B1F3A' }}>{i+1}</span>
+                        {section.h}
+                      </h2>
+                      <p className="text-slate-600 text-sm leading-relaxed pl-8">{section.p}</p>
+                    </motion.div>
+                  ))}
+                </div>
+                {/* Related */}
+                <div className="mt-8 pt-6 border-t border-slate-100">
+                  <div className="text-sm font-bold text-navy-900 mb-4">Guides similaires</div>
+                  <div className="space-y-3">
+                    {ALL_GUIDES.filter(g => g.id !== openGuide.id && g.cat === openGuide.cat).slice(0,2).concat(
+                      ALL_GUIDES.filter(g => g.id !== openGuide.id && g.cat !== openGuide.cat).slice(0,1)
+                    ).slice(0,3).map(g => (
+                      <button key={g.id} onClick={() => setOpenId(g.id)}
+                        className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 text-left transition-colors">
+                        <img src={g.img} alt="" className="w-14 h-10 rounded-xl object-cover shrink-0"
+                          onError={e => { e.currentTarget.src = unsplash('photo-1560448204-e02f11c3d0e2', 100) }} />
+                        <div className="min-w-0">
+                          <div className="text-xs font-bold text-navy-900 truncate">{g.title}</div>
+                          <div className="text-[11px] text-slate-400 mt-0.5">{g.time} de lecture</div>
+                        </div>
+                        <Icons.ChevronRight size={14} className="text-slate-300 shrink-0" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {/* CTA */}
+                <div className="mt-6 bg-gradient-to-r from-navy-900 to-[#162E52] rounded-2xl p-5 text-center">
+                  <div className="text-white font-bold mb-1 text-sm">Prêt à passer à l'action ?</div>
+                  <p className="text-white/60 text-xs mb-4">Trouvez votre bien idéal sur PASMAL.</p>
+                  <button onClick={() => { setOpenId(null); setCurrentView('results') }}
+                    className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-colors">
+                    Voir les annonces <Icons.ArrowRight size={14} />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
+/* ─── Étape 39: Comparateur d'annonces ───────────────────────────────── */
+const DPE_ORDER_CMP = { A:0, B:1, C:2, D:3, E:4, F:5, G:6 }
+
+function CompareBar({ compareList, setCompareList, setCurrentView }) {
+  return (
+    <AnimatePresence>
+      {compareList.length > 0 && (
+        <motion.div
+          initial={{ y:'100%' }} animate={{ y:0 }} exit={{ y:'100%' }}
+          transition={{ type:'spring', damping:30, stiffness:280 }}
+          className="fixed bottom-0 left-0 right-0 z-[90] bg-white border-t-2 border-orange-500 shadow-2xl">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4">
+            <div className="flex items-center gap-4 flex-wrap sm:flex-nowrap">
+              <div className="flex items-center gap-2.5 flex-1 flex-wrap">
+                {[0,1,2].map(i => {
+                  const raw = compareList[i]
+                  if (!raw) return (
+                    <div key={i} className="flex items-center justify-center w-36 h-14 rounded-xl border-2 border-dashed border-slate-200 text-[11px] text-slate-400 shrink-0">
+                      + Ajouter
+                    </div>
+                  )
+                  const l = enrichWithMeta(raw, i)
+                  return (
+                    <div key={raw.id} className="relative flex items-center gap-2.5 bg-slate-50 rounded-xl p-2 pr-3 shrink-0">
+                      <img src={l.image_url || unsplash('photo-1560448204-e02f11c3d0e2', 80)} alt=""
+                        className="w-12 h-10 rounded-lg object-cover shrink-0"
+                        onError={e => { e.currentTarget.src = unsplash('photo-1560448204-e02f11c3d0e2', 80) }} />
+                      <div className="min-w-0">
+                        <div className="text-xs font-bold text-navy-900 max-w-[110px] truncate">{l.title}</div>
+                        <div className="text-xs font-semibold text-orange-600">{formatPrice(l)}</div>
+                      </div>
+                      <button onClick={() => setCompareList(p => p.filter(x => x.id !== raw.id))}
+                        className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-slate-300 hover:bg-red-500 hover:text-white text-slate-600 rounded-full flex items-center justify-center transition-colors"
+                        style={{ fontSize:13, lineHeight:1 }}>×</button>
+                    </div>
+                  )
+                })}
+              </div>
+              <div className="flex items-center gap-3 shrink-0">
+                <button onClick={() => setCompareList([])}
+                  className="text-xs text-slate-400 hover:text-slate-600 font-medium transition-colors whitespace-nowrap">
+                  Tout effacer
+                </button>
+                <button onClick={() => setCurrentView('comparer')} disabled={compareList.length < 2}
+                  className={`px-5 py-3 rounded-2xl font-bold text-sm transition-all whitespace-nowrap ${compareList.length >= 2 ? 'bg-orange-600 hover:bg-orange-700 text-white shadow-md hover:-translate-y-0.5' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}`}>
+                  Comparer ({compareList.length}/3)
+                </button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
+
+/* ============================================================================
+   Étape 41 — Tendances du Marché
+   ============================================================================ */
+const MARCHE_CITIES_DATA = [
+  { city:'Paris',       ppm:10200, prev:10800, color:'#F97316', yield:2.8, days:58 },
+  { city:'Lyon',        ppm:4800,  prev:3800,  color:'#6366F1', yield:4.2, days:42 },
+  { city:'Nice',        ppm:4700,  prev:4000,  color:'#8B5CF6', yield:3.9, days:52 },
+  { city:'Bordeaux',    ppm:4500,  prev:4200,  color:'#10B981', yield:4.0, days:45 },
+  { city:'Toulouse',    ppm:3700,  prev:3100,  color:'#F59E0B', yield:5.1, days:48 },
+  { city:'Nantes',      ppm:3600,  prev:3400,  color:'#EC4899', yield:4.5, days:40 },
+  { city:'Montpellier', ppm:3500,  prev:2900,  color:'#14B8A6', yield:5.3, days:55 },
+  { city:'Marseille',   ppm:3200,  prev:2600,  color:'#0EA5E9', yield:5.8, days:68 },
+  { city:'Grenoble',    ppm:2800,  prev:2500,  color:'#84CC16', yield:5.6, days:50 },
+  { city:'Lille',       ppm:2900,  prev:2600,  color:'#FB7185', yield:5.4, days:46 },
+]
+const MARCHE_HISTORY = {
+  Paris:       [10800, 11200, 10900, 10600, 10300, 10100, 10200],
+  Lyon:        [3800,  4100,  4400,  4600,  4700,  4750,  4800],
+  Nice:        [4000,  4200,  4400,  4600,  4650,  4680,  4700],
+  Bordeaux:    [4200,  4500,  4600,  4500,  4400,  4420,  4500],
+  Toulouse:    [3100,  3200,  3400,  3500,  3600,  3650,  3700],
+  Montpellier: [2900,  3000,  3200,  3300,  3400,  3450,  3500],
+}
+const MARCHE_YEARS = [2020, 2021, 2022, 2023, 2024, 2025, 2026]
+const MARCHE_CHART_COLORS = { Paris:'#F97316', Lyon:'#6366F1', Nice:'#8B5CF6', Bordeaux:'#10B981', Toulouse:'#F59E0B', Montpellier:'#14B8A6' }
+const MARCHE_SEGMENTS = [
+  { label:'Appartements T1-T2',    trend:'+2.1 %', volume:'142 000', Icon: Icons.Building2, color:'#F97316' },
+  { label:'Appartements T3-T4',    trend:'+0.8 %', volume:'198 000', Icon: Icons.Building2, color:'#6366F1' },
+  { label:'Maisons individuelles', trend:'-1.2 %', volume:'215 000', Icon: Icons.Home,      color:'#10B981' },
+  { label:'Biens de prestige',     trend:'+4.3 %', volume:'38 000',  Icon: Icons.Star,      color:'#F59E0B' },
+]
+const MARCHE_PREDICTIONS = [
+  { Icon: Icons.TrendingUp, color:'#10B981', title:'Reprise progressive en province', desc:'Les experts anticipent un rebond de +2 à +4 % sur les marchés de province en 2026, portés par la baisse des taux directeurs.', confidence:72 },
+  { Icon: Icons.MapPin,     color:'#F97316', title:'Paris stabilisé ±2 %',            desc:'La capitale devrait rester stable dans un contexte de taux encore contraints et de hausse du stock disponible.', confidence:65 },
+  { Icon: Icons.TrendingUp, color:'#6366F1', title:'Investissement locatif en hausse', desc:'Les villes moyennes (Toulouse, Montpellier, Nantes) affichent les meilleures perspectives de rendement brut 2026.', confidence:80 },
+]
+
+/* ============================================================================
+   Étape 42 — Simulateur de financement
+   ============================================================================ */
+const SIMUL_PRESETS = [
+  { label:'Studio Paris',    prix:280000, apport:40000 },
+  { label:'T3 Lyon',         prix:350000, apport:60000 },
+  { label:'Maison Bordeaux', prix:480000, apport:80000 },
+  { label:'Investissement',  prix:200000, apport:30000 },
+]
+
+function SliderField({ label, value, onChange, min, max, step, fmt: format }) {
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-sm font-medium text-navy-700">{label}</span>
+        <span className="text-sm font-bold text-orange-600">{format(value)}</span>
+      </div>
+      <input type="range" min={min} max={max} step={step} value={value}
+        onChange={e => onChange(Number(e.target.value))}
+        className="w-full h-2 bg-slate-200 rounded-full appearance-none cursor-pointer accent-orange-500" />
+      <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+        <span>{format(min)}</span><span>{format(max)}</span>
+      </div>
+    </div>
+  )
+}
+
+/* ============================================================================
+   Étape 43 — Programme Neuf
+   ============================================================================ */
+const NEUF_PROGRAMS = [
+  { id:'p1', featured:true,  name:'Les Terrasses du Lac',      developer:'Nexity',               city:'Bordeaux',   hood:'Bordeaux Lac',  type:'Appartements', priceFrom:249000, priceTo:485000, dpe:'A', delivery:'T3 2026', total:48, avail:14, img:unsplash('photo-1545324418-cc1a3fa10c00',900), features:['Parking inclus','Terrasse','Ascenseur','Digicode'], lots:[{t:'T2',surf:'44–52 m²',price:'249 000 – 285 000 €',nb:3},{t:'T3',surf:'62–75 m²',price:'320 000 – 368 000 €',nb:7},{t:'T4',surf:'86–98 m²',price:'415 000 – 485 000 €',nb:4}], desc:'Un programme d\'exception au cœur du nouveau Bordeaux, alliant architecture contemporaine et confort de vie premium. Prestations haut de gamme, exposition plein sud, vue dégagée.' },
+  { id:'p2',                 name:'Olympe Résidences',          developer:'Bouygues Immobilier',  city:'Lyon',       hood:'Confluence',    type:'Appartements', priceFrom:285000, priceTo:620000, dpe:'A', delivery:'T1 2027', total:72, avail:28, img:unsplash('photo-1486325212027-8081e485255e',900), features:['Cave','Balcon','Gardien','Fibre optique'],             lots:[{t:'T2',surf:'48–58 m²',price:'285 000 – 320 000 €',nb:8},{t:'T3',surf:'68–80 m²',price:'385 000 – 440 000 €',nb:12},{t:'T4',surf:'95–115 m²',price:'510 000 – 620 000 €',nb:8}], desc:'Face au Rhône, vivez dans un lieu d\'exception au sein du quartier Confluence avec des prestations 5 étoiles et un accès direct aux commerces et transports.' },
+  { id:'p3',                 name:'Villa Azur Résidence',       developer:'Kaufman & Broad',      city:'Nice',       hood:'Cimiez',        type:'Appartements', priceFrom:320000, priceTo:780000, dpe:'A', delivery:'T4 2026', total:36, avail:9,  img:unsplash('photo-1600607687939-ce8a6c25118c',900), features:['Piscine','Parking 2 places','Vue mer','Pergola'],     lots:[{t:'T2',surf:'52–60 m²',price:'320 000 – 370 000 €',nb:2},{t:'T3',surf:'72–88 m²',price:'460 000 – 560 000 €',nb:5},{t:'T4+',surf:'100–140 m²',price:'640 000 – 780 000 €',nb:2}], desc:'Sur les hauteurs de Cimiez, ce programme rare offre une vue panoramique sur la mer et les toits de Nice. Résidence sécurisée avec piscine commune et jardins privatifs.' },
+  { id:'p4',                 name:'Le Carré Montaigne',         developer:'Vinci Immobilier',     city:'Paris',      hood:'15e arrdt',     type:'Appartements', priceFrom:480000, priceTo:1200000, dpe:'B', delivery:'T2 2027', total:60, avail:22, img:unsplash('photo-1560518883-ce09059eeffa',900), features:['Gardien 24h','Conciergerie','Salle sport','Toiture terrasse'], lots:[{t:'T2',surf:'46–54 m²',price:'480 000 – 560 000 €',nb:6},{t:'T3',surf:'68–82 m²',price:'720 000 – 890 000 €',nb:10},{t:'T4',surf:'98–120 m²',price:'980 000 – 1,2 M€',nb:6}], desc:'Au cœur du 15e arrondissement de Paris, une adresse de prestige signée Vinci. Architecture haussmannienne réinterprétée, espaces communs luxueux, domotique intégrée.' },
+  { id:'p5',                 name:'Domaine des Pins',           developer:'Eiffage Immobilier',   city:'Toulouse',   hood:'Balma',         type:'Maisons',      priceFrom:295000, priceTo:450000, dpe:'A', delivery:'T2 2026', total:24, avail:7,  img:unsplash('photo-1600585154340-be6161a56a0c',900), features:['Jardin privatif','Garage double','Pompe à chaleur','Panneaux solaires'], lots:[{t:'T3',surf:'85 m²',price:'295 000 €',nb:3},{t:'T4',surf:'105 m²',price:'345 000 €',nb:3},{t:'T5',surf:'125 m²',price:'410 000 – 450 000 €',nb:1}], desc:'Un écrin de verdure à quelques minutes de Toulouse. Maisons individuelles contemporaines avec jardins paysagers, sobriété énergétique exemplaire (DPE A).' },
+  { id:'p6',                 name:'Nantes Horizon',             developer:'Icade Promotion',      city:'Nantes',     hood:'Île de Nantes', type:'Appartements', priceFrom:220000, priceTo:390000, dpe:'A', delivery:'T4 2026', total:54, avail:31, img:unsplash('photo-1613490493576-7fde63acd811',900), features:['Vélo-box','Loggia','Domotique','Charges réduites'],    lots:[{t:'T1',surf:'28–35 m²',price:'220 000 – 248 000 €',nb:8},{t:'T2',surf:'46–56 m²',price:'268 000 – 315 000 €',nb:15},{t:'T3',surf:'66–78 m²',price:'340 000 – 390 000 €',nb:8}], desc:'Sur l\'Île de Nantes en pleine mutation, ce programme bénéficie d\'un emplacement stratégique à 5 minutes à pied du tramway et du futur campus universitaire.' },
+]
+const NEUF_CITIES   = ['Toutes les villes', 'Bordeaux', 'Lyon', 'Nice', 'Paris', 'Toulouse', 'Nantes']
+const NEUF_TYPES    = ['Tous types', 'Appartements', 'Maisons']
+const NEUF_BUDGETS  = ['Tous budgets', '< 300 000 €', '300 – 500 000 €', '500 000 – 1 M€', '> 1 M€']
+const DPE_COLORS_NF = { A:'#047857', B:'#10B981', C:'#84CC16' }
+const NEUF_AVANTAGES = [
+  { Icon: Icons.CreditCard, title:'TVA réduite à 5,5 %', desc:'En zone ANRU ou primo-accédants, bénéficiez d\'une TVA réduite et économisez jusqu\'à 30 000 €.' },
+  { Icon: Icons.Shield, title:'Frais de notaire réduits', desc:'Seulement 2 à 3 % contre 7 à 8 % dans l\'ancien — une économie immédiate sur le prix d\'achat.' },
+  { Icon: Icons.Star, title:'Garanties constructeur', desc:'Garantie décennale, parfait achèvement, biennale : vous êtes protégé 10 ans après la livraison.' },
+  { Icon: Icons.Zap, title:'DPE A ou B garanti', desc:'RE2020 et RT2012 : performances énergétiques exemplaires, charges réduites et confort thermique supérieur.' },
+  { Icon: Icons.TrendingUp, title:'PTZ — Prêt à Taux Zéro', desc:'Finançable jusqu\'à 40 % du prix avec le PTZ pour les primo-accédants en zone éligible.' },
+]
+
+function NeufProgramCard({ prog, onOpen, featured }) {
+  const availPct = prog.total > 0 ? (prog.avail / prog.total) * 100 : 0
+  const soldPct  = 100 - availPct
+  const urgent   = prog.avail <= 10
+
+  if (featured) return (
+    <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.05 }}
+      onClick={() => onOpen(prog)}
+      className="relative rounded-3xl overflow-hidden cursor-pointer group h-72 md:h-80">
+      <img src={prog.img} alt={prog.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+      <div className="absolute inset-0 bg-gradient-to-t from-navy-900/90 via-navy-900/30 to-transparent" />
+      <div className="absolute inset-0 p-6 flex flex-col justify-between">
+        <div className="flex items-start justify-between">
+          <div className="flex gap-2">
+            <span className="bg-orange-500 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wide">Programme vedette</span>
+            <span className="text-[10px] font-bold px-2 py-1 rounded-full text-white" style={{ background: DPE_COLORS_NF[prog.dpe] || '#64748b' }}>DPE {prog.dpe}</span>
+          </div>
+          {urgent && <span className="bg-red-500/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-full">⚡ {prog.avail} lots restants</span>}
+        </div>
+        <div>
+          <div className="text-white/70 text-xs mb-1">{prog.developer} · {prog.city}, {prog.hood}</div>
+          <h3 className="text-white text-2xl font-extrabold mb-2">{prog.name}</h3>
+          <div className="flex flex-wrap items-center gap-3 text-sm">
+            <span className="text-orange-300 font-bold">À partir de {Math.round(prog.priceFrom/1000)} 000 €</span>
+            <span className="text-white/60">· Livraison {prog.delivery}</span>
+            <span className="text-white/60">· {prog.type}</span>
+          </div>
+          <div className="mt-3 flex items-center gap-3">
+            <div className="flex-1 h-1.5 bg-white/20 rounded-full overflow-hidden">
+              <div className="h-full bg-orange-400 rounded-full" style={{ width:`${soldPct}%` }} />
+            </div>
+            <span className="text-white/80 text-xs shrink-0">{prog.avail} lots disponibles / {prog.total}</span>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  )
+
+  return (
+    <motion.div initial={{ opacity:0, y:12 }} animate={{ opacity:1, y:0 }}
+      onClick={() => onOpen(prog)}
+      className="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-lg cursor-pointer group transition-all overflow-hidden">
+      <div className="relative h-44 overflow-hidden">
+        <img src={prog.img} alt={prog.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-900/60 to-transparent" />
+        <div className="absolute top-3 left-3 flex gap-1.5">
+          <span className="bg-white/90 text-navy-900 text-[10px] font-bold px-2 py-0.5 rounded-full">NEUF</span>
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full text-white" style={{ background: DPE_COLORS_NF[prog.dpe] || '#64748b' }}>DPE {prog.dpe}</span>
+        </div>
+        {urgent && <span className="absolute top-3 right-3 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">⚡ Derniers lots</span>}
+        <div className="absolute bottom-3 left-3 right-3">
+          <div className="h-1 bg-white/25 rounded-full overflow-hidden">
+            <div className="h-full bg-orange-400 rounded-full" style={{ width:`${soldPct}%` }} />
+          </div>
+        </div>
+      </div>
+      <div className="p-4">
+        <div className="text-[11px] text-slate-400 mb-0.5">{prog.developer} · {prog.hood}</div>
+        <h3 className="font-bold text-navy-900 text-sm leading-tight mb-2">{prog.name}</h3>
+        <div className="flex items-center justify-between text-xs text-slate-500 mb-3">
+          <span>Livraison {prog.delivery}</span>
+          <span className={urgent ? 'text-red-500 font-semibold' : 'text-slate-500'}>{prog.avail} lots dispo</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-[11px] text-slate-400">À partir de</div>
+            <div className="text-base font-extrabold text-navy-900">{Math.round(prog.priceFrom/1000)} 000 €</div>
+          </div>
+          <span className="text-xs font-semibold text-orange-600 group-hover:text-orange-700 transition-colors flex items-center gap-1">
+            Voir les lots <Icons.ArrowRight size={12} />
+          </span>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+function NeufDetailModal({ prog, onClose, setCurrentView }) {
+  if (!prog) return null
+  const availPct = prog.total > 0 ? (prog.avail / prog.total) * 100 : 0
+  return (
+    <AnimatePresence>
+      <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
+        className="fixed inset-0 z-[150] bg-navy-900/60 backdrop-blur-sm flex items-center justify-center p-4"
+        onClick={onClose}>
+        <motion.div initial={{ opacity:0, scale:0.96, y:20 }} animate={{ opacity:1, scale:1, y:0 }} exit={{ opacity:0, scale:0.96, y:20 }}
+          transition={{ type:'spring', damping:28, stiffness:300 }}
+          onClick={e => e.stopPropagation()}
+          className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden max-h-[88vh] flex flex-col">
+          {/* Header image */}
+          <div className="relative h-52 flex-shrink-0">
+            <img src={prog.img} alt={prog.name} className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-900/80 to-transparent" />
+            <button onClick={onClose} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center text-slate-600 hover:text-navy-900 transition-colors">
+              <Icons.X size={14} />
+            </button>
+            <div className="absolute bottom-4 left-5 right-5">
+              <div className="text-white/70 text-xs mb-0.5">{prog.developer} · {prog.city}, {prog.hood}</div>
+              <h2 className="text-white text-xl font-extrabold">{prog.name}</h2>
+            </div>
+          </div>
+          {/* Body */}
+          <div className="overflow-y-auto flex-1 p-6 space-y-5">
+            {/* Badges + availability */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full">NEUF · {prog.type}</span>
+              <span className="text-xs font-bold px-2.5 py-1 rounded-full text-white" style={{ background: DPE_COLORS_NF[prog.dpe] || '#64748b' }}>DPE {prog.dpe}</span>
+              <span className="bg-slate-100 text-slate-600 text-xs font-medium px-2.5 py-1 rounded-full">Livraison {prog.delivery}</span>
+              <span className="bg-orange-50 text-orange-600 text-xs font-bold px-2.5 py-1 rounded-full">{prog.avail} lots disponibles / {prog.total}</span>
+            </div>
+            {/* Availability bar */}
+            <div>
+              <div className="flex justify-between text-xs text-slate-500 mb-1.5">
+                <span>Avancement des réservations</span>
+                <span className="font-semibold">{Math.round(100 - availPct)} % réservé</span>
+              </div>
+              <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                <motion.div initial={{ width:0 }} animate={{ width:`${100 - availPct}%` }} transition={{ duration:0.7, ease:'easeOut' }}
+                  className="h-full rounded-full bg-orange-500" />
+              </div>
+            </div>
+            {/* Description */}
+            <p className="text-sm text-slate-600 leading-relaxed">{prog.desc}</p>
+            {/* Lots table */}
+            <div>
+              <h3 className="text-sm font-bold text-navy-900 mb-2">Lots disponibles</h3>
+              <div className="rounded-2xl border border-slate-100 overflow-hidden">
+                <div className="grid text-[11px] font-bold text-slate-400 uppercase tracking-wider px-4 py-2.5 border-b border-slate-100 bg-slate-50"
+                  style={{ gridTemplateColumns:'60px 1fr 1fr 60px' }}>
+                  <div>Type</div><div>Surface</div><div>Prix</div><div>Dispo</div>
+                </div>
+                {prog.lots.map((l, i) => (
+                  <div key={i} className="grid items-center px-4 py-3 border-b border-slate-50 last:border-0 hover:bg-orange-50/50 transition-colors"
+                    style={{ gridTemplateColumns:'60px 1fr 1fr 60px' }}>
+                    <span className="bg-navy-900 text-white text-[10px] font-bold px-2 py-0.5 rounded-lg w-fit">{l.t}</span>
+                    <span className="text-sm text-slate-600">{l.surf}</span>
+                    <span className="text-sm font-semibold text-navy-900">{l.price}</span>
+                    <span className={`text-sm font-bold ${l.nb === 0 ? 'text-slate-300' : l.nb <= 2 ? 'text-red-500' : 'text-emerald-600'}`}>{l.nb === 0 ? '—' : l.nb}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Features */}
+            <div>
+              <h3 className="text-sm font-bold text-navy-900 mb-2">Prestations incluses</h3>
+              <div className="flex flex-wrap gap-2">
+                {prog.features.map((f, i) => (
+                  <span key={i} className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-700 text-xs px-3 py-1.5 rounded-xl">
+                    <Icons.Check size={11} className="text-emerald-500" /> {f}
+                  </span>
+                ))}
+              </div>
+            </div>
+            {/* CTAs */}
+            <div className="flex gap-3 pt-1">
+              <button onClick={() => { onClose(); setCurrentView('simulateur') }}
+                className="flex-1 bg-slate-100 hover:bg-slate-200 text-navy-900 font-semibold py-3 rounded-2xl text-sm transition-colors flex items-center justify-center gap-2">
+                <Icons.CreditCard size={14} /> Simuler le financement
+              </button>
+              <button className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-2xl text-sm transition-colors flex items-center justify-center gap-2">
+                <Icons.Phone size={14} /> Être contacté
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  )
+}
+
+// ─── Mon Espace constants ─────────────────────────────────────────────────
+
+const ME_VIEWS_DATA = [
+  { day:'Lun', v:8 }, { day:'Mar', v:12 }, { day:'Mer', v:18 },
+  { day:'Jeu', v:22 }, { day:'Ven', v:14 }, { day:'Sam', v:6 }, { day:'Dim', v:4 },
+]
+const ME_FAVO_TYPES = [
+  { label:'Appartement', count:7, color:'#F97316' },
+  { label:'Maison',      count:3, color:'#64748B' },
+  { label:'Studio',      count:2, color:'#94A3B8' },
+  { label:'Autre',       count:1, color:'#CBD5E1' },
+]
+const ME_RECENT = [
+  { id:1, label:'Appartement 3P · Paris 11e',  price:'450 000 €', grad:'linear-gradient(135deg,#1e3a6e,#2563eb)' },
+  { id:2, label:'Maison 5P · Lyon 6e',         price:'780 000 €', grad:'linear-gradient(135deg,#4c1d95,#7c3aed)' },
+  { id:3, label:'Studio · Marseille 8e',       price:'210 000 €', grad:'linear-gradient(135deg,#064e3b,#059669)' },
+]
+
+function MonEspaceView({ setCurrentView }) {
+  const [tab, setTab] = useState('dashboard')
+
+  const NAV = [
+    { id:'dashboard',    label:"Vue d'ensemble",          Icon:Icons.Home       },
+    { id:'searches',     label:'Recherches sauvegardées', Icon:Icons.Search     },
+    { id:'notifs',       label:'Notifications',            Icon:Icons.Bell,  badge:3 },
+    { id:'insights',     label:'Insights IA',              Icon:Icons.Sparkles   },
+    { id:'subscription', label:'Abonnement',               Icon:Icons.CreditCard },
+    { id:'favorites',    label:'Favoris',                  Icon:Icons.Heart      },
+    { id:'profile',      label:'Mon profil',               Icon:Icons.User       },
+  ]
+
+  const W = 380, H = 100, maxV = 24
+  const pts = ME_VIEWS_DATA.map((d, i) => ({
+    x: i * (W / (ME_VIEWS_DATA.length - 1)),
+    y: (1 - d.v / maxV) * H,
+  }))
+  const linePath = pts.reduce((acc, p, i) => {
+    if (i === 0) return `M ${p.x},${p.y}`
+    const prev = pts[i - 1]
+    const cpx = (prev.x + p.x) / 2
+    return `${acc} C ${cpx},${prev.y} ${cpx},${p.y} ${p.x},${p.y}`
+  }, '')
+  const areaPath = `${linePath} L ${W},${H} L 0,${H} Z`
+
+  const favoTotal = ME_FAVO_TYPES.reduce((a, t) => a + t.count, 0)
+  const fr = 42, fcirc = 2 * Math.PI * fr
+  let fcum = 0
+  const donutSegs = ME_FAVO_TYPES.map(t => {
+    const dash = t.count / favoTotal * fcirc
+    const off  = -fcum
+    fcum += dash
+    return { ...t, dash, off }
+  })
+
+  return (
+    <div className="fixed inset-0 z-[120] flex" style={{ background:'#0D1B2E' }}>
+
+      {/* ── Sidebar ─────────────────────────────────────── */}
+      <div className="w-64 flex flex-col flex-shrink-0" style={{ background:'#0D1B2E', borderRight:'1px solid #1e3a5f' }}>
+        {/* Logo */}
+        <div className="flex items-center gap-2.5 px-6 h-16 flex-shrink-0" style={{ borderBottom:'1px solid #1e3a5f' }}>
+          <div className="w-8 h-8 rounded-xl bg-orange-500 flex items-center justify-center flex-shrink-0">
+            <Icons.Home size={16} className="text-white" />
+          </div>
+          <div>
+            <div className="text-sm font-extrabold text-white tracking-wide">PASMAL</div>
+            <div className="text-[9px] text-slate-500 font-semibold uppercase tracking-widest">Premium Estate</div>
+          </div>
+        </div>
+
+        {/* Nav items */}
+        <div className="flex-1 overflow-y-auto py-5 px-3">
+          <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-3 px-2">Navigation</p>
+          <div className="space-y-0.5">
+            {NAV.map(({ id, label, Icon, badge }) => (
+              <button key={id} onClick={() => setTab(id)}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-left"
+                style={{ background:tab === id ? '#F97316' : 'transparent', color:tab === id ? '#fff' : '#94a3b8' }}>
+                <Icon size={15} />
+                <span className="flex-1 text-[13px]">{label}</span>
+                {badge && (
+                  <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full min-w-[18px] text-center"
+                    style={{ background:tab === id ? 'rgba(255,255,255,0.25)' : '#F97316', color:'#fff' }}>{badge}</span>
+                )}
+              </button>
+            ))}
+            <div className="my-3" style={{ borderTop:'1px solid #1e3a5f' }} />
+            <button onClick={() => setCurrentView('crm')}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-left text-slate-500 hover:text-white hover:bg-white/5">
+              <Icons.Users size={15} />
+              <span className="text-[13px]">CRM</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Upgrade card */}
+        <div className="mx-3 mb-4 rounded-2xl p-4" style={{ background:'linear-gradient(135deg,#c2410c,#f97316)' }}>
+          <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center mb-3">
+            <Icons.Zap size={15} className="text-white" />
+          </div>
+          <p className="text-white font-extrabold text-sm mb-0.5">Passer à Pro</p>
+          <p className="text-orange-100 text-[11px] leading-relaxed mb-3">Alertes illimitées + IA avancée</p>
+          <button onClick={() => setCurrentView('tarifs')}
+            className="flex items-center gap-1.5 bg-white text-orange-600 text-xs font-extrabold px-3 py-1.5 rounded-xl hover:bg-orange-50 transition-colors">
+            Voir les offres <Icons.ArrowRight size={11} />
+          </button>
+        </div>
+      </div>
+
+      {/* ── Main ────────────────────────────────────────── */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+
+        {/* Header */}
+        <div className="h-16 flex items-center gap-4 px-8 flex-shrink-0" style={{ background:'#0f1f35', borderBottom:'1px solid #1e3a5f' }}>
+          <div className="flex items-center gap-2 px-4 h-9 rounded-xl" style={{ background:'#1e3a5f', width:240 }}>
+            <Icons.Search size={13} className="text-slate-500 flex-shrink-0" />
+            <input placeholder="Rechercher..." className="flex-1 text-sm text-slate-300 bg-transparent outline-none placeholder-slate-500" />
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            <button className="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:text-white transition-colors" style={{ background:'#1e3a5f' }}>
+              <Icons.Sparkles size={14} />
+            </button>
+            <div className="relative">
+              <button className="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:text-white transition-colors" style={{ background:'#1e3a5f' }}>
+                <Icons.Bell size={14} />
+              </button>
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 text-white text-[9px] font-extrabold rounded-full flex items-center justify-center">3</span>
+            </div>
+            <div className="flex items-center gap-2 px-3 h-8 rounded-xl" style={{ background:'#1e3a5f' }}>
+              <div className="w-5 h-5 rounded-lg bg-orange-500 flex items-center justify-center text-white text-[9px] font-extrabold flex-shrink-0">ME</div>
+              <span className="text-sm text-white font-semibold">Mon</span>
+              <Icons.ChevronDown size={12} className="text-slate-400" />
+            </div>
+            <button onClick={() => setCurrentView('home')}
+              className="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:text-white transition-colors" style={{ background:'#1e3a5f' }}>
+              <Icons.X size={14} />
+            </button>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto px-8 py-7">
+          {tab === 'dashboard' && (
+            <>
+              {/* Title row */}
+              <div className="flex items-start justify-between mb-7">
+                <div>
+                  <p className="text-[11px] font-bold text-orange-500 uppercase tracking-widest mb-1">Mon Espace</p>
+                  <h1 className="text-3xl font-extrabold text-white">Bonjour 👋</h1>
+                  <p className="text-slate-400 text-sm mt-1">Voici ce qui se passe sur votre espace PASMAL.</p>
+                </div>
+                <button className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm px-5 py-2.5 rounded-2xl transition-all shadow-sm flex-shrink-0">
+                  <Icons.PlusSquare size={14} /> Nouvelle alerte
+                </button>
+              </div>
+
+              {/* KPI cards */}
+              <div className="grid grid-cols-4 gap-4 mb-6">
+                {[
+                  { Icon:Icons.Bell,       color:'#F97316', val:'5',   label:'Alertes actives',  sub:'2 nouvelles correspondances' },
+                  { Icon:Icons.Heart,      color:'#EC4899', val:'12',  label:'Favoris',           sub:'3 collections créées'         },
+                  { Icon:Icons.Eye,        color:'#8B5CF6', val:'47',  label:'Annonces vues',     sub:'Cette semaine'                 },
+                  { Icon:Icons.CreditCard, color:'#10B981', val:'Pro', label:'Abonnement',        sub:"Actif jusqu'au 22/06"          },
+                ].map(({ Icon, color, val, label, sub }) => (
+                  <div key={label} className="rounded-2xl p-5" style={{ background:'#1e3a5f', border:'1px solid #2d4a6f' }}>
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background:color + '22' }}>
+                      <Icon size={20} style={{ color }} />
+                    </div>
+                    <div className="text-2xl font-extrabold text-white mb-0.5">{val}</div>
+                    <div className="text-sm font-semibold text-white mb-0.5">{label}</div>
+                    <div className="text-xs text-slate-400">{sub}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Charts row */}
+              <div className="grid grid-cols-5 gap-4 mb-6">
+                {/* Area chart */}
+                <div className="col-span-3 rounded-2xl p-6" style={{ background:'#1e3a5f', border:'1px solid #2d4a6f' }}>
+                  <div className="flex items-center justify-between mb-5">
+                    <div>
+                      <p className="text-base font-bold text-white">Annonces consultées</p>
+                      <p className="text-xs text-slate-400 mt-0.5">7 derniers jours</p>
+                    </div>
+                    <span className="text-[10px] font-extrabold px-2.5 py-1 rounded-full" style={{ background:'#10B98122', color:'#34d399' }}>+18% VS SEM. PASSÉE</span>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="flex flex-col justify-between text-[10px] text-slate-600 py-0.5 flex-shrink-0" style={{ height:100 }}>
+                      {[24, 18, 12, 6, 0].map(v => <span key={v}>{v}</span>)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height:100, display:'block' }}>
+                        <defs>
+                          <linearGradient id="meAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#F97316" stopOpacity="0.28" />
+                            <stop offset="100%" stopColor="#F97316" stopOpacity="0.02" />
+                          </linearGradient>
+                        </defs>
+                        <path d={areaPath} fill="url(#meAreaGrad)" />
+                        <path d={linePath} fill="none" stroke="#F97316" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                        {pts.map((p, i) => (
+                          <circle key={i} cx={p.x} cy={p.y} r="3.5" fill="#F97316" stroke="#1e3a5f" strokeWidth="2" />
+                        ))}
+                      </svg>
+                      <div className="flex justify-between mt-1.5">
+                        {ME_VIEWS_DATA.map(d => <span key={d.day} className="text-[10px] text-slate-500">{d.day}</span>)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Donut chart */}
+                <div className="col-span-2 rounded-2xl p-6" style={{ background:'#1e3a5f', border:'1px solid #2d4a6f' }}>
+                  <p className="text-base font-bold text-white mb-0.5">Favoris par type</p>
+                  <p className="text-xs text-slate-400 mb-5">{favoTotal} biens sauvegardés</p>
+                  <div className="flex items-center gap-5">
+                    <svg viewBox="0 0 120 120" width="100" height="100" style={{ flexShrink:0 }}>
+                      <circle cx="60" cy="60" r={fr} fill="none" stroke="#0f172a" strokeWidth="18" />
+                      {donutSegs.map((seg, i) => (
+                        <circle key={i} cx="60" cy="60" r={fr} fill="none"
+                          stroke={seg.color} strokeWidth="18"
+                          strokeDasharray={`${seg.dash} ${fcirc - seg.dash}`}
+                          strokeDashoffset={seg.off}
+                          transform="rotate(-90 60 60)" />
+                      ))}
+                    </svg>
+                    <div className="space-y-2.5 flex-1">
+                      {ME_FAVO_TYPES.map(t => (
+                        <div key={t.label} className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background:t.color }} />
+                            <span className="text-xs text-slate-300 truncate">{t.label}</span>
+                          </div>
+                          <span className="text-xs font-bold text-white flex-shrink-0">{t.count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Recently viewed */}
+              <div className="rounded-2xl p-6" style={{ background:'#1e3a5f', border:'1px solid #2d4a6f' }}>
+                <div className="flex items-center justify-between mb-5">
+                  <div>
+                    <p className="text-base font-bold text-white">Consultées récemment</p>
+                    <p className="text-xs text-slate-400 mt-0.5">Vos dernières annonces visitées</p>
+                  </div>
+                  <button className="text-orange-500 hover:text-orange-400 text-sm font-semibold flex items-center gap-1.5 transition-colors">
+                    Voir les favoris <Icons.ArrowRight size={13} />
+                  </button>
+                </div>
+                <div className="grid grid-cols-3 gap-4">
+                  {ME_RECENT.map(p => (
+                    <div key={p.id} className="rounded-2xl overflow-hidden cursor-pointer hover:-translate-y-0.5 transition-transform">
+                      <div className="h-36 relative" style={{ background:p.grad }}>
+                        <div className="absolute inset-0" style={{ background:'linear-gradient(to top,rgba(0,0,0,0.55),transparent)' }} />
+                        <div className="absolute bottom-3 left-3 right-10">
+                          <div className="text-white font-bold text-sm leading-tight">{p.label}</div>
+                          <div className="text-orange-300 text-xs font-semibold mt-0.5">{p.price}</div>
+                        </div>
+                        <button className="absolute top-3 right-3 w-7 h-7 rounded-full flex items-center justify-center" style={{ background:'rgba(255,255,255,0.15)', backdropFilter:'blur(4px)' }}>
+                          <Icons.Heart size={13} className="text-white" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
+          {tab !== 'dashboard' && (
+            <div className="flex items-center justify-center" style={{ minHeight:'60vh' }}>
+              <div className="text-center">
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background:'#1e3a5f' }}>
+                  <Icons.Sparkles size={28} style={{ color:'#F97316' }} />
+                </div>
+                <p className="text-white font-bold text-lg mb-1">{NAV.find(n => n.id === tab)?.label}</p>
+                <p className="text-slate-400 text-sm">Fonctionnalité à venir.</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── CRM constants ────────────────────────────────────────────────────────
+
+const CRM_LEADS_DATA = [
+  { id:1,  fn:'Sophie',  ln:'Martin',   ini:'SM', email:'sophie.m@email.com',     phone:'06 12 34 56 78', src:'Leboncoin', prop:'Appt 3P Paris 11',  budget:450000,  score:87, status:'nouveau',     profile:'Acheteur sérieux', tags:['URGENT','FINANCEMENT OK'],  date:'2026-05-20', notes:'Cherche pour juillet, financement accordé.'    },
+  { id:2,  fn:'Thomas',  ln:'Dupont',   ini:'TD', email:'thomas.d@gmail.com',     phone:'06 23 45 67 89', src:'SeLoger',   prop:'Villa 5P Lyon',      budget:780000,  score:72, status:'nouveau',     profile:'Investisseur',     tags:['INVESTISSEMENT'],           date:'2026-05-21', notes:'Investisseur Lyon, cherche rendement > 5 %.'   },
+  { id:3,  fn:'Amina',   ln:'Benali',   ini:'AB', email:'a.benali@hotmail.fr',    phone:'06 34 56 78 90', src:'PAP',       prop:'Studio Paris 15',    budget:210000,  score:55, status:'contacte',    profile:'Faible intention', tags:['INCERTAIN'],                date:'2026-05-19', notes:'Indécise, compare plusieurs options.'           },
+  { id:4,  fn:'Romain',  ln:'Lefèvre',  ini:'RL', email:'r.lefevre@pro.fr',       phone:'06 45 67 89 01', src:"Bien'ici",  prop:'Appt 4P Bordeaux',   budget:320000,  score:91, status:'contacte',    profile:'Acheteur sérieux', tags:['URGENT','CASH'],            date:'2026-05-22', notes:'Acheteur cash, décision très rapide.'           },
+  { id:5,  fn:'Lucie',   ln:'Moreau',   ini:'LM', email:'lucie.moreau@gmail.com', phone:'06 56 78 90 12', src:'SeLoger',   prop:'Maison Nantes',       budget:550000,  score:80, status:'visite',      profile:'Acheteur sérieux', tags:['FAMILLE'],                  date:'2026-05-18', notes:'Famille avec 2 enfants, besoin jardin.'         },
+  { id:6,  fn:'Hugo',    ln:'Bernard',  ini:'HB', email:'h.bernard@outlook.com',  phone:'06 67 89 01 23', src:'Leboncoin', prop:'Loft Paris 10',       budget:380000,  score:68, status:'visite',      profile:'Investisseur',     tags:['LOCATION'],                 date:'2026-05-17', notes:'Veut louer après achat, cherche rendement.'     },
+  { id:7,  fn:'Clara',   ln:'Petit',    ini:'CP', email:'c.petit@email.fr',       phone:'06 78 90 12 34', src:'PAP',       prop:'Appt 2P Paris 9',    budget:290000,  score:63, status:'negociation', profile:'Acheteur sérieux', tags:['AGENCE','MANDAT'],          date:'2026-05-15', notes:'En cours de négociation, offre déposée.'        },
+  { id:8,  fn:'Maxime',  ln:'Girard',   ini:'MG', email:'m.girard@gmail.com',     phone:'06 89 01 23 45', src:"Bien'ici",  prop:'Villa Cannes',        budget:1200000, score:76, status:'negociation', profile:'Acheteur sérieux', tags:['PREMIUM','CASH'],           date:'2026-05-14', notes:'Client premium, villa vue mer.'                 },
+  { id:9,  fn:'Julie',   ln:'Blanc',    ini:'JB', email:'j.blanc@pro.fr',         phone:'06 90 12 34 56', src:'SeLoger',   prop:'T2 Marseille 8',      budget:220000,  score:45, status:'gagne',       profile:'Acheteur sérieux', tags:['LOCATION'],                 date:'2026-05-10', notes:'Vendu ! Signature chez notaire.'                },
+  { id:10, fn:'Pierre',  ln:'Lambert',  ini:'PL', email:'p.lambert@email.com',    phone:'06 01 23 45 67', src:'PAP',       prop:'Maison Nice',         budget:650000,  score:33, status:'perdu',       profile:'Faible intention', tags:[],                           date:'2026-05-08', notes:'A choisi une autre agence.'                     },
+  { id:11, fn:'Marie',   ln:'Cohen',    ini:'MC', email:'m.cohen@gmail.com',      phone:'06 12 34 56 79', src:"Bien'ici",  prop:'Studio Lyon 3',       budget:180000,  score:58, status:'gagne',       profile:'Acheteur sérieux', tags:['INVESTISSEMENT'],           date:'2026-05-05', notes:'Investisseur, LMNP Lyon.'                       },
+  { id:12, fn:'David',   ln:'Rousseau', ini:'DR', email:'d.rousseau@pro.fr',      phone:'06 23 45 67 90', src:'SeLoger',   prop:'Appt 5P Bordeaux',    budget:490000,  score:42, status:'perdu',       profile:'Faible intention', tags:[],                           date:'2026-04-28', notes:'Budget trop serré après simulation.'            },
+]
+const CRM_PIPELINE = [
+  { id:'nouveau',     label:'Nouveau lead',  color:'#94A3B8' },
+  { id:'contacte',    label:'Contacté',      color:'#3B82F6' },
+  { id:'visite',      label:'Visite prévue', color:'#8B5CF6' },
+  { id:'negociation', label:'Négociation',   color:'#F59E0B' },
+  { id:'gagne',       label:'Gagné',         color:'#10B981' },
+]
+const CRM_CONV_DATA = [
+  { m:'Janv', leads:15, conv:5  },
+  { m:'Févr', leads:18, conv:7  },
+  { m:'Mars', leads:22, conv:9  },
+  { m:'Avr',  leads:25, conv:11 },
+  { m:'Mai',  leads:28, conv:13 },
+]
+const CRM_SOURCES = [
+  { label:'SeLoger',  pct:32, color:'#3B82F6' },
+  { label:'Leboncoin',pct:28, color:'#F97316' },
+  { label:'PAP',      pct:18, color:'#8B5CF6' },
+  { label:"Bien'ici", pct:14, color:'#10B981' },
+  { label:'Autre',    pct:8,  color:'#94A3B8' },
+]
+const CRM_TEMPLATES = [
+  { emoji:'👋', label:'Prise de contact',       delay:'Immédiat'        },
+  { emoji:'🔔', label:'Relance J+3',            delay:'Après 3 jours'   },
+  { emoji:'📅', label:'Confirmation de visite', delay:'Visite prévue'   },
+  { emoji:'💬', label:'Suivi post-visite',      delay:'Après la visite' },
+  { emoji:'🏡', label:'Offre personnalisée',    delay:'Négociation'     },
+]
+
+function CrmView({ setCurrentView }) {
+  const [tab, setTab]             = useState('kanban')
+  const [dark, setDark]           = useState(false)
+  const [search, setSearch]       = useState('')
+  const [selected, setSelected]   = useState(null)
+  const [leads, setLeads]         = useState(CRM_LEADS_DATA)
+  const [editNotes, setEditNotes]   = useState(false)
+  const [notesVal, setNotesVal]     = useState('')
+  const [draggingId, setDraggingId] = useState(null)
+  const [dragOver, setDragOver]     = useState(null)
+  const [newLeadOpen, setNewLeadOpen] = useState(false)
+  const [newForm, setNewForm] = useState({ nom:'', email:'', phone:'', src:'', prop:'', budget:'', profile:'', notes:'' })
+  const [newFormErr, setNewFormErr] = useState('')
+
+  const total    = leads.length
+  const gagne    = leads.filter(l => l.status === 'gagne').length
+  const conv     = Math.round((gagne / total) * 100)
+  const negoc    = leads.filter(l => l.status === 'negociation').length
+  const perdus   = leads.filter(l => l.status === 'perdu').length
+  const scoreAvg = Math.round(leads.reduce((a, l) => a + l.score, 0) / total)
+
+  const S = {
+    nouveau:     { label:'Nouveau lead',  bg:'#1e293b' },
+    contacte:    { label:'Contacté',      bg:'#2563EB' },
+    visite:      { label:'Visite prévue', bg:'#7C3AED' },
+    negociation: { label:'Négociation',   bg:'#D97706' },
+    gagne:       { label:'Gagné',         bg:'#059669' },
+    perdu:       { label:'Perdu',         bg:'#DC2626' },
+  }
+  const P = {
+    'Acheteur sérieux': { bg:'#D1FAE5', text:'#065F46', emoji:'🎯' },
+    'Investisseur':     { bg:'#DBEAFE', text:'#1E40AF', emoji:'📈' },
+    'Faible intention': { bg:'#F1F5F9', text:'#475569', emoji:'👤' },
+    'Agence':           { bg:'#FEF3C7', text:'#92400E', emoji:'🏢' },
+  }
+
+  const sColor    = s => s >= 80 ? '#10B981' : s >= 60 ? '#F97316' : '#EF4444'
+  const fmtBudget = n => n >= 1000000 ? (n / 1000000).toFixed(1) + ' M€' : (n / 1000).toFixed(0) + ' 000 €'
+  const AVCOLS    = { S:'#3B82F6',T:'#8B5CF6',A:'#F97316',R:'#10B981',L:'#F59E0B',H:'#06B6D4',C:'#EC4899',M:'#6366F1',J:'#84CC16',P:'#F43F5E',D:'#14B8A6' }
+  const avColor   = ini => AVCOLS[ini[0]] || '#94A3B8'
+
+  const bg   = dark ? '#0f172a' : '#f8fafc'
+  const card = dark ? '#1e293b' : '#ffffff'
+  const bdr  = dark ? '#334155' : '#e2e8f0'
+  const txt  = dark ? '#f1f5f9' : '#0f172a'
+  const sub  = dark ? '#94a3b8' : '#64748b'
+
+  const Av = ({ ini, sz = 36 }) => (
+    <div className="flex items-center justify-center rounded-full font-bold text-white flex-shrink-0 select-none"
+      style={{ width:sz, height:sz, background:'#0f172a', fontSize:sz*0.35 }}>{ini}</div>
+  )
+  const ScoreBadge = ({ s }) => (
+    <span className="text-xs font-bold px-1.5 py-0.5 rounded-lg tabular-nums"
+      style={{ background:sColor(s)+'22', color:sColor(s) }}>{s}</span>
+  )
+  const StatusPill = ({ st }) => (
+    <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full text-white whitespace-nowrap"
+      style={{ background:S[st]?.bg || '#64748b' }}>{S[st]?.label || st}</span>
+  )
+
+  const filteredLeads = search
+    ? leads.filter(l => `${l.fn} ${l.ln} ${l.prop} ${l.email}`.toLowerCase().includes(search.toLowerCase()))
+    : leads
+
+  const updateStatus = (id, status) => {
+    setLeads(ls => ls.map(l => l.id === id ? { ...l, status } : l))
+    setSelected(s => s ? { ...s, status } : s)
+  }
+
+  const handleNewLead = () => {
+    if (!newForm.nom.trim() || !newForm.email.trim()) { setNewFormErr('Le nom et l\'e-mail sont obligatoires.'); return }
+    const parts = newForm.nom.trim().split(' ')
+    const fn = parts[0] || ''
+    const ln = parts.slice(1).join(' ') || ''
+    const ini = ((fn[0] || '') + (ln[0] || '')).toUpperCase() || fn[0]?.toUpperCase() || '?'
+    const score = Math.floor(Math.random() * 25) + 65
+    const today = new Date().toISOString().slice(0, 10)
+    const lead = {
+      id: Date.now(), fn, ln, ini,
+      email: newForm.email.trim(), phone: newForm.phone.trim(),
+      src: newForm.src || 'Autre', prop: newForm.prop.trim() || 'Non précisé',
+      budget: parseInt(newForm.budget.replace(/\s/g, '')) || 0,
+      score, status: 'nouveau',
+      profile: newForm.profile || 'Faible intention',
+      tags: [], date: today, notes: newForm.notes.trim(),
+    }
+    setLeads(ls => [lead, ...ls])
+    setNewLeadOpen(false)
+    setNewForm({ nom:'', email:'', phone:'', src:'', prop:'', budget:'', profile:'', notes:'' })
+    setNewFormErr('')
+  }
+
+  // Donut chart
+  const r = 42, circ = 2 * Math.PI * r
+  let cum = 0
+  const donutSegs = CRM_SOURCES.map(src => {
+    const dash = src.pct / 100 * circ
+    const off  = -cum
+    cum += dash
+    return { ...src, dash, off }
+  })
+
+  // Bar chart
+  const maxL = Math.max(...CRM_CONV_DATA.map(d => d.leads))
+  const BH = 100, BW = 28, BGAP = 20, GW = BW * 2 + 6
+  const CW = CRM_CONV_DATA.length * (GW + BGAP)
+
+  const SIDEBAR_NAV = [
+    { Icon:Icons.Home,       label:"Vue d'ensemble",         id:'home-crm'   },
+    { Icon:Icons.Search,     label:'Recherches sauvegardées', id:'saved'      },
+    { Icon:Icons.Bell,       label:'Notifications',           id:'notifs',    badge:4 },
+    { Icon:Icons.Sparkles,   label:'Insights IA',             id:'insights'   },
+    { Icon:Icons.CreditCard, label:'Abonnement',              id:'abonnement' },
+    { Icon:Icons.Heart,      label:'Favoris',                 id:'favoris'    },
+    { Icon:Icons.User,       label:'Mon profil',              id:'profil'     },
+  ]
+
+  return (
+    <div className="fixed inset-0 z-[120] flex">
+
+      {/* Sidebar */}
+      <aside className="w-64 flex flex-col flex-shrink-0 overflow-y-auto" style={{ background:'#0D1B2E' }}>
+        <div className="px-6 py-5 border-b border-white/10">
+          <BrandLogo dark />
+        </div>
+        <nav className="flex-1 px-4 py-5 space-y-0.5">
+          <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest px-2 mb-3">Navigation</p>
+          {SIDEBAR_NAV.map(n => (
+            <button key={n.id}
+              onClick={() => n.id === 'profil' && setCurrentView('profil')}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all text-left">
+              <n.Icon size={16} />
+              <span className="flex-1 truncate">{n.label}</span>
+              {n.badge && <span className="w-5 h-5 rounded-full bg-orange-500 text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0">{n.badge}</span>}
+            </button>
+          ))}
+        </nav>
+        <div className="px-4 pb-3">
+          <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-white bg-orange-500">
+            <Icons.Users size={16} /> CRM
+          </button>
+        </div>
+        <div className="mx-4 mb-5 p-4 rounded-2xl" style={{ background:'rgba(249,115,22,0.15)', border:'1px solid rgba(249,115,22,0.25)' }}>
+          <div className="flex items-center gap-2 mb-1">
+            <Icons.Zap size={14} className="text-orange-400" />
+            <span className="text-sm font-bold text-white">Passer à Pro</span>
+          </div>
+          <p className="text-xs text-white/60 mb-3">Alertes illimitées + IA avancée</p>
+          <button className="w-full bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold py-2 rounded-xl transition-all"
+            onClick={() => setCurrentView('tarifs')}>Voir les offres →</button>
+        </div>
+      </aside>
+
+      {/* Main */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden" style={{ background:bg }}>
+
+        {/* Top bar */}
+        <header className="flex items-center gap-4 px-8 py-3.5 flex-shrink-0" style={{ background:card, borderBottom:`1px solid ${bdr}` }}>
+          <div className="flex items-center gap-2.5 flex-1 max-w-sm px-4 h-10 rounded-full border" style={{ background:bg, borderColor:bdr }}>
+            <Icons.Search size={14} style={{ color:sub }} />
+            <input className="flex-1 text-sm bg-transparent outline-none" placeholder="Rechercher..."
+              style={{ color:txt }} value={search} onChange={e => setSearch(e.target.value)} />
+          </div>
+          <div className="flex items-center gap-2.5 ml-auto">
+            <button onClick={() => setDark(v => !v)} className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-slate-100 transition-all" style={{ color:sub }}>
+              {dark
+                ? <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                : <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+              }
+            </button>
+            <button className="w-9 h-9 rounded-full flex items-center justify-center relative" style={{ color:sub }}>
+              <Icons.Bell size={16} />
+              <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-orange-500 rounded-full" />
+            </button>
+            <div className="flex items-center gap-2 cursor-pointer">
+              <div className="w-8 h-8 rounded-full text-white text-xs font-bold flex items-center justify-center" style={{ background:'#0f172a' }}>ME</div>
+              <span className="text-sm font-semibold" style={{ color:txt }}>Mon</span>
+              <Icons.ChevronDown size={13} style={{ color:sub }} />
+            </div>
+            <button onClick={() => setCurrentView('home')}
+              className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-orange-500 transition-colors px-3 py-1.5 rounded-xl border border-slate-200 hover:border-orange-300">
+              <Icons.ChevronLeft size={12} /> Accueil
+            </button>
+          </div>
+        </header>
+
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto px-8 py-6">
+
+          {/* Title */}
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <h1 className="text-2xl font-extrabold" style={{ color:txt }}>CRM Immobilier</h1>
+              <p className="text-sm mt-0.5" style={{ color:sub }}>{total} leads · {gagne} gagnés · Taux de conv. {conv}%</p>
+            </div>
+            <button onClick={() => setNewLeadOpen(true)} className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm px-5 py-2.5 rounded-2xl transition-all shadow-sm">
+              <Icons.PlusSquare size={15} /> Nouveau lead
+            </button>
+          </div>
+
+          {/* KPI cards */}
+          <div className="grid grid-cols-4 gap-4 mb-6">
+            {[
+              { Icon:Icons.Users,       color:'#3B82F6', val:total,    label:'Total leads'    },
+              { Icon:Icons.TrendingUp,  color:'#10B981', val:conv+'%', label:'Taux de conv.'  },
+              { Icon:Icons.Tag,         color:'#F59E0B', val:negoc,    label:'En négociation' },
+              { Icon:Icons.AlertCircle, color:'#EF4444', val:perdus,   label:'Perdus'         },
+            ].map(({ Icon, color, val, label }) => (
+              <div key={label} className="rounded-2xl p-5" style={{ background:card, border:`1px solid ${bdr}`, boxShadow:'0 1px 4px rgba(0,0,0,0.05)' }}>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background:color+'22', color }}>
+                  <Icon size={18} />
+                </div>
+                <div className="text-3xl font-extrabold" style={{ color:txt }}>{val}</div>
+                <div className="text-sm mt-0.5" style={{ color:sub }}>{label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Tab bar */}
+          <div className="flex items-center gap-0.5 p-1 rounded-2xl mb-6 w-fit" style={{ background:dark?'#1e293b':'#f1f5f9' }}>
+            {[
+              { id:'kanban',    label:'Kanban'    },
+              { id:'leads',     label:'Leads'     },
+              { id:'analytics', label:'Analytics' },
+              { id:'automation',label:'Automation'},
+            ].map(({ id, label }) => (
+              <button key={id} onClick={() => setTab(id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${tab===id?'bg-white shadow-sm':''}`}
+                style={{ color:tab===id?txt:sub }}>
+                {id==='kanban'    && <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><rect width="7" height="12" x="3" y="6" rx="1"/><rect width="7" height="9" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/></svg>}
+                {id==='leads'     && <Icons.Users size={13} />}
+                {id==='analytics' && <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>}
+                {id==='automation'&& <Icons.Zap size={13} />}
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {/* KANBAN */}
+          {tab === 'kanban' && (
+            <div className="flex gap-4 overflow-x-auto pb-4">
+              {CRM_PIPELINE.map(col => {
+                const colL = leads.filter(l => l.status === col.id)
+                const isOver = dragOver === col.id
+                return (
+                  <div key={col.id} className="flex-shrink-0 w-72"
+                    onDragOver={e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; if (dragOver !== col.id) setDragOver(col.id) }}
+                    onDragLeave={e => { if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) setDragOver(null) }}
+                    onDrop={e => {
+                      e.preventDefault()
+                      const id = parseInt(e.dataTransfer.getData('leadId'))
+                      if (id) updateStatus(id, col.id)
+                      setDraggingId(null)
+                      setDragOver(null)
+                    }}>
+                    {/* Column header */}
+                    <div className="flex items-center gap-2 mb-3 px-1 py-1.5 rounded-xl transition-colors"
+                      style={{ background: isOver ? col.color + '18' : 'transparent' }}>
+                      <div className="w-2.5 h-2.5 rounded-full transition-transform" style={{ background:col.color, transform: isOver ? 'scale(1.3)' : 'scale(1)' }} />
+                      <span className="text-sm font-bold" style={{ color:txt }}>{col.label}</span>
+                      <span className="ml-auto text-xs font-bold px-2 py-0.5 rounded-full" style={{ background:dark?'#334155':'#f1f5f9', color:sub }}>{colL.length}</span>
+                    </div>
+                    {/* Drop zone */}
+                    <div className="space-y-3 rounded-2xl transition-all"
+                      style={{
+                        minHeight: 80,
+                        padding: isOver ? '8px' : '0',
+                        background: isOver ? col.color + '0d' : 'transparent',
+                        border: isOver ? `2px dashed ${col.color}66` : '2px solid transparent',
+                      }}>
+                      {colL.map(lead => (
+                        <motion.div key={lead.id}
+                          layout
+                          layoutId={`lead-${lead.id}`}
+                          transition={{ type:'spring', stiffness:400, damping:30 }}
+                          draggable={true}
+                          onDragStart={e => {
+                            setDraggingId(lead.id)
+                            e.dataTransfer.setData('leadId', String(lead.id))
+                            e.dataTransfer.effectAllowed = 'move'
+                          }}
+                          onDragEnd={() => { setDraggingId(null); setDragOver(null) }}
+                          onClick={() => { if (!draggingId) { setSelected(lead); setNotesVal(lead.notes); setEditNotes(false) } }}
+                          className="rounded-2xl p-4 transition-opacity"
+                          style={{
+                            background:card,
+                            border:`1px solid ${bdr}`,
+                            boxShadow: draggingId === lead.id ? 'none' : '0 1px 4px rgba(0,0,0,0.06)',
+                            opacity: draggingId === lead.id ? 0.35 : 1,
+                            cursor: draggingId ? 'grabbing' : 'grab',
+                          }}>
+                          <div className="flex items-center gap-2.5 mb-2.5">
+                            <Av ini={lead.ini} sz={32} />
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm font-bold truncate" style={{ color:txt }}>{lead.fn} {lead.ln}</div>
+                              <div className="text-[11px] truncate" style={{ color:sub }}>{lead.prop}</div>
+                            </div>
+                            <ScoreBadge s={lead.score} />
+                          </div>
+                          <div className="text-sm font-extrabold text-orange-500 mb-2">{fmtBudget(lead.budget)}</div>
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                              style={{ background:P[lead.profile]?.bg, color:P[lead.profile]?.text }}>
+                              {P[lead.profile]?.emoji} {lead.profile}
+                            </span>
+                            <span className="text-[10px] ml-auto" style={{ color:sub }}>{lead.date.slice(5)}</span>
+                          </div>
+                          {lead.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                              {lead.tags.map(t => (
+                                <span key={t} className="text-[9px] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wide"
+                                  style={{ background:dark?'#334155':'#f1f5f9', color:sub }}>{t}</span>
+                              ))}
+                            </div>
+                          )}
+                        </motion.div>
+                      ))}
+                      {colL.length === 0 && (
+                        <div className="rounded-xl border-2 border-dashed p-6 text-center transition-all"
+                          style={{ borderColor: isOver ? col.color : bdr, background: isOver ? col.color + '0d' : 'transparent' }}>
+                          <p className="text-xs font-medium" style={{ color: isOver ? col.color : sub }}>
+                            {isOver ? 'Déposer ici' : 'Aucun lead'}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+
+          {/* LEADS */}
+          {tab === 'leads' && (
+            <div>
+              <div className="flex items-center gap-2.5 px-4 h-10 rounded-full border mb-5 max-w-xs"
+                style={{ background:card, borderColor:bdr }}>
+                <Icons.Search size={13} style={{ color:sub }} />
+                <input className="flex-1 text-sm bg-transparent outline-none" placeholder="Chercher un lead..."
+                  style={{ color:txt }} value={search} onChange={e => setSearch(e.target.value)} />
+              </div>
+              <div className="rounded-2xl overflow-hidden" style={{ background:card, border:`1px solid ${bdr}` }}>
+                <div className="grid px-5 py-3 border-b text-[10px] font-bold uppercase tracking-wider"
+                  style={{ gridTemplateColumns:'minmax(0,3fr) minmax(0,2fr) 80px 150px 40px', borderColor:bdr, color:sub }}>
+                  <span>Lead</span><span>Bien / Budget</span><span>Score</span><span>Statut</span><span/>
+                </div>
+                {filteredLeads.map(lead => (
+                  <div key={lead.id}
+                    onClick={() => { setSelected(lead); setNotesVal(lead.notes); setEditNotes(false) }}
+                    className="grid px-5 py-3.5 border-b items-center cursor-pointer transition-colors"
+                    style={{ gridTemplateColumns:'minmax(0,3fr) minmax(0,2fr) 80px 150px 40px', borderColor:bdr }}
+                    onMouseEnter={e => e.currentTarget.style.background = dark?'#263044':'#f8fafc'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <Av ini={lead.ini} sz={36} />
+                      <div className="min-w-0">
+                        <div className="text-sm font-semibold truncate" style={{ color:txt }}>{lead.fn} {lead.ln}</div>
+                        <div className="text-xs truncate" style={{ color:sub }}>{lead.email}</div>
+                      </div>
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-sm truncate" style={{ color:txt }}>{lead.prop}</div>
+                      <div className="text-xs font-bold text-orange-500">{fmtBudget(lead.budget)}</div>
+                    </div>
+                    <ScoreBadge s={lead.score} />
+                    <StatusPill st={lead.status} />
+                    <button className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-slate-100 transition-all"
+                      style={{ color:sub }} onClick={e => e.stopPropagation()}>
+                      <svg width={14} height={14} viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ANALYTICS */}
+          {tab === 'analytics' && (
+            <div className="space-y-5">
+              <div className="grid grid-cols-4 gap-4">
+                {[
+                  { Icon:Icons.Users,       color:'#3B82F6', val:total,     label:'Total leads'    },
+                  { Icon:Icons.TrendingUp,  color:'#10B981', val:conv+'%',  label:'Taux de conv.'  },
+                  { Icon:Icons.Sparkles,    color:'#8B5CF6', val:scoreAvg,  label:'Score IA moyen' },
+                  { Icon:Icons.AlertCircle, color:'#EF4444', val:perdus,    label:'Perdus'         },
+                ].map(({ Icon, color, val, label }) => (
+                  <div key={label} className="rounded-2xl p-5" style={{ background:card, border:`1px solid ${bdr}` }}>
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background:color+'22', color }}>
+                      <Icon size={18} />
+                    </div>
+                    <div className="text-3xl font-extrabold" style={{ color:txt }}>{val}</div>
+                    <div className="text-sm mt-0.5" style={{ color:sub }}>{label}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="grid grid-cols-2 gap-5">
+                <div className="rounded-2xl p-5" style={{ background:card, border:`1px solid ${bdr}` }}>
+                  <h3 className="text-sm font-bold mb-4" style={{ color:txt }}>Entonnoir de conversion</h3>
+                  <svg width="100%" viewBox={`0 0 ${CW + 50} ${BH + 30}`}>
+                    {[0, 0.25, 0.5, 0.75, 1].map((frac, i) => {
+                      const v = Math.round(frac * maxL)
+                      const y = BH - frac * BH
+                      return (
+                        <g key={i}>
+                          <line x1="35" y1={y} x2={CW + 35} y2={y} stroke={dark?'#334155':'#e2e8f0'} strokeWidth={0.8}/>
+                          <text x="30" y={y + 3.5} fontSize={8} fill={sub} textAnchor="end">{v}</text>
+                        </g>
+                      )
+                    })}
+                    {CRM_CONV_DATA.map((d, i) => {
+                      const gx = 35 + i * (GW + BGAP)
+                      const h1 = (d.leads / maxL) * BH
+                      const h2 = (d.conv  / maxL) * BH
+                      return (
+                        <g key={d.m}>
+                          <rect x={gx}      y={BH-h1} width={BW} height={h1} rx={3} fill="#3B82F6" opacity={0.85}/>
+                          <rect x={gx+BW+6} y={BH-h2} width={BW} height={h2} rx={3} fill="#8B5CF6" opacity={0.85}/>
+                          <text x={gx+GW/2} y={BH+14} fontSize={9} fill={sub} textAnchor="middle">{d.m}</text>
+                        </g>
+                      )
+                    })}
+                  </svg>
+                  <div className="flex items-center gap-4 mt-1">
+                    {[{c:'#3B82F6',l:'Leads'},{c:'#8B5CF6',l:'Convertis'}].map(({ c, l }) => (
+                      <div key={l} className="flex items-center gap-1.5">
+                        <div className="w-2.5 h-2.5 rounded-sm" style={{ background:c }}/>
+                        <span className="text-[11px]" style={{ color:sub }}>{l}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="rounded-2xl p-5" style={{ background:card, border:`1px solid ${bdr}` }}>
+                  <h3 className="text-sm font-bold mb-4" style={{ color:txt }}>Sources de leads</h3>
+                  <div className="flex items-center gap-6">
+                    <svg width={120} height={120} viewBox="0 0 120 120">
+                      <circle cx="60" cy="60" r={r} fill="none" stroke={dark?'#334155':'#f1f5f9'} strokeWidth={18}/>
+                      {donutSegs.map((seg, i) => (
+                        <circle key={i} cx="60" cy="60" r={r} fill="none"
+                          stroke={seg.color} strokeWidth={18}
+                          strokeDasharray={`${seg.dash} ${circ}`}
+                          strokeDashoffset={seg.off}
+                          transform="rotate(-90, 60, 60)"/>
+                      ))}
+                      <text x="60" y="57" textAnchor="middle" fontSize={11} fontWeight="700" fill={txt}>{total}</text>
+                      <text x="60" y="70" textAnchor="middle" fontSize={8} fill={sub}>leads</text>
+                    </svg>
+                    <div className="flex-1 space-y-2.5">
+                      {CRM_SOURCES.map(s => (
+                        <div key={s.label} className="flex items-center gap-2">
+                          <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background:s.color }}/>
+                          <span className="text-xs flex-1" style={{ color:txt }}>{s.label}</span>
+                          <span className="text-xs font-bold" style={{ color:sub }}>{s.pct}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-5">
+                <div className="rounded-2xl p-5" style={{ background:card, border:`1px solid ${bdr}` }}>
+                  <h3 className="text-sm font-bold mb-4" style={{ color:txt }}>Taux de réponse par jour</h3>
+                  <div className="flex items-end gap-2" style={{ height:56 }}>
+                    {[72,88,65,91,78,84,70].map((v,i) => (
+                      <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
+                        <div className="w-full rounded-sm" style={{ height:`${Math.round(v*0.52)}px`, background:'#F97316', opacity:0.75 }}/>
+                        <span className="text-[9px]" style={{ color:sub }}>{['L','M','M','J','V','S','D'][i]}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="rounded-2xl p-5" style={{ background:card, border:`1px solid ${bdr}` }}>
+                  <h3 className="text-sm font-bold mb-4" style={{ color:txt }}>Meilleures villes</h3>
+                  <div className="space-y-2.5">
+                    {[['Paris',4,'#3B82F6'],['Lyon',3,'#8B5CF6'],['Bordeaux',2,'#F97316'],['Nantes',2,'#10B981'],['Cannes',1,'#F59E0B']].map(([city,n,color]) => (
+                      <div key={city} className="flex items-center gap-3">
+                        <span className="text-xs font-medium w-20" style={{ color:txt }}>{city}</span>
+                        <div className="flex-1 h-1.5 rounded-full" style={{ background:dark?'#334155':'#f1f5f9' }}>
+                          <div className="h-full rounded-full" style={{ width:`${(n/4)*100}%`, background:color }}/>
+                        </div>
+                        <span className="text-xs font-bold w-4 text-right" style={{ color:sub }}>{n}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* AUTOMATION */}
+          {tab === 'automation' && (
+            <div className="grid grid-cols-2 gap-6">
+              <div className="rounded-2xl p-5" style={{ background:card, border:`1px solid ${bdr}` }}>
+                <h3 className="text-sm font-bold mb-0.5" style={{ color:txt }}>Templates d'emails automatiques</h3>
+                <p className="text-xs mb-4" style={{ color:sub }}>Séquences de suivi prédéfinies</p>
+                <div className="space-y-2">
+                  {CRM_TEMPLATES.map((t, i) => (
+                    <div key={i} className="flex items-center gap-3 px-4 py-3 rounded-2xl border cursor-pointer transition-all hover:shadow-sm"
+                      style={{ borderColor:bdr, background:dark?'#263044':'#f8fafc' }}>
+                      <span className="text-lg">{t.emoji}</span>
+                      <div className="flex-1">
+                        <div className="text-sm font-semibold" style={{ color:txt }}>{t.label}</div>
+                        <div className="text-xs" style={{ color:sub }}>{t.delay}</div>
+                      </div>
+                      <Icons.ChevronDown size={14} style={{ color:sub }}/>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-5">
+                <div className="rounded-2xl p-5" style={{ background:card, border:`1px solid ${bdr}` }}>
+                  <h3 className="text-sm font-bold mb-0.5" style={{ color:txt }}>Relances prioritaires</h3>
+                  <p className="text-xs mb-4" style={{ color:sub }}>Leads à recontacter en urgence</p>
+                  <div className="space-y-2.5">
+                    {leads.filter(l => ['negociation','visite','contacte'].includes(l.status))
+                      .sort((a,b) => a.date.localeCompare(b.date))
+                      .slice(0, 5)
+                      .map(lead => {
+                        const days = Math.ceil((new Date('2026-05-28') - new Date(lead.date)) / 86400000)
+                        return (
+                          <div key={lead.id} className="flex items-center gap-3 p-3 rounded-2xl"
+                            style={{ background:days>6?'#FEF2F2':dark?'#263044':'#f8fafc', border:`1px solid ${days>6?'#FCA5A5':bdr}` }}>
+                            <Av ini={lead.ini} sz={36}/>
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm font-semibold truncate" style={{ color:txt }}>{lead.fn} {lead.ln}</div>
+                              <div className="text-xs" style={{ color:days>6?'#EF4444':sub }}>Il y a {days} jours</div>
+                            </div>
+                            <StatusPill st={lead.status}/>
+                            <button className="w-8 h-8 bg-orange-500 hover:bg-orange-600 text-white rounded-full flex items-center justify-center transition-all flex-shrink-0">
+                              <Icons.Mail size={13}/>
+                            </button>
+                          </div>
+                        )
+                      })}
+                  </div>
+                </div>
+                <div className="rounded-2xl p-5" style={{ background:card, border:`1px solid ${bdr}` }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Icons.Sparkles size={14} style={{ color:'#8B5CF6' }}/>
+                    <h3 className="text-sm font-bold" style={{ color:txt }}>Score IA — Légende</h3>
+                  </div>
+                  <div className="space-y-2">
+                    {[['80–100','Acheteur sérieux, décision rapide','#10B981'],['60–79','Intérêt modéré, à relancer','#F97316'],['0–59','Faible intention, surveiller','#EF4444']].map(([range,label,color]) => (
+                      <div key={range} className="flex items-center gap-3">
+                        <span className="text-xs font-bold px-2 py-0.5 rounded-lg whitespace-nowrap" style={{ background:color+'22', color }}>{range}</span>
+                        <span className="text-xs" style={{ color:sub }}>{label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+      </div>
+
+      {/* New Lead Modal */}
+      <AnimatePresence>
+        {newLeadOpen && (
+          <>
+            <motion.div className="fixed inset-0 z-[130] bg-black/60 backdrop-blur-sm"
+              initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
+              onClick={() => { setNewLeadOpen(false); setNewFormErr('') }} />
+            <div className="fixed inset-0 z-[131] flex items-center justify-center p-4 pointer-events-none">
+              <motion.div
+                initial={{ opacity:0, scale:0.94, y:20 }} animate={{ opacity:1, scale:1, y:0 }} exit={{ opacity:0, scale:0.94, y:20 }}
+                transition={{ type:'spring', damping:28, stiffness:320 }}
+                className="pointer-events-auto w-full max-w-lg rounded-[24px] shadow-2xl overflow-hidden"
+                style={{ background:card }}>
+                {/* Header */}
+                <div className="flex items-center justify-between px-7 pt-6 pb-4" style={{ borderBottom:`1px solid ${bdr}` }}>
+                  <div>
+                    <h2 className="text-lg font-extrabold" style={{ color:txt }}>Nouveau lead</h2>
+                    <p className="text-xs mt-0.5" style={{ color:sub }}>Ajoutez un lead à votre pipeline</p>
+                  </div>
+                  <button onClick={() => { setNewLeadOpen(false); setNewFormErr('') }}
+                    className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-slate-100"
+                    style={{ color:sub }}>
+                    <Icons.X size={16} />
+                  </button>
+                </div>
+
+                {/* Body */}
+                <div className="px-7 py-5 space-y-4 max-h-[65vh] overflow-y-auto">
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Nom */}
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color:sub }}>Nom complet *</label>
+                      <input value={newForm.nom} onChange={e => setNewForm(f => ({ ...f, nom:e.target.value }))} placeholder="Jean Dupont"
+                        className="w-full h-11 px-4 rounded-2xl border-2 text-sm outline-none transition-all focus:border-orange-400"
+                        style={{ background:dark?'#0f172a':bg, borderColor:bdr, color:txt }} />
+                    </div>
+                    {/* Email */}
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color:sub }}>E-mail *</label>
+                      <input value={newForm.email} onChange={e => setNewForm(f => ({ ...f, email:e.target.value }))} placeholder="jean@exemple.fr" type="email"
+                        className="w-full h-11 px-4 rounded-2xl border-2 text-sm outline-none transition-all focus:border-orange-400"
+                        style={{ background:dark?'#0f172a':bg, borderColor:bdr, color:txt }} />
+                    </div>
+                    {/* Téléphone */}
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color:sub }}>Téléphone</label>
+                      <input value={newForm.phone} onChange={e => setNewForm(f => ({ ...f, phone:e.target.value }))} placeholder="06 00 00 00 00" type="tel"
+                        className="w-full h-11 px-4 rounded-2xl border-2 text-sm outline-none transition-all focus:border-orange-400"
+                        style={{ background:dark?'#0f172a':bg, borderColor:bdr, color:txt }} />
+                    </div>
+                    {/* Source */}
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color:sub }}>Source</label>
+                      <select value={newForm.src} onChange={e => setNewForm(f => ({ ...f, src:e.target.value }))}
+                        className="w-full h-11 px-4 rounded-2xl border-2 text-sm outline-none transition-all focus:border-orange-400 cursor-pointer"
+                        style={{ background:dark?'#0f172a':bg, borderColor:bdr, color:newForm.src ? txt : sub }}>
+                        <option value="" style={{ color:sub }}>Choisir…</option>
+                        {['SeLoger', 'Leboncoin', 'PAP', "Bien'ici", 'Instagram', 'Recommandation', 'Autre'].map(s => (
+                          <option key={s} value={s} style={{ color:txt }}>{s}</option>
+                        ))}
+                      </select>
+                    </div>
+                    {/* Bien recherché */}
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color:sub }}>Bien recherché</label>
+                      <input value={newForm.prop} onChange={e => setNewForm(f => ({ ...f, prop:e.target.value }))} placeholder="Appt 3P Paris 11"
+                        className="w-full h-11 px-4 rounded-2xl border-2 text-sm outline-none transition-all focus:border-orange-400"
+                        style={{ background:dark?'#0f172a':bg, borderColor:bdr, color:txt }} />
+                    </div>
+                    {/* Budget */}
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color:sub }}>Budget (€)</label>
+                      <input value={newForm.budget} onChange={e => setNewForm(f => ({ ...f, budget:e.target.value }))} placeholder="420 000"
+                        className="w-full h-11 px-4 rounded-2xl border-2 text-sm outline-none transition-all focus:border-orange-400"
+                        style={{ background:dark?'#0f172a':bg, borderColor:bdr, color:txt }} />
+                    </div>
+                  </div>
+
+                  {/* Profil IA */}
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider mb-2" style={{ color:sub }}>Profil IA</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {Object.entries(P).map(([key, val]) => (
+                        <button key={key} type="button" onClick={() => setNewForm(f => ({ ...f, profile:key }))}
+                          className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl border-2 text-left transition-all text-sm font-semibold"
+                          style={{
+                            background: newForm.profile === key ? val.bg : dark ? '#0f172a' : bg,
+                            borderColor: newForm.profile === key ? val.text + '80' : bdr,
+                            color: newForm.profile === key ? val.text : sub,
+                          }}>
+                          <span>{val.emoji}</span> {key}
+                          {newForm.profile === key && <Icons.Check size={13} className="ml-auto" />}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Notes */}
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color:sub }}>Notes</label>
+                    <textarea value={newForm.notes} onChange={e => setNewForm(f => ({ ...f, notes:e.target.value }))}
+                      placeholder="Contexte, motivation, urgence…" rows={3}
+                      className="w-full px-4 py-3 rounded-2xl border-2 text-sm outline-none transition-all focus:border-orange-400 resize-none"
+                      style={{ background:dark?'#0f172a':bg, borderColor:bdr, color:txt }} />
+                  </div>
+
+                  {newFormErr && (
+                    <div className="flex items-center gap-2 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-2xl px-4 py-2.5">
+                      <Icons.AlertCircle size={14} className="shrink-0" /> {newFormErr}
+                    </div>
+                  )}
+                </div>
+
+                {/* Footer */}
+                <div className="flex gap-3 px-7 py-5" style={{ borderTop:`1px solid ${bdr}` }}>
+                  <button onClick={() => { setNewLeadOpen(false); setNewFormErr('') }}
+                    className="flex-1 h-11 rounded-2xl border-2 text-sm font-semibold transition-all hover:border-slate-400"
+                    style={{ borderColor:bdr, color:sub, background:'transparent' }}>
+                    Annuler
+                  </button>
+                  <button onClick={handleNewLead}
+                    className="flex-1 h-11 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-sm">
+                    <Icons.PlusSquare size={15} /> Créer le lead
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Lead Detail Modal */}
+      <AnimatePresence>
+        {selected && (
+          <>
+            <motion.div className="fixed inset-0 z-[130] bg-black/50 backdrop-blur-sm"
+              initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
+              onClick={() => { setSelected(null); setEditNotes(false) }}/>
+            <div className="fixed inset-0 z-[131] flex items-center justify-center p-4 pointer-events-none">
+              <motion.div
+                initial={{ opacity:0, scale:0.93, y:16 }}
+                animate={{ opacity:1, scale:1,    y:0  }}
+                exit={{ opacity:0, scale:0.93, y:16 }}
+                transition={{ type:'spring', damping:26, stiffness:300 }}
+                className="bg-white rounded-[28px] shadow-2xl w-full max-w-md pointer-events-auto">
+                <div className="flex items-start gap-4 px-6 pt-6 pb-4">
+                  <Av ini={selected.ini} sz={52}/>
+                  <div className="flex-1">
+                    <h2 className="text-lg font-extrabold text-navy-900">{selected.fn} {selected.ln}</h2>
+                    <p className="text-sm text-slate-500">{selected.prop}</p>
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <ScoreBadge s={selected.score}/>
+                      <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full"
+                        style={{ background:P[selected.profile]?.bg, color:P[selected.profile]?.text }}>
+                        {P[selected.profile]?.emoji} {selected.profile}
+                      </span>
+                    </div>
+                  </div>
+                  <button onClick={() => { setSelected(null); setEditNotes(false) }}
+                    className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-all">
+                    <Icons.X size={14} className="text-slate-600"/>
+                  </button>
+                </div>
+                <div className="px-6 pb-4 grid grid-cols-2 gap-2.5">
+                  <div className="flex items-center gap-2 text-sm text-slate-600 min-w-0"><Icons.Mail size={13} className="text-slate-400 shrink-0"/><span className="truncate">{selected.email}</span></div>
+                  <div className="flex items-center gap-2 text-sm text-slate-600"><Icons.Phone size={13} className="text-slate-400 shrink-0"/>{selected.phone}</div>
+                  <div className="flex items-center gap-2 text-sm text-slate-600"><Icons.MapPin size={13} className="text-slate-400 shrink-0"/>{selected.src}</div>
+                  <div className="text-sm font-bold text-orange-500">{fmtBudget(selected.budget)}</div>
+                </div>
+                <div className="px-6 pb-4">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Statut Pipeline</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {Object.entries(S).map(([key, val]) => (
+                      <button key={key} onClick={() => updateStatus(selected.id, key)}
+                        className="text-xs font-semibold px-3 py-1.5 rounded-full transition-all"
+                        style={{ background:selected.status===key?val.bg:'#f1f5f9', color:selected.status===key?'white':'#64748b' }}>
+                        {val.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="px-6 pb-4">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Notes</p>
+                    <button onClick={() => setEditNotes(v => !v)} className="text-xs text-orange-500 font-medium hover:text-orange-600">
+                      {editNotes ? 'Sauvegarder' : 'Modifier'}
+                    </button>
+                  </div>
+                  {editNotes
+                    ? <textarea rows={2} value={notesVal} onChange={e => setNotesVal(e.target.value)}
+                        className="w-full text-sm text-slate-700 bg-slate-50 rounded-xl px-3 py-2 resize-none outline-none border border-slate-200 focus:border-orange-400 transition-colors"/>
+                    : <p className="text-sm text-slate-600">{notesVal || selected.notes}</p>}
+                </div>
+                {selected.tags.length > 0 && (
+                  <div className="px-6 pb-4">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Tags</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {selected.tags.map(t => <span key={t} className="text-xs font-medium px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">{t.toLowerCase()}</span>)}
+                    </div>
+                  </div>
+                )}
+                <div className="px-6 pb-6 pt-2 flex gap-2">
+                  <button className="flex-1 flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm py-3 rounded-2xl transition-all">
+                    <Icons.Mail size={14}/> Envoyer email
+                  </button>
+                  <button className="flex items-center gap-1.5 px-4 py-3 border-2 border-slate-200 hover:border-slate-300 rounded-2xl text-sm font-semibold text-navy-800 transition-all">
+                    <Icons.Eye size={13}/> Visite
+                  </button>
+                  <button className="flex items-center gap-1.5 px-4 py-3 border-2 border-slate-200 hover:border-slate-300 rounded-2xl text-sm font-semibold text-navy-800 transition-all">
+                    <Icons.Phone size={13}/> Appeler
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
+function NeufView({ setCurrentView }) {
+  const [city,   setCity]   = useState('Toutes les villes')
+  const [type,   setType]   = useState('Tous types')
+  const [budget, setBudget] = useState('Tous budgets')
+  const [open,   setOpen]   = useState(null)
+
+  const filtered = NEUF_PROGRAMS.filter(p => {
+    if (city   !== 'Toutes les villes' && p.city !== city)     return false
+    if (type   !== 'Tous types'        && p.type !== type)     return false
+    if (budget !== 'Tous budgets') {
+      if (budget === '< 300 000 €'          && p.priceFrom >= 300000)  return false
+      if (budget === '300 – 500 000 €'      && (p.priceFrom >= 500000 || p.priceTo < 300000)) return false
+      if (budget === '500 000 – 1 M€'       && (p.priceFrom >= 1000000 || p.priceTo < 500000)) return false
+      if (budget === '> 1 M€'               && p.priceTo < 1000000) return false
+    }
+    return true
+  })
+
+  const featured = filtered.find(p => p.featured) || filtered[0]
+  const rest     = filtered.filter(p => p !== featured)
+
+  const FilterSelect = ({ value, onChange, options }) => (
+    <div className="relative">
+      <select value={value} onChange={e => onChange(e.target.value)}
+        className="appearance-none bg-white border-2 border-slate-200 hover:border-orange-300 focus:border-orange-400 focus:outline-none text-sm font-medium text-navy-800 pl-4 pr-8 py-2.5 rounded-2xl cursor-pointer transition-all">
+        {options.map(o => <option key={o}>{o}</option>)}
+      </select>
+      <Icons.ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+    </div>
+  )
+
+  return (
+    <div className="min-h-screen bg-slate-50">
+      {/* Hero */}
+      <div className="bg-gradient-to-br from-navy-900 to-navy-800 text-white pt-24 pb-14 px-6">
+        <div className="max-w-6xl mx-auto">
+          <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }}>
+            <div className="flex items-center gap-2 text-orange-400 text-xs font-semibold uppercase tracking-wider mb-3">
+              <Icons.Building2 size={14} /> Immobilier neuf
+            </div>
+            <h1 className="text-3xl md:text-5xl font-extrabold mb-3">
+              Programmes neufs<br className="hidden md:block" /> sélectionnés par PASMAL
+            </h1>
+            <p className="text-white/70 text-lg max-w-xl mb-8">
+              TVA réduite · Frais de notaire à 2 % · Garanties constructeur · DPE A garanti
+            </p>
+          </motion.div>
+          {/* Filter bar */}
+          <div className="flex flex-wrap gap-3 items-center">
+            <FilterSelect value={city}   onChange={setCity}   options={NEUF_CITIES}  />
+            <FilterSelect value={type}   onChange={setType}   options={NEUF_TYPES}   />
+            <FilterSelect value={budget} onChange={setBudget} options={NEUF_BUDGETS} />
+            <span className="text-white/50 text-sm ml-1">{filtered.length} programme{filtered.length > 1 ? 's' : ''} trouvé{filtered.length > 1 ? 's' : ''}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
+        {filtered.length === 0 ? (
+          <div className="text-center py-20 text-slate-400">Aucun programme ne correspond à vos critères.</div>
+        ) : (
+          <>
+            {/* Featured program */}
+            {featured && (
+              <section>
+                <NeufProgramCard prog={featured} onOpen={setOpen} featured />
+              </section>
+            )}
+            {/* Grid */}
+            {rest.length > 0 && (
+              <section>
+                <h2 className="text-xl font-bold text-navy-900 mb-5">Tous les programmes</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {rest.map((p, i) => (
+                    <motion.div key={p.id} initial={{ opacity:0, y:12 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.06*i }}>
+                      <NeufProgramCard prog={p} onOpen={setOpen} />
+                    </motion.div>
+                  ))}
+                </div>
+              </section>
+            )}
+          </>
+        )}
+
+        {/* Avantages neuf */}
+        <section>
+          <h2 className="text-2xl font-bold text-navy-900 mb-1">Pourquoi acheter dans le neuf ?</h2>
+          <p className="text-slate-500 text-sm mb-6">Des avantages fiscaux, financiers et techniques exclusifs</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+            {NEUF_AVANTAGES.map((av, i) => (
+              <motion.div key={i} initial={{ opacity:0, y:12 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.07*i }}
+                className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+                <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center mb-3">
+                  <av.Icon size={18} className="text-orange-500" />
+                </div>
+                <h3 className="text-sm font-bold text-navy-900 mb-1">{av.title}</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">{av.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* CTA simulateur */}
+        <section>
+          <div className="bg-gradient-to-br from-navy-900 to-navy-800 rounded-3xl p-8 md:p-10 text-white flex flex-col md:flex-row items-center gap-6">
+            <div className="flex-1">
+              <h2 className="text-xl font-bold mb-1">Calculez votre financement neuf</h2>
+              <p className="text-white/65 text-sm">PTZ inclus, frais de notaire réduits — simulez votre mensualité en 2 minutes.</p>
+            </div>
+            <div className="flex gap-3 flex-shrink-0 flex-wrap">
+              <button onClick={() => setCurrentView('simulateur')}
+                className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-full text-sm transition-colors">
+                <Icons.CreditCard size={14} className="inline mr-1.5 -mt-0.5" /> Simuler mon prêt
+              </button>
+              <button onClick={() => setCurrentView('guides')}
+                className="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-full text-sm border border-white/20 transition-colors">
+                Guides & conseils
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <NeufDetailModal prog={open} onClose={() => setOpen(null)} setCurrentView={setCurrentView} />
+    </div>
+  )
+}
+
+function SimulateurView({ setCurrentView }) {
+  const [tab, setTab] = useState('mensualite')
+  const [prix, setPrix] = useState(350000)
+  const [apport, setApport] = useState(60000)
+  const [taux, setTaux] = useState(3.52)
+  const [duree, setDuree] = useState(20)
+  const [typeLogement, setTypeLogement] = useState('ancien')
+  const [revenus, setRevenus] = useState(5000)
+  const [tauxEndt, setTauxEndt] = useState(35)
+
+  const fmt = (n) => Math.round(n).toLocaleString('fr-FR')
+
+  const emprunt = Math.max(0, prix - apport)
+  const tauxMensuel = taux / 100 / 12
+  const nbMois = duree * 12
+  const mensualite = tauxMensuel > 0
+    ? Math.round(emprunt * tauxMensuel / (1 - Math.pow(1 + tauxMensuel, -nbMois)))
+    : Math.round(emprunt / nbMois)
+  const coutTotal = mensualite * nbMois
+  const interetsTotal = coutTotal - emprunt
+  const fraisNotaire = Math.round(prix * (typeLogement === 'neuf' ? 0.025 : 0.075))
+  const assuranceMensuelle = Math.round(emprunt * 0.0035 / 12)
+
+  const amoByYear = []
+  let capitalRestant = emprunt
+  for (let yr = 1; yr <= Math.min(duree, 30); yr++) {
+    let capAnnuel = 0, intAnnuel = 0
+    for (let m = 0; m < 12 && capitalRestant > 0; m++) {
+      const intMois = capitalRestant * tauxMensuel
+      const capMois = Math.min(mensualite - intMois, capitalRestant)
+      intAnnuel += intMois
+      capAnnuel += capMois
+      capitalRestant = Math.max(0, capitalRestant - capMois)
+    }
+    amoByYear.push({ yr, cap: Math.round(capAnnuel), int: Math.round(intAnnuel) })
+  }
+  const maxAnnuel = Math.max(1, ...amoByYear.map(a => a.cap + a.int))
+
+  const mensualiteMax = Math.round(revenus * tauxEndt / 100)
+  const capaciteEmprunt = tauxMensuel > 0
+    ? Math.round(mensualiteMax * (1 - Math.pow(1 + tauxMensuel, -nbMois)) / tauxMensuel)
+    : mensualiteMax * nbMois
+  const prixMaxBien = capaciteEmprunt + apport
+
+  return (
+    <div className="min-h-screen bg-slate-50">
+      {/* Hero */}
+      <div className="bg-gradient-to-br from-navy-900 to-navy-800 text-white pt-24 pb-12 px-6">
+        <div className="max-w-5xl mx-auto">
+          <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }}>
+            <div className="flex items-center gap-2 text-orange-400 text-xs font-semibold uppercase tracking-wider mb-3">
+              <Icons.CreditCard size={14} /> Simulateur de financement
+            </div>
+            <h1 className="text-3xl md:text-4xl font-extrabold mb-2">Simulez votre prêt immobilier</h1>
+            <p className="text-white/70 max-w-xl">Mensualité, capacité d'emprunt, frais de notaire — tous vos calculs en temps réel.</p>
+          </motion.div>
+          <div className="flex flex-wrap gap-2 mt-6">
+            {SIMUL_PRESETS.map((p, i) => (
+              <button key={i} onClick={() => { setPrix(p.prix); setApport(p.apport) }}
+                className="text-xs font-medium px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-orange-500 border border-white/15 hover:border-orange-500 text-white/80 hover:text-white transition-all">
+                {p.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-5xl mx-auto px-6 py-10">
+        {/* Tabs */}
+        <div className="flex gap-1 bg-white rounded-2xl border border-slate-100 shadow-sm p-1.5 mb-8 w-fit">
+          {[
+            { id:'mensualite', label:'Calculer ma mensualité' },
+            { id:'capacite',   label:"Capacité d'emprunt" },
+          ].map(t => (
+            <button key={t.id} onClick={() => setTab(t.id)}
+              className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${tab === t.id ? 'bg-orange-500 text-white shadow-sm' : 'text-slate-500 hover:text-navy-800'}`}>
+              {t.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          {/* Inputs */}
+          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-7 space-y-7">
+            {tab === 'mensualite' ? (
+              <>
+                <SliderField label="Prix du bien" value={prix} onChange={setPrix} min={50000} max={2000000} step={5000} fmt={v => `${fmt(v)} €`} />
+                <SliderField label="Apport personnel" value={apport} onChange={setApport} min={0} max={Math.min(prix, 600000)} step={5000} fmt={v => `${fmt(v)} €`} />
+                <div className="bg-orange-50 rounded-2xl px-4 py-3 text-sm flex items-center justify-between">
+                  <span className="text-slate-600">Montant emprunté</span>
+                  <span className="font-bold text-orange-600">{fmt(emprunt)} €</span>
+                </div>
+              </>
+            ) : (
+              <>
+                <SliderField label="Revenus mensuels nets" value={revenus} onChange={setRevenus} min={1500} max={20000} step={100} fmt={v => `${fmt(v)} €/mois`} />
+                <SliderField label="Taux d'endettement max" value={tauxEndt} onChange={setTauxEndt} min={20} max={40} step={1} fmt={v => `${v} %`} />
+                <SliderField label="Apport personnel" value={apport} onChange={setApport} min={0} max={500000} step={5000} fmt={v => `${fmt(v)} €`} />
+              </>
+            )}
+            <SliderField label="Taux d'intérêt annuel" value={taux} onChange={setTaux} min={0.5} max={7} step={0.01} fmt={v => `${v.toFixed(2)} %`} />
+            <SliderField label="Durée du prêt" value={duree} onChange={setDuree} min={5} max={30} step={1} fmt={v => `${v} ans`} />
+            {tab === 'mensualite' && (
+              <div>
+                <div className="text-sm font-medium text-navy-700 mb-2">Type de logement</div>
+                <div className="grid grid-cols-2 gap-2">
+                  {[{ id:'ancien', label:'Ancien' }, { id:'neuf', label:'Neuf / VEFA' }].map(t => (
+                    <button key={t.id} onClick={() => setTypeLogement(t.id)}
+                      className={`py-2.5 rounded-xl text-sm font-medium border transition-all ${typeLogement === t.id ? 'bg-navy-900 text-white border-navy-900' : 'bg-white text-slate-500 border-slate-200 hover:border-navy-300'}`}>
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Results */}
+          <div className="space-y-5">
+            {tab === 'mensualite' ? (
+              <>
+                <motion.div key={`${mensualite}-${emprunt}`} initial={{ scale:0.97, opacity:0.8 }} animate={{ scale:1, opacity:1 }} transition={{ type:'spring', stiffness:280 }}
+                  className="bg-gradient-to-br from-navy-900 to-navy-800 rounded-3xl p-7 text-white">
+                  <div className="text-white/60 text-sm mb-1">Mensualité hors assurance</div>
+                  <div className="text-5xl font-extrabold">{fmt(mensualite)} <span className="text-2xl font-normal text-white/60">€/mois</span></div>
+                  <div className="text-white/50 text-xs mt-2">
+                    Avec assurance (0,35 %) : <span className="text-orange-300 font-semibold">{fmt(mensualite + assuranceMensuelle)} €/mois</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4 mt-6 pt-5 border-t border-white/15">
+                    {[
+                      { label:'Capital', value:`${fmt(emprunt)} €` },
+                      { label:'Intérêts', value:`${fmt(interetsTotal)} €` },
+                      { label:'Coût total', value:`${fmt(coutTotal)} €` },
+                    ].map((k, i) => (
+                      <div key={i}>
+                        <div className="text-[11px] text-white/50 mb-0.5">{k.label}</div>
+                        <div className="text-sm font-bold">{k.value}</div>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+
+                {/* Frais de notaire */}
+                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex items-center justify-between">
+                  <div>
+                    <div className="text-sm font-semibold text-navy-800">Frais de notaire estimés</div>
+                    <div className="text-xs text-slate-400 mt-0.5">{typeLogement === 'neuf' ? '≈ 2,5 % · VEFA / neuf' : '≈ 7,5 % · bien ancien'}</div>
+                  </div>
+                  <div className="text-xl font-bold text-navy-900">{fmt(fraisNotaire)} €</div>
+                </div>
+
+                {/* Amortization chart */}
+                <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="text-sm font-semibold text-navy-800">Amortissement annuel</div>
+                    <div className="flex items-center gap-3 text-[11px] text-slate-500">
+                      <span className="flex items-center gap-1.5"><span className="w-3 h-2 rounded-sm inline-block bg-orange-500" /> Capital</span>
+                      <span className="flex items-center gap-1.5"><span className="w-3 h-2 rounded-sm inline-block bg-slate-200" /> Intérêts</span>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5 overflow-y-auto max-h-56 pr-1">
+                    {amoByYear.map(({ yr, cap, int }) => (
+                      <div key={yr} className="grid items-center gap-2" style={{ gridTemplateColumns:'38px 1fr 72px' }}>
+                        <div className="text-[10px] text-slate-400 font-medium">An {yr}</div>
+                        <div className="flex h-3.5 rounded-full overflow-hidden bg-slate-50">
+                          <motion.div className="h-full bg-orange-500 rounded-l-full"
+                            initial={{ width:0 }} animate={{ width:`${(cap / maxAnnuel) * 100}%` }} transition={{ delay:0.02*yr, duration:0.5, ease:'easeOut' }} />
+                          <div className="h-full bg-slate-200" style={{ width:`${(int / maxAnnuel) * 100}%` }} />
+                        </div>
+                        <div className="text-[10px] text-slate-500 text-right">{fmt(cap + int)} €</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <motion.div key={`cap-${capaciteEmprunt}`} initial={{ scale:0.97, opacity:0.8 }} animate={{ scale:1, opacity:1 }} transition={{ type:'spring', stiffness:280 }}
+                  className="bg-gradient-to-br from-navy-900 to-navy-800 rounded-3xl p-7 text-white">
+                  <div className="text-white/60 text-sm mb-1">Capacité d'emprunt estimée</div>
+                  <div className="text-5xl font-extrabold">{fmt(capaciteEmprunt)} <span className="text-2xl font-normal text-white/60">€</span></div>
+                  <div className="text-white/50 text-xs mt-2">
+                    Prix maxi du bien (avec apport) : <span className="text-orange-300 font-semibold">{fmt(prixMaxBien)} €</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4 mt-6 pt-5 border-t border-white/15">
+                    {[
+                      { label:'Mensualité max', value:`${fmt(mensualiteMax)} €` },
+                      { label:'Durée', value:`${duree} ans` },
+                      { label:'Taux', value:`${taux.toFixed(2)} %` },
+                    ].map((k, i) => (
+                      <div key={i}>
+                        <div className="text-[11px] text-white/50 mb-0.5">{k.label}</div>
+                        <div className="text-sm font-bold">{k.value}</div>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+
+                {/* Endettement gauge */}
+                <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6">
+                  <div className="text-sm font-semibold text-navy-800 mb-4">Taux d'endettement</div>
+                  <div className="relative h-5 bg-slate-100 rounded-full overflow-hidden mb-3">
+                    <motion.div className="absolute inset-y-0 left-0 rounded-full"
+                      initial={{ width:0 }} animate={{ width:`${tauxEndt}%` }} transition={{ duration:0.4 }}
+                      style={{ background: tauxEndt <= 33 ? '#10B981' : tauxEndt <= 35 ? '#F59E0B' : '#EF4444' }} />
+                    <div className="absolute inset-y-0 w-0.5 bg-white/80" style={{ left:'33%' }} />
+                    <div className="absolute inset-y-0 w-0.5 bg-white/80" style={{ left:'35%' }} />
+                  </div>
+                  <div className="flex justify-between text-[10px] text-slate-400 mb-3">
+                    <span>Confortable (≤33 %)</span><span>Limite 35 %</span><span>Risqué</span>
+                  </div>
+                  <p className="text-xs text-slate-500">
+                    {tauxEndt <= 33
+                      ? "Taux d'endettement confortable — bonne marge de sécurité pour votre dossier."
+                      : tauxEndt <= 35
+                      ? "Vous approchez de la limite réglementaire de 35 %. Soignez votre dossier bancaire."
+                      : "Au-delà de 35 %, l'octroi du prêt nécessitera une dérogation bancaire."}
+                  </p>
+                </div>
+
+                {/* Profil */}
+                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 space-y-3">
+                  <div className="text-sm font-semibold text-navy-800 mb-2">Profil financier</div>
+                  {[
+                    { label:'Revenus nets',         value:`${fmt(revenus)} €/mois` },
+                    { label:'Mensualité maximale',  value:`${fmt(mensualiteMax)} €/mois` },
+                    { label:'Reste à vivre',        value:`${fmt(revenus - mensualiteMax)} €/mois` },
+                    { label:'Apport personnel',     value:`${fmt(apport)} €` },
+                  ].map((r, i) => (
+                    <div key={i} className="flex items-center justify-between text-sm border-b border-slate-50 last:border-0 pb-2 last:pb-0">
+                      <span className="text-slate-500">{r.label}</span>
+                      <span className="font-semibold text-navy-800">{r.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            <div className="flex gap-3">
+              <button onClick={() => setCurrentView('estimation')}
+                className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-xl text-sm transition-colors">
+                <Icons.Sparkles size={13} className="inline mr-1.5 -mt-0.5" /> Estimer mon bien
+              </button>
+              <button onClick={() => setCurrentView('marche')}
+                className="flex-1 bg-navy-900 hover:bg-navy-800 text-white font-semibold py-3 rounded-xl text-sm transition-colors">
+                Tendances marché
+              </button>
+            </div>
+            <p className="text-center text-[11px] text-slate-400">Simulation indicative non contractuelle. Consultez un courtier pour un plan de financement personnalisé.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function MarcheView({ setCurrentView }) {
+  const [chartCities, setChartCities] = useState(Object.keys(MARCHE_HISTORY))
+
+  const Y_MIN = 88, Y_MAX = 132, Y_RANGE = Y_MAX - Y_MIN
+  const X_BASE = 55, Y_BASE = 18, CHART_W = 505, CHART_H = 140
+
+  const getX = (i) => X_BASE + i * (CHART_W / 6)
+  const getY = (pct) => Y_BASE + (Y_MAX - pct) / Y_RANGE * CHART_H
+  const getPoints = (city) => {
+    const base = MARCHE_HISTORY[city][0]
+    return MARCHE_HISTORY[city].map((v, i) => {
+      const pct = (v / base) * 100
+      return `${getX(i).toFixed(1)},${getY(pct).toFixed(1)}`
+    }).join(' ')
+  }
+
+  const maxPpm = Math.max(...MARCHE_CITIES_DATA.map(c => c.ppm))
+  const sortedByYield = [...MARCHE_CITIES_DATA].sort((a, b) => b.yield - a.yield)
+
+  return (
+    <div className="min-h-screen bg-slate-50">
+      {/* Hero */}
+      <div className="bg-gradient-to-br from-navy-900 to-navy-800 text-white pt-24 pb-16 px-6">
+        <div className="max-w-6xl mx-auto">
+          <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }}>
+            <div className="flex items-center gap-2 text-orange-400 text-xs font-semibold uppercase tracking-wider mb-3">
+              <Icons.TrendingUp size={14} /> Données du marché
+            </div>
+            <h1 className="text-3xl md:text-5xl font-extrabold mb-3">
+              Tendances du marché<br className="hidden md:block" /> immobilier français
+            </h1>
+            <p className="text-white/70 text-lg max-w-xl">
+              Prix, volumes, rendements et prévisions — toutes les données clés pour décider avec confiance.
+            </p>
+          </motion.div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">
+            {[
+              { label:'Prix moyen France',   value:'3 420 €/m²', sub:'+1,2 % sur 12 mois',     up:true  },
+              { label:'Transactions 2025',   value:'856 000',    sub:'+4,3 % vs 2024',          up:true  },
+              { label:'Délai de vente moy.', value:'51 jours',   sub:'−3 jours vs 2024',        up:false },
+              { label:'Taux immo moy.',      value:'3,52 %',     sub:'Nov. 2025 · 20 ans',      up:false },
+            ].map((k, i) => (
+              <motion.div key={i} initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.1*i }}
+                className="bg-white/10 backdrop-blur rounded-2xl p-5 border border-white/10">
+                <div className="text-xs text-white/55 mb-1">{k.label}</div>
+                <div className="text-2xl font-bold text-white">{k.value}</div>
+                <div className={`text-xs mt-1 ${k.up ? 'text-emerald-400' : 'text-orange-400'}`}>{k.sub}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 py-12 space-y-14">
+
+        {/* Prix par ville — horizontal bars */}
+        <section>
+          <h2 className="text-2xl font-bold text-navy-900 mb-1">Prix au m² par ville</h2>
+          <p className="text-slate-500 text-sm mb-6">Marché secondaire — appartements toutes surfaces · évolution 2020–2026</p>
+          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 md:p-8 space-y-4">
+            {MARCHE_CITIES_DATA.map((c, i) => {
+              const barPct = (c.ppm / maxPpm) * 100
+              const chg = (c.ppm - c.prev) / c.prev * 100
+              return (
+                <motion.div key={c.city} initial={{ opacity:0, x:-20 }} animate={{ opacity:1, x:0 }} transition={{ delay:0.05*i }}
+                  className="grid items-center gap-4" style={{ gridTemplateColumns:'130px 1fr 76px' }}>
+                  <div className="text-sm font-semibold text-navy-800">{c.city}</div>
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 bg-slate-100 rounded-full h-3 overflow-hidden">
+                      <motion.div initial={{ width:0 }} animate={{ width:`${barPct}%` }} transition={{ delay:0.1+0.05*i, duration:0.7, ease:'easeOut' }}
+                        className="h-3 rounded-full" style={{ background: c.color }} />
+                    </div>
+                    <span className="text-navy-900 font-bold text-sm w-24 shrink-0 text-right">{c.ppm.toLocaleString('fr-FR')} €/m²</span>
+                  </div>
+                  <div className={`text-xs font-semibold px-2.5 py-1 rounded-lg text-center ${chg >= 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'}`}>
+                    {chg >= 0 ? '+' : ''}{chg.toFixed(1)} %
+                  </div>
+                </motion.div>
+              )
+            })}
+            <div className="text-xs text-slate-400 pt-3 border-t border-slate-100">Sources : DVF, bases notariales — données estimatives.</div>
+          </div>
+        </section>
+
+        {/* Multi-line SVG chart */}
+        <section>
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+            <div>
+              <h2 className="text-2xl font-bold text-navy-900">Évolution des prix (2020–2026)</h2>
+              <p className="text-slate-500 text-sm mt-1">Indice base 100 en 2020 — comparaison normalisée par ville</p>
+            </div>
+            <div className="flex flex-wrap gap-2 shrink-0">
+              {Object.keys(MARCHE_HISTORY).map(city => {
+                const active = chartCities.includes(city)
+                const col = MARCHE_CHART_COLORS[city]
+                return (
+                  <button key={city}
+                    onClick={() => setChartCities(prev =>
+                      active && prev.length > 1 ? prev.filter(c => c !== city) : active ? prev : [...prev, city]
+                    )}
+                    className="text-xs font-medium px-3 py-1 rounded-full border transition-all"
+                    style={active
+                      ? { background: col, borderColor: col, color: '#fff' }
+                      : { background: '#fff', borderColor: '#E2E8F0', color: '#94A3B8' }}>
+                    {city}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-4 md:p-6 overflow-x-auto">
+            <svg viewBox="0 0 600 190" className="w-full min-w-[340px]" aria-label="Évolution des prix immobiliers 2020-2026">
+              {[90, 100, 110, 120, 130].map(pct => (
+                <g key={pct}>
+                  <line x1={X_BASE} x2={X_BASE + CHART_W} y1={getY(pct)} y2={getY(pct)} stroke="#E2E8F0" strokeWidth="1" strokeDasharray="4 3" />
+                  <text x={X_BASE - 6} y={getY(pct) + 4} textAnchor="end" fontSize="9" fill="#94A3B8">{pct}%</text>
+                </g>
+              ))}
+              {MARCHE_YEARS.map((yr, i) => (
+                <g key={yr}>
+                  <line x1={getX(i)} x2={getX(i)} y1={Y_BASE} y2={Y_BASE + CHART_H} stroke="#F1F5F9" strokeWidth="1" />
+                  <text x={getX(i)} y={175} textAnchor="middle" fontSize="9" fill="#64748B">{yr}</text>
+                </g>
+              ))}
+              <line x1={X_BASE} x2={X_BASE + CHART_W} y1={getY(100)} y2={getY(100)} stroke="#CBD5E1" strokeWidth="1.5" />
+              {Object.keys(MARCHE_HISTORY).filter(c => chartCities.includes(c)).map(city => (
+                <g key={city}>
+                  <polyline points={getPoints(city)} fill="none" stroke={MARCHE_CHART_COLORS[city]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                  {MARCHE_HISTORY[city].map((v, i) => (
+                    <circle key={i} cx={getX(i)} cy={getY((v / MARCHE_HISTORY[city][0]) * 100)} r="3.5" fill={MARCHE_CHART_COLORS[city]} />
+                  ))}
+                </g>
+              ))}
+            </svg>
+          </div>
+        </section>
+
+        {/* Segments */}
+        <section>
+          <h2 className="text-2xl font-bold text-navy-900 mb-6">Segments de marché</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {MARCHE_SEGMENTS.map((seg, i) => (
+              <motion.div key={i} initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.08*i }}
+                className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: seg.color + '20' }}>
+                  <div style={{ color: seg.color }}><seg.Icon size={20} /></div>
+                </div>
+                <div className="text-sm font-semibold text-navy-800 mb-1">{seg.label}</div>
+                <div className={`text-2xl font-extrabold mb-0.5 ${seg.trend.startsWith('+') ? 'text-emerald-600' : 'text-red-500'}`}>{seg.trend}</div>
+                <div className="text-xs text-slate-400">{seg.volume} transactions / an</div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Top investissement */}
+        <section>
+          <h2 className="text-2xl font-bold text-navy-900 mb-1">Top villes pour l'investissement</h2>
+          <p className="text-slate-500 text-sm mb-6">Classement par rendement brut estimé · 2025</p>
+          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="grid text-xs font-semibold text-slate-400 uppercase tracking-wider px-6 py-3 border-b border-slate-100"
+              style={{ gridTemplateColumns:'1fr 120px 160px 120px' }}>
+              <div>Ville</div>
+              <div>Prix/m²</div>
+              <div>Rendement brut</div>
+              <div>Délai de vente</div>
+            </div>
+            {sortedByYield.map((c, i) => (
+              <motion.div key={c.city} initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.04*i }}
+                className={`grid items-center px-6 py-4 border-b border-slate-50 hover:bg-slate-50 transition-colors ${i === 0 ? 'bg-orange-50/50' : ''}`}
+                style={{ gridTemplateColumns:'1fr 120px 160px 120px' }}>
+                <div className="flex items-center gap-2.5">
+                  <span className={`w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center ${i === 0 ? 'bg-orange-500 text-white' : 'bg-slate-100 text-slate-500'}`}>{i+1}</span>
+                  <span className="font-semibold text-navy-800 text-sm">{c.city}</span>
+                </div>
+                <div className="text-sm font-medium text-navy-700">{c.ppm.toLocaleString('fr-FR')} €</div>
+                <div className="flex items-center gap-2">
+                  <div className="h-2 rounded-full bg-slate-100 w-20 overflow-hidden">
+                    <div className="h-2 rounded-full bg-emerald-500" style={{ width:`${Math.min(c.yield / 7 * 100, 100)}%` }} />
+                  </div>
+                  <span className="text-emerald-700 font-bold text-sm">{c.yield} %</span>
+                </div>
+                <div className="text-sm text-navy-700">{c.days} j</div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Prévisions */}
+        <section>
+          <h2 className="text-2xl font-bold text-navy-900 mb-1">Prévisions 2026</h2>
+          <p className="text-slate-500 text-sm mb-6">Anticipations des experts et modèles économétriques</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {MARCHE_PREDICTIONS.map((pred, i) => (
+              <motion.div key={i} initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.1*i }}
+                className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style={{ background: pred.color + '18' }}>
+                  <div style={{ color: pred.color }}><pred.Icon size={22} /></div>
+                </div>
+                <h3 className="text-base font-bold text-navy-900 mb-2">{pred.title}</h3>
+                <p className="text-sm text-slate-500 leading-relaxed mb-4">{pred.desc}</p>
+                <div>
+                  <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
+                    <span>Indice de confiance</span>
+                    <span className="font-semibold text-navy-700">{pred.confidence} %</span>
+                  </div>
+                  <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                    <motion.div initial={{ width:0 }} animate={{ width:`${pred.confidence}%` }} transition={{ delay:0.2+0.1*i, duration:0.6, ease:'easeOut' }}
+                      className="h-full rounded-full" style={{ background: pred.color }} />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="pb-4">
+          <div className="bg-gradient-to-br from-navy-900 to-navy-800 rounded-3xl p-10 text-white text-center">
+            <h2 className="text-2xl font-bold mb-3">Estimez votre bien gratuitement</h2>
+            <p className="text-white/70 mb-6 max-w-md mx-auto">Comparez votre prix par rapport aux tendances du marché dans votre ville.</p>
+            <div className="flex items-center justify-center gap-4 flex-wrap">
+              <button onClick={() => setCurrentView('estimation')}
+                className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-7 py-3 rounded-full transition-colors">
+                <Icons.Sparkles size={14} className="inline mr-1.5 -mt-0.5" /> Lancer l'estimation
+              </button>
+              <button onClick={() => setCurrentView('results')}
+                className="bg-white/10 hover:bg-white/20 text-white font-semibold px-7 py-3 rounded-full border border-white/20 transition-colors">
+                Voir les annonces
+              </button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  )
+}
+
+function ComparerView({ compareList, setCompareList, onBack, onOpenListing }) {
+  const listings = compareList.map((raw, i) => ({ ...enrichWithMeta(raw, i), _raw: raw, _idx: i }))
+  const [favd, setFavd] = useState({})
+
+  if (listings.length === 0) return (
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="text-center">
+        <div className="text-slate-400 mb-4 text-sm">Aucun bien à comparer</div>
+        <button onClick={onBack} className="px-5 py-2.5 bg-orange-600 text-white rounded-xl font-semibold text-sm">
+          Retour
+        </button>
+      </div>
+    </div>
+  )
+
+  const prices   = listings.map(l => typeof l.price === 'number' ? l.price : Infinity)
+  const surfaces = listings.map(l => l.surface || 0)
+  const pSqms    = listings.map(l => l.surface && typeof l.price === 'number' ? Math.round(l.price / l.surface) : Infinity)
+  const rooms_   = listings.map(l => l.rooms || 0)
+  const dpeVals  = listings.map(l => DPE_ORDER_CMP[l.dpe] ?? 4)
+  const scores   = listings.map(l => l.trust_score || 0)
+
+  const best = {
+    price:   prices.indexOf(Math.min(...prices.filter(v=>v<Infinity))),
+    surface: surfaces.indexOf(Math.max(...surfaces)),
+    pSqm:    pSqms.indexOf(Math.min(...pSqms.filter(v=>v<Infinity))),
+    rooms:   rooms_.indexOf(Math.max(...rooms_)),
+    dpe:     dpeVals.indexOf(Math.min(...dpeVals)),
+    score:   scores.indexOf(Math.max(...scores)),
+  }
+
+  const ROWS = [
+    { id:'surface', label:'Surface',     vals: listings.map(l => l.surface ? `${l.surface} m²` : '—') },
+    { id:'pSqm',    label:'Prix/m²',     vals: listings.map(l => l.surface && typeof l.price==='number' ? `${Math.round(l.price/l.surface).toLocaleString('fr-FR')} €` : '—') },
+    { id:'rooms',   label:'Pièces',      vals: listings.map(l => l.rooms ? `${l.rooms} pièces` : '—') },
+    { id:'dpe',     label:'DPE',         vals: listings.map(l => l.dpe || '—') },
+    { id:'score',   label:'Score',       vals: listings.map(l => `${l.trust_score}/100`) },
+    { id:'price',   label:'Prix',        vals: listings.map(l => formatPrice(l)) },
+  ]
+
+  const colW = Math.floor(820 / listings.length)
+
+  return (
+    <div className="min-h-screen bg-slate-50 pb-32">
+      {/* Sticky header */}
+      <div className="bg-white border-b border-slate-100 sticky top-0 z-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-3.5 flex items-center gap-4">
+          <button onClick={onBack}
+            className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-navy-900 transition-colors">
+            <Icons.ChevronLeft size={16} /> Retour
+          </button>
+          <span className="text-slate-200">/</span>
+          <span className="font-extrabold text-navy-900 text-sm">Comparaison de biens</span>
+          <span className="ml-auto text-xs text-slate-400">{listings.length} bien{listings.length>1?'s':''} comparé{listings.length>1?'s':''}</span>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-8">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse" style={{ minWidth: 560 }}>
+            <colgroup>
+              <col style={{ width:130 }} />
+              {listings.map(l => <col key={l.id} style={{ width:colW }} />)}
+            </colgroup>
+
+            {/* Header: listing cards */}
+            <thead>
+              <tr>
+                <th />
+                {listings.map((l, i) => (
+                  <th key={l.id} className="px-2 pb-4 align-top">
+                    <motion.div initial={{ opacity:0, y:-12 }} animate={{ opacity:1, y:0 }}
+                      transition={{ delay:i*0.1 }}
+                      className="bg-white rounded-2xl overflow-hidden shadow-soft">
+                      <div className="relative overflow-hidden" style={{ aspectRatio:'4/3' }}>
+                        <img src={l.image_url || unsplash('photo-1560448204-e02f11c3d0e2', 600)} alt={l.title}
+                          className="w-full h-full object-cover"
+                          onError={e => { e.currentTarget.src = unsplash('photo-1560448204-e02f11c3d0e2', 600) }} />
+                        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
+                        {l.is_premium && (
+                          <div className="absolute top-2 left-2 bg-orange-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">Premium</div>
+                        )}
+                        <button onClick={() => setFavd(f => ({ ...f, [l.id]:!f[l.id] }))}
+                          className="absolute top-2 right-2 w-7 h-7 bg-white/90 rounded-full flex items-center justify-center transition-colors hover:bg-white">
+                          <svg viewBox="0 0 24 24" style={{ width:12, height:12, color: favd[l.id] ? '#EF4444' : '#94A3B8' }}
+                            fill={favd[l.id] ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                          </svg>
+                        </button>
+                        <button onClick={() => setCompareList(p => p.filter(x => x.id !== l._raw.id))}
+                          className="absolute bottom-2 right-2 w-6 h-6 bg-red-500/90 hover:bg-red-600 rounded-full flex items-center justify-center text-white transition-colors">
+                          <Icons.X size={11} />
+                        </button>
+                      </div>
+                      <div className="p-3">
+                        <div className="font-bold text-navy-900 text-sm truncate mb-0.5">{l.title}</div>
+                        <div className="flex items-center gap-1 text-[11px] text-slate-400">
+                          <Icons.MapPin size={10} className="text-orange-500 shrink-0" />
+                          <span className="truncate">{l.location}</span>
+                        </div>
+                        <div className="text-base font-extrabold text-orange-600 mt-1.5">{formatPrice(l)}</div>
+                      </div>
+                    </motion.div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+
+            {/* Data rows */}
+            <tbody>
+              {ROWS.map((row, ri) => (
+                <motion.tr key={row.id}
+                  initial={{ opacity:0, x:-8 }} animate={{ opacity:1, x:0 }}
+                  transition={{ delay: 0.2 + ri*0.06 }}>
+                  <td className="py-3 pr-4 text-sm font-semibold text-slate-500 whitespace-nowrap align-middle">{row.label}</td>
+                  {listings.map((l, ci) => {
+                    const isWinner = best[row.id] === ci && row.id !== 'price' || (row.id === 'price' && best.price === ci)
+                    const isDpe = row.id === 'dpe'
+                    return (
+                      <td key={l.id} className="py-3 px-2 align-middle">
+                        <div className={`rounded-xl px-3 py-2.5 text-center text-sm font-bold transition-all ${isWinner ? 'bg-emerald-50 border border-emerald-200 shadow-sm' : 'bg-slate-50'}`}>
+                          {isDpe ? (
+                            <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg font-extrabold text-white text-sm"
+                              style={{ background: EST_DPE_COLORS[row.vals[ci]] || '#94A3B8' }}>
+                              {row.vals[ci]}
+                            </span>
+                          ) : (
+                            <span style={{ color: isWinner ? '#059669' : '#334155' }}>{row.vals[ci]}</span>
+                          )}
+                          {isWinner && row.id !== 'price' && row.vals[ci] !== '—' && (
+                            <div className="text-[10px] text-emerald-600 font-medium mt-0.5">Meilleur</div>
+                          )}
+                          {row.id === 'price' && isWinner && (
+                            <div className="text-[10px] text-emerald-600 font-medium mt-0.5">Moins cher</div>
+                          )}
+                        </div>
+                      </td>
+                    )
+                  })}
+                </motion.tr>
+              ))}
+            </tbody>
+
+            {/* CTA row */}
+            <tfoot>
+              <tr>
+                <td className="pt-5" />
+                {listings.map((l, i) => (
+                  <td key={l.id} className="pt-5 px-2">
+                    <button onClick={() => onOpenListing?.(l._raw, l._idx)}
+                      className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded-2xl text-sm transition-colors flex items-center justify-center gap-2">
+                      Voir <Icons.ArrowRight size={14} />
+                    </button>
+                  </td>
+                ))}
+              </tr>
+            </tfoot>
+          </table>
         </div>
       </div>
     </div>
