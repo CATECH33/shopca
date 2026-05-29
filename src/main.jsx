@@ -11,6 +11,7 @@ import CallbackPage       from './features/auth/pages/CallbackPage.jsx'
 import LogoutPage         from './features/auth/pages/LogoutPage.jsx'
 import AccountPage        from './features/auth/pages/AccountPage.jsx'
 import OnboardingPage    from './features/auth/pages/OnboardingPage.jsx'
+import ListingsPage      from './features/listings/ListingsPage.jsx'
 import EarlyAccessPage  from './earlyaccess/EarlyAccessPage.jsx'
 import './index.css'
 
@@ -50,6 +51,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/auth/logout"        element={<LogoutPage />} />
           <Route path="/account"             element={<AccountPage />} />
           <Route path="/onboarding"          element={<OnboardingPage />} />
+          <Route path="/annonces"            element={<ListingsPage />} />
           <Route path="/early-access"        element={<EarlyAccessPage />} />
         </Routes>
       </BrowserRouter>
