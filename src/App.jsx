@@ -839,6 +839,11 @@ function UserChip({ user, role, onSignOut, onGoAdmin, onNavigate }) {
               CRM Pro
               <span className="ml-auto text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-orange-50 text-orange-600 ring-1 ring-orange-200">Pro</span>
             </Link>
+            <Link to="/forms" onClick={() => setOpen(false)} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50">
+              <Icons.FileText size={16} className="text-orange-500" />
+              Formulaires
+              <span className="ml-auto text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-orange-50 text-orange-600 ring-1 ring-orange-200">Pro</span>
+            </Link>
             <button onClick={() => go('verification')} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50 text-left">
               <Icons.BadgeCheck size={16} className="text-emerald-600" />
               Vérification agence
@@ -956,6 +961,16 @@ function Header({ currentView, setCurrentView, user, role, onSignIn, onPublish, 
                 }`}
               >
                 <Icons.Users size={14} /> CRM
+              </button>
+              <button
+                onClick={() => navigate('/forms')}
+                className={`flex items-center gap-1.5 text-sm font-semibold transition-colors px-3 py-1.5 rounded-full border ${
+                  isOverlay
+                    ? 'border-white/30 text-white/90 hover:text-orange-400 hover:border-orange-400/50'
+                    : 'border-orange-200 text-orange-600 hover:bg-orange-50'
+                }`}
+              >
+                <Icons.FileText size={14} /> Formulaires
               </button>
               <UserChip user={user} role={role} onSignOut={onSignOut} onGoAdmin={() => setCurrentView('admin')} onNavigate={setCurrentView} />
             </>
