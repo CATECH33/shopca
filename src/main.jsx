@@ -14,6 +14,7 @@ import OnboardingPage    from './features/auth/pages/OnboardingPage.jsx'
 import ListingsPage       from './features/listings/ListingsPage.jsx'
 import ListingDetailPage  from './features/listings/ListingDetailPage.jsx'
 import EarlyAccessPage  from './earlyaccess/EarlyAccessPage.jsx'
+import CRMPage          from './features/crm/CRMPage.jsx'
 import './index.css'
 
 class ErrorBoundary extends React.Component {
@@ -55,6 +56,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/annonces"            element={<ListingsPage />} />
           <Route path="/annonces/:id"        element={<ListingDetailPage />} />
           <Route path="/early-access"        element={<EarlyAccessPage />} />
+          <Route path="/crm"               element={<CRMPage />} />
         </Routes>
       </BrowserRouter>
     </ErrorBoundary>
