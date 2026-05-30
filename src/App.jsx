@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import LocationSearch from './components/LocationSearch.tsx'
 import LocationAutocomplete from './components/LocationAutocomplete.jsx'
 import { useNavigate, Link } from 'react-router-dom'
@@ -9746,12 +9746,33 @@ export default function App() {
   }
 
   const handleSearch = (overrides = {}) => {
-    fetchListings({ ...filters, ...overrides })
-    if (currentView === 'home') setCurrentView('results')
+    if (typeof overrides === 'string') overrides = { location: overrides }
+    const merged = { ...filters, ...overrides }
+    if (currentView === 'home') {
+      const params = new URLSearchParams()
+      if (merged.type)         params.set('type', merged.type)
+      if (merged.location)     params.set('location', merged.location)
+      if (merged.propertyType) params.set('propertyType', merged.propertyType)
+      if (merged.priceMax)     params.set('priceMax', String(merged.priceMax))
+      if (merged.surfaceMin)   params.set('surfaceMin', String(merged.surfaceMin))
+      if (merged.roomsMin)     params.set('roomsMin', String(merged.roomsMin))
+      navigate(`/annonces?${params.toString()}`)
+      return
+    }
+    fetchListings(merged)
+    setCurrentView('results')
   }
   const handleCategoryPick = (propertyType) => {
     const next = { ...filters, propertyType }
     setFilters(next)
+    if (currentView === 'home') {
+      const params = new URLSearchParams()
+      if (next.type)         params.set('type', next.type)
+      if (next.propertyType) params.set('propertyType', next.propertyType)
+      if (next.location)     params.set('location', next.location)
+      navigate(`/annonces?${params.toString()}`)
+      return
+    }
     fetchListings(next)
     document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' })
   }
