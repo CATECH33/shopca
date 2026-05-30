@@ -16,6 +16,7 @@ import ListingDetailPage  from './features/listings/ListingDetailPage.jsx'
 import EarlyAccessPage  from './earlyaccess/EarlyAccessPage.jsx'
 import CRMPage          from './features/crm/CRMPage.jsx'
 import FormsPage        from './features/forms/FormsPage.jsx'
+import { AuthProvider } from './features/auth/providers/AuthProvider.jsx'
 import './index.css'
 
 class ErrorBoundary extends React.Component {
@@ -42,6 +43,7 @@ class ErrorBoundary extends React.Component {
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
+      <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/"                    element={<App />} />
@@ -61,6 +63,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/forms"             element={<FormsPage />} />
         </Routes>
       </BrowserRouter>
+      </AuthProvider>
     </ErrorBoundary>
   </React.StrictMode>,
 )

@@ -1043,7 +1043,10 @@ export default function RegisterPage() {
             show_phone: showPhone, receive_leads: receiveLeads, whatsapp,
           }
         : { account_type: 'personal', first_name: firstName, last_name: lastName, phone, preferences: prefs, email_opt_in: emailOptIn }
-      const result = await run(() => svc.signUp(email, password, meta))
+      const files = tab === 'pro'
+        ? { avatar: avatarFile || undefined, logo: logoFile || undefined, cover: coverFile || undefined, kbis: kbisFile || undefined, idDoc: idDocFile || undefined }
+        : { avatar: avatarFile || undefined }
+      const result = await run(() => svc.signUp(email, password, meta, files))
       if (result) {
         if (tab === 'pro') localStorage.removeItem(DRAFT_KEY)
         setSuccess(true)
