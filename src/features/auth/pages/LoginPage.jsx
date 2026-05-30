@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BrandLogo, I } from '../../../lib/ui.jsx'
 import { useAuthAction, svc } from '../hooks/useAuth.js'
+import { useAuth } from '../providers/AuthProvider.jsx'
 import { validateLoginForm } from '../validators/authValidators.js'
 
 const FEATURES = [
@@ -114,10 +115,15 @@ function LeftPanel() {
 export default function LoginPage() {
   const navigate = useNavigate()
   const { loading, error, setError, run } = useAuthAction()
+  const { user, loading: authLoading } = useAuth()
   const [email,        setEmail]        = useState('')
   const [password,     setPassword]     = useState('')
   const [showPwd,      setShowPwd]      = useState(false)
   const [oauthLoading, setOauthLoading] = useState(false)
+
+  useEffect(() => {
+    if (!authLoading && user) navigate('/', { replace: true })
+  }, [user, authLoading, navigate])
 
   const signInWithGoogle = async () => {
     setOauthLoading(true)
@@ -129,8 +135,17 @@ export default function LoginPage() {
     e.preventDefault()
     const err = validateLoginForm({ email, password })
     if (err) { setError(err); return }
-    const result = await run(() => svc.signIn(email, password))
+    let unconfirmed = false
+    const result = await run(async () => {
+      try {
+        return await svc.signIn(email, password)
+      } catch (e) {
+        if (/email not confirmed/i.test(e?.message)) unconfirmed = true
+        throw e
+      }
+    })
     if (result) navigate('/')
+    else if (unconfirmed) navigate('/auth/verify-pending')
   }
 
   return (
