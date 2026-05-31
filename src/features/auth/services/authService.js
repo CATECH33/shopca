@@ -111,6 +111,12 @@ export async function googleSignIn() {
   if (error) throw error
 }
 
+// ── Verification doc upload ───────────────────────────────────────────────────
+export async function uploadVerificationDoc(userId, docType, file) {
+  const path = await uploadKycDoc(userId, docType, file)
+  await insertVerificationDoc(userId, docType, path)
+}
+
 // ── Profile updates ───────────────────────────────────────────────────────────
 export async function updatePassword(newPassword) {
   const { error } = await supabase.auth.updateUser({ password: newPassword })
