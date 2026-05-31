@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BrandLogo, I } from '../../../lib/ui.jsx'
-import { supabase } from '../../../lib/supabase.js'
-import { friendlyAuthError } from '../validators/authValidators.js'
+import { useAuthAction, svc } from '../hooks/useAuth.js'
 
 const STEPS = [
   { Icon: I.User,        label: 'Compte créé',          done: true  },
@@ -121,22 +120,13 @@ function LeftPanel() {
 export default function VerifyPendingPage() {
   const location = useLocation()
   const email    = location.state?.email || null
-  const [sent,    setSent]    = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error,   setError]   = useState('')
+  const [sent, setSent] = useState(false)
+  const { run, loading, error } = useAuthAction()
 
   const resend = async () => {
     if (!email) return
-    setLoading(true); setError('')
-    try {
-      const { error: err } = await supabase.auth.resend({ type: 'signup', email })
-      if (err) throw err
-      setSent(true)
-    } catch (err) {
-      setError(friendlyAuthError(err?.message))
-    } finally {
-      setLoading(false)
-    }
+    const result = await run(() => svc.resendConfirmation(email))
+    if (result !== null) setSent(true)
   }
 
   return (

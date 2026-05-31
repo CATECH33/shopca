@@ -145,7 +145,7 @@ export default function LoginPage() {
       }
     })
     if (result) navigate('/')
-    else if (unconfirmed) navigate('/auth/verify-pending')
+    else if (unconfirmed) navigate('/auth/verify-pending', { state: { email } })
   }
 
   return (
