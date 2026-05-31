@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import App from './App.jsx'
 import LoginPage        from './features/auth/pages/LoginPage.jsx'
 import RegisterPage     from './features/auth/pages/RegisterPage.jsx'
+import RegisterProPage  from './features/auth/pages/RegisterProPage.jsx'
 import ForgotPage       from './features/auth/pages/ForgotPage.jsx'
 import VerifyPendingPage from './features/auth/pages/VerifyPendingPage.jsx'
 import ResetPage          from './features/auth/pages/ResetPage.jsx'
@@ -49,6 +50,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/"                    element={<App />} />
           <Route path="/auth/login"          element={<LoginPage />} />
           <Route path="/auth/register"       element={<RegisterPage />} />
+          <Route path="/auth/register/pro"   element={<RegisterProPage />} />
           <Route path="/auth/forgot"         element={<ForgotPage />} />
           <Route path="/auth/verify-pending" element={<VerifyPendingPage />} />
           <Route path="/auth/reset"          element={<ResetPage />} />

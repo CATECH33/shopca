@@ -5153,7 +5153,7 @@ function AgencyVerificationView({ setCurrentView }) {
                     <div className="text-slate-400 text-xs">Complétez votre vérification pour booster immédiatement votre visibilité.</div>
                   </div>
                   {status === 'none' && (
-                    <button onClick={() => setCurrentView('register-pro')}
+                    <button onClick={() => navigate('/auth/register/pro')}
                       className="shrink-0 flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all hover:-translate-y-0.5">
                       Commencer <Icons.ArrowRight size={14} />
                     </button>
@@ -5200,7 +5200,7 @@ function AgencyVerificationView({ setCurrentView }) {
                     </div>
                     <h3 className="font-extrabold text-navy-900 text-lg mb-2">Votre agence n'est pas encore vérifiée</h3>
                     <p className="text-slate-500 text-sm max-w-md mx-auto mb-6">Soumettez vos documents pour obtenir le badge officiel PASMAL et multiplier vos contacts qualifiés.</p>
-                    <button onClick={() => setCurrentView('register-pro')}
+                    <button onClick={() => navigate('/auth/register/pro')}
                       className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-bold px-7 py-3 rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-lg">
                       Démarrer la vérification <Icons.ArrowRight size={16} />
                     </button>
