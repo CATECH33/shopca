@@ -22,7 +22,8 @@ import AgencesPage      from './features/agencies/AgencesPage.jsx'
 import TarifsPage      from './features/tarifs/TarifsPage.jsx'
 import SimulateurPage from './features/simulateur/SimulateurPage.jsx'
 import EstimationPage from './features/estimation/EstimationPage.jsx'
-import GuidesPage    from './features/guides/GuidesPage.jsx'
+import GuidesPage       from './features/guides/GuidesPage.jsx'
+import ProRegisterPage  from './features/pro/ProRegisterPage.jsx'
 import { AuthProvider } from './features/auth/providers/AuthProvider.jsx'
 import './index.css'
 
@@ -56,6 +57,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/"                    element={<App />} />
           <Route path="/auth/login"          element={<LoginPage />} />
           <Route path="/auth/register"       element={<RegisterPage />} />
+          <Route path="/auth/register/pro"   element={<ProRegisterPage />} />
           <Route path="/auth/forgot"         element={<ForgotPage />} />
           <Route path="/auth/verify-pending" element={<VerifyPendingPage />} />
           <Route path="/auth/reset"          element={<ResetPage />} />
