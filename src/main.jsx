@@ -19,6 +19,7 @@ import EarlyAccessPage  from './earlyaccess/EarlyAccessPage.jsx'
 import CRMPage          from './features/crm/CRMPage.jsx'
 import FormsPage        from './features/forms/FormsPage.jsx'
 import AgencesPage      from './features/agencies/AgencesPage.jsx'
+import TarifsPage      from './features/tarifs/TarifsPage.jsx'
 import { AuthProvider } from './features/auth/providers/AuthProvider.jsx'
 import './index.css'
 
@@ -63,6 +64,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/annonces/:id"        element={<ListingDetailPage />} />
           <Route path="/early-access"        element={<EarlyAccessPage />} />
           <Route path="/agences"           element={<AgencesPage />} />
+          <Route path="/tarifs"            element={<TarifsPage />} />
           <Route path="/crm"               element={<CRMPage />} />
           <Route path="/forms"             element={<FormsPage />} />
           <Route path="/pro" element={
