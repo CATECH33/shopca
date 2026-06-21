@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, Counter, Button, Avatar, Badge } from '../lib/ui.jsx'
+import { PasmalSelect } from '../components/ui/PasmalSelect'
 
 /* ============================================================
    Super Admin — Listings Moderation
@@ -158,14 +159,17 @@ export default function AdminListings() {
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Rechercher annonce, ville, propriétaire, ID…" className="flex-1 bg-transparent text-sm focus:outline-none"/>
         </div>
 
-        <div className="relative">
-          <select value={sort} onChange={(e) => setSort(e.target.value)} className="appearance-none h-10 pl-3 pr-8 bg-current/[0.04] border border-current/10 rounded-xl text-sm focus:outline-none cursor-pointer" style={{ backgroundColor: 'transparent' }}>
-            <option value="recent"  className="text-navy-900">Plus récentes</option>
-            <option value="score"   className="text-navy-900">Score le plus faible</option>
-            <option value="reports" className="text-navy-900">Plus de signalements</option>
-          </select>
-          <I.ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 opacity-50 pointer-events-none"/>
-        </div>
+        <PasmalSelect
+          value={sort}
+          onChange={setSort}
+          options={[
+            { value: 'recent',  label: 'Plus récentes' },
+            { value: 'score',   label: 'Score le plus faible' },
+            { value: 'reports', label: 'Plus de signalements' },
+          ]}
+          size="sm"
+          dark
+        />
 
         <button onClick={toggleAll} className="h-10 px-3 rounded-xl bg-current/[0.04] border border-current/10 text-xs font-semibold opacity-70 hover:opacity-100 transition flex items-center gap-1.5">
           <I.Check size={12}/> {allChecked ? 'Tout déselectionner' : 'Tout sélectionner'}

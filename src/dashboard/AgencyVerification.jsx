@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, Button, Badge } from '../lib/ui.jsx'
+import { PasmalSelect } from '../components/ui/PasmalSelect'
 
 /* ============================================================
    Agency Verification — Premium PropTech workflow
@@ -199,9 +200,14 @@ export default function AgencyVerification() {
                 <input value={agency.siret} onChange={setField('siret')} className="w-full bg-transparent text-navy-900 text-sm focus:outline-none font-mono"/>
               </Field>
               <Field label="Forme juridique">
-                <select value={agency.legalForm} onChange={setField('legalForm')} className="w-full bg-transparent text-navy-900 text-sm focus:outline-none">
-                  <option>SAS</option><option>SARL</option><option>EURL</option><option>SCI</option><option>SA</option><option>Auto-entrepreneur</option>
-                </select>
+                <PasmalSelect
+                  value={agency.legalForm}
+                  onChange={v => setAgency(a => ({ ...a, legalForm: v }))}
+                  options={['SAS', 'SARL', 'EURL', 'SCI', 'SA', 'Auto-entrepreneur']}
+                  placeholder="Choisir…"
+                  ghost
+                  className="flex-1"
+                />
               </Field>
               <Field label="Capital social">
                 <input value={agency.capital} onChange={setField('capital')} className="w-full bg-transparent text-navy-900 text-sm focus:outline-none"/>

@@ -10,6 +10,7 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { I, Button, Avatar } from '../lib/ui.jsx'
+import { PasmalSelect } from '../components/ui/PasmalSelect'
 
 /* ============================================================
    CRM Leads — Kanban premium (HubSpot-style)
@@ -195,11 +196,13 @@ export default function CRM() {
               placeholder="Rechercher un lead, une ville, un type…"
               className="flex-1 bg-transparent text-sm text-navy-900 placeholder-slate-400 focus:outline-none" />
           </div>
-          <select value={sourceFilter} onChange={e => setSourceFilter(e.target.value)}
-            className="h-10 px-3 bg-white/70 border border-slate-100 rounded-xl text-sm text-navy-900 focus:outline-none">
-            <option value="">Toutes les sources</option>
-            {SOURCES.map(s => <option key={s} value={s}>{s}</option>)}
-          </select>
+          <PasmalSelect
+            value={sourceFilter}
+            onChange={setSourceFilter}
+            options={[{ value: '', label: 'Toutes les sources' }, ...SOURCES.map(s => ({ value: s, label: s }))]}
+            size="sm"
+            searchable={false}
+          />
           <div className="flex items-center gap-2 px-3 h-10 bg-white/70 border border-slate-100 rounded-xl">
             <I.Tag size={14} className="text-slate-400"/>
             <input type="number" value={minBudget} onChange={e => setMinBudget(e.target.value)}

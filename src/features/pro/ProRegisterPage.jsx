@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { I, BrandLogo, PasswordStrength } from '../../lib/ui.jsx'
 import { useAuthAction, svc } from '../auth/hooks/useAuth.js'
 import { isValidEmail } from '../auth/validators/authValidators.js'
+import { PasmalSelect } from '../../components/ui/PasmalSelect'
 
 const DRAFT_KEY = 'pasmal_pro_wizard_v2'
 const MAX_IMG = 5 * 1024 * 1024
@@ -67,19 +68,14 @@ function TextInput({ value, onChange, placeholder, type = 'text', icon: Icon, er
 
 function SelectInput({ value, onChange, options, placeholder, icon: Icon, error }) {
   return (
-    <div className={`flex items-center gap-3 px-4 h-12 rounded-xl border-2 bg-slate-50/80 transition-all ${
-      error
-        ? 'border-rose-300 bg-rose-50/50 focus-within:border-rose-400 focus-within:ring-2 focus-within:ring-rose-100'
-        : 'border-slate-200 focus-within:border-orange-400 focus-within:ring-2 focus-within:ring-orange-100'
-    }`}>
-      {Icon && <Icon size={15} className={`shrink-0 ${error ? 'text-rose-400' : 'text-slate-400'}`} />}
-      <select value={value} onChange={e => onChange(e.target.value)}
-        className="flex-1 bg-transparent text-sm text-[#0F172A] focus:outline-none appearance-none cursor-pointer">
-        <option value="" disabled>{placeholder}</option>
-        {options.map(o => <option key={o} value={o}>{o}</option>)}
-      </select>
-      <I.ChevronDown size={14} className="text-slate-400 shrink-0 pointer-events-none" />
-    </div>
+    <PasmalSelect
+      value={value}
+      onChange={onChange}
+      options={options}
+      placeholder={placeholder}
+      icon={Icon ? <Icon size={15} /> : undefined}
+      error={error}
+    />
   )
 }
 

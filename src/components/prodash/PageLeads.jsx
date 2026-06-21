@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I } from '../../lib/ui.jsx'
+import { PasmalSelect } from '../ui/PasmalSelect'
 import { useAuth } from '../../features/auth/providers/AuthProvider.jsx'
 import { supabase } from '../../lib/supabase.js'
 
@@ -176,13 +177,15 @@ export default function PageLeads({ dark }) {
                     </div>
                     <p className={`text-xs font-semibold ${tx} text-center break-all`}>{lead.email ?? 'Contact'}</p>
                     {/* Status selector */}
-                    <select
+                    <PasmalSelect
                       value={lead.status}
-                      onChange={e => updateStatus(lead.id, e.target.value)}
+                      onChange={v => updateStatus(lead.id, v)}
+                      options={STATUSES}
                       disabled={updating}
-                      className={`text-[11px] font-bold px-2.5 py-1 rounded-full border-0 outline-none cursor-pointer disabled:opacity-50 ${STATUS_STYLE[lead.status]}`}>
-                      {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
-                    </select>
+                      ghost
+                      size="xs"
+                      triggerClassName={`text-[11px] font-bold px-2.5 py-1 rounded-full disabled:opacity-50 ${STATUS_STYLE[lead.status]}`}
+                    />
                   </div>
 
                   {/* Fields */}

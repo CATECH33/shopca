@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, Counter, Button, Avatar, Badge } from '../lib/ui.jsx'
+import { PasmalSelect } from '../components/ui/PasmalSelect'
 
 /* ============================================================
    Super Admin — Users Management
@@ -332,19 +333,13 @@ function StatTile({ icon: Icon, label, value, tone, pulse }) {
 
 function Select({ value, onChange, options }) {
   return (
-    <div className="relative">
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="appearance-none h-10 pl-3 pr-8 bg-current/[0.04] border border-current/10 rounded-xl text-sm focus:outline-none cursor-pointer"
-        style={{ backgroundColor: 'transparent' }}
-      >
-        {options.map((o) => (
-          <option key={o.id} value={o.id} className="text-navy-900">{o.label}</option>
-        ))}
-      </select>
-      <I.ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 opacity-50 pointer-events-none"/>
-    </div>
+    <PasmalSelect
+      value={value}
+      onChange={onChange}
+      options={options.map(o => ({ value: o.id, label: o.label }))}
+      size="sm"
+      dark
+    />
   )
 }
 

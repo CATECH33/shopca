@@ -13,6 +13,7 @@ import { svc } from './features/auth/hooks/useAuth.js'
 import LoggedInHome          from './components/LoggedInHome.jsx'
 import PersonalDashboard     from './components/PersonalDashboard.jsx'
 import ProfessionalDashboard from './components/ProfessionalDashboard.jsx'
+import { PasmalSelect } from './components/ui/PasmalSelect'
 
 /* ============================================================================
    Inline SVG icons (no external lib)
@@ -640,10 +641,22 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
         </div>
         <div className="md:col-span-2">
           <Field icon={Icons.Home} label="Type" divider>
-            <select value={filters.propertyType} onChange={(e) => setFilters({ ...filters, propertyType: e.target.value })} className="w-full bg-transparent text-navy-900 text-sm focus:outline-none appearance-none cursor-pointer">
-              <option value="">Tous</option>
-              <option>Studio</option><option>T2</option><option>T3</option><option>Maison</option><option>Villa</option><option>Colocation</option><option>Parking</option>
-            </select>
+            <PasmalSelect
+              value={filters.propertyType}
+              onChange={v => setFilters({ ...filters, propertyType: v })}
+              options={[
+                { value: '', label: 'Tous' },
+                { value: 'Studio',    label: 'Studio' },
+                { value: 'T2',        label: 'T2' },
+                { value: 'T3',        label: 'T3' },
+                { value: 'Maison',    label: 'Maison' },
+                { value: 'Villa',     label: 'Villa' },
+                { value: 'Colocation',label: 'Colocation' },
+                { value: 'Parking',   label: 'Parking' },
+              ]}
+              ghost
+              className="flex-1"
+            />
           </Field>
         </div>
         <div className="md:col-span-2">
@@ -6681,13 +6694,18 @@ function SearchResultsPage({ listings, loading, error, source, filters, setFilte
 
               <div className="flex items-center gap-2 mr-auto">
                 <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Trier</span>
-                <select value={sortBy} onChange={e => setSortBy(e.target.value)}
-                  className="h-9 pl-3 pr-8 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:border-orange-400 appearance-none cursor-pointer">
-                  <option value="relevance">Pertinence</option>
-                  <option value="price-asc">Prix croissant</option>
-                  <option value="price-desc">Prix décroissant</option>
-                  <option value="surface">Surface</option>
-                </select>
+                <PasmalSelect
+                  value={sortBy}
+                  onChange={setSortBy}
+                  options={[
+                    { value: 'relevance',  label: 'Pertinence' },
+                    { value: 'price-asc',  label: 'Prix croissant' },
+                    { value: 'price-desc', label: 'Prix décroissant' },
+                    { value: 'surface',    label: 'Surface' },
+                  ]}
+                  size="sm"
+                  searchable={false}
+                />
               </div>
 
               <div className="flex items-center gap-0.5 p-1 bg-white border border-slate-200 rounded-xl">
@@ -8715,14 +8733,14 @@ function CrmView({ setCurrentView }) {
                     {/* Source */}
                     <div>
                       <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color:sub }}>Source</label>
-                      <select value={newForm.src} onChange={e => setNewForm(f => ({ ...f, src:e.target.value }))}
-                        className="w-full h-11 px-4 rounded-2xl border-2 text-sm outline-none transition-all focus:border-orange-400 cursor-pointer"
-                        style={{ background:dark?'#0f172a':bg, borderColor:bdr, color:newForm.src ? txt : sub }}>
-                        <option value="" style={{ color:sub }}>Choisir…</option>
-                        {['SeLoger', 'Leboncoin', 'PAP', "Bien'ici", 'Instagram', 'Recommandation', 'Autre'].map(s => (
-                          <option key={s} value={s} style={{ color:txt }}>{s}</option>
-                        ))}
-                      </select>
+                      <PasmalSelect
+                        value={newForm.src}
+                        onChange={v => setNewForm(f => ({ ...f, src: v }))}
+                        options={["SeLoger","Leboncoin","PAP","Bien'ici","Instagram","Recommandation","Autre"]}
+                        placeholder="Choisir…"
+                        size="sm"
+                        dark={dark}
+                      />
                     </div>
                     {/* Bien recherché */}
                     <div>

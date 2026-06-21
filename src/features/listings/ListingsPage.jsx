@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Link, useSearchParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BrandLogo, I } from '../../lib/ui.jsx'
+import { PasmalSelect } from '../../components/ui/PasmalSelect'
 import { supabase } from '../../lib/supabase.js'
 
 // ── Data ──────────────────────────────────────────────────────────────────────
@@ -603,13 +604,18 @@ export default function ListingsPage() {
 
               {/* Sort */}
               <div className="flex items-center gap-2 mr-auto">
-                <select value={sort} onChange={e => setSort(e.target.value)}
-                  className="h-9 pl-3 pr-8 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:border-orange-400 appearance-none cursor-pointer">
-                  <option value="relevance">Pertinence</option>
-                  <option value="price-asc">Prix croissant</option>
-                  <option value="price-desc">Prix décroissant</option>
-                  <option value="surface">Surface</option>
-                </select>
+                <PasmalSelect
+                  value={sort}
+                  onChange={setSort}
+                  options={[
+                    { value: 'relevance',  label: 'Pertinence' },
+                    { value: 'price-asc',  label: 'Prix croissant' },
+                    { value: 'price-desc', label: 'Prix décroissant' },
+                    { value: 'surface',    label: 'Surface' },
+                  ]}
+                  size="sm"
+                  searchable={false}
+                />
               </div>
 
               {/* View toggle */}

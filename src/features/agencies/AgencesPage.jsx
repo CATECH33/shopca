@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, BrandLogo } from '../../lib/ui.jsx'
+import { PasmalSelect } from '../../components/ui/PasmalSelect'
 
 const unsplash = (id, w = 1200) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`
@@ -182,14 +183,19 @@ export default function AgencesPage() {
                 className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-orange-400 transition" />
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <select value={sortBy} onChange={e => setSortBy(e.target.value)}
-                className="h-10 pl-3 pr-8 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:border-orange-400 appearance-none cursor-pointer">
-                <option value="score">Score PASMAL</option>
-                <option value="rating">Note clients</option>
-                <option value="listings">Annonces actives</option>
-                <option value="reviews">Nombre d'avis</option>
-                <option value="response">Temps de réponse</option>
-              </select>
+              <PasmalSelect
+                value={sortBy}
+                onChange={setSortBy}
+                options={[
+                  { value: 'score',    label: 'Score PASMAL' },
+                  { value: 'rating',   label: 'Note clients' },
+                  { value: 'listings', label: 'Annonces actives' },
+                  { value: 'reviews',  label: "Nombre d'avis" },
+                  { value: 'response', label: 'Temps de réponse' },
+                ]}
+                size="sm"
+                searchable={false}
+              />
               <div className="flex items-center gap-0.5 p-1 bg-slate-50 border border-slate-200 rounded-xl">
                 {[
                   { id: 'grid', icon: <><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></> },

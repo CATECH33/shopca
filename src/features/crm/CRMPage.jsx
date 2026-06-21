@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, BrandLogo } from '../../lib/ui'
+import { PasmalSelect } from '../../components/ui/PasmalSelect'
 
 // ─── Data ──────────────────────────────────────────────────────────────────
 
@@ -655,14 +656,14 @@ export default function CRMPage() {
                     </div>
                     <div>
                       <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color:sub }}>Source</label>
-                      <select value={newForm.src} onChange={e => setNewForm(f => ({ ...f, src:e.target.value }))}
-                        className="w-full h-11 px-4 rounded-2xl border-2 text-sm outline-none transition-all focus:border-orange-400 cursor-pointer"
-                        style={{ background:dark?'#0f172a':bg, borderColor:bdr, color:newForm.src ? txt : sub }}>
-                        <option value="" style={{ color:sub }}>Choisir…</option>
-                        {["SeLoger","Leboncoin","PAP","Bien'ici","Instagram","Recommandation","Autre"].map(s => (
-                          <option key={s} value={s} style={{ color:txt }}>{s}</option>
-                        ))}
-                      </select>
+                      <PasmalSelect
+                        value={newForm.src}
+                        onChange={v => setNewForm(f => ({ ...f, src: v }))}
+                        options={["SeLoger","Leboncoin","PAP","Bien'ici","Instagram","Recommandation","Autre"]}
+                        placeholder="Choisir…"
+                        size="sm"
+                        dark={dark}
+                      />
                     </div>
                     <div>
                       <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color:sub }}>Bien recherché</label>
