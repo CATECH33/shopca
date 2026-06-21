@@ -5,6 +5,7 @@ import { BrandLogo, I } from '../../../lib/ui.jsx'
 import { useAuthAction, svc } from '../hooks/useAuth.js'
 import { useAuth } from '../providers/AuthProvider.jsx'
 import { validateLoginForm } from '../validators/authValidators.js'
+import { PasmalInput } from '../../../components/ui/PasmalInput'
 
 const FEATURES = [
   { Icon: I.Home,       label: 'Annonces illimitées',      sub: 'Publiez sans restriction'          },
@@ -120,7 +121,6 @@ export default function LoginPage() {
   const existingEmail = location.state?.existingEmail || ''
   const [email,        setEmail]        = useState(existingEmail)
   const [password,     setPassword]     = useState('')
-  const [showPwd,      setShowPwd]      = useState(false)
   const [oauthLoading, setOauthLoading] = useState(false)
 
   useEffect(() => {
@@ -214,38 +214,32 @@ export default function LoginPage() {
             {/* Email + password form */}
             <form onSubmit={submit} className="space-y-4">
               {/* Email */}
-              <div>
-                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
-                  E-mail
-                </label>
-                <div className="flex items-center gap-3 px-4 h-12 rounded-xl border-2 border-slate-200 bg-slate-50 focus-within:border-orange-400 focus-within:ring-2 focus-within:ring-orange-100 transition-all">
-                  <I.Mail size={15} className="text-slate-400 shrink-0" />
-                  <input type="email" required value={email} onChange={e => setEmail(e.target.value)}
-                    placeholder="vous@exemple.fr"
-                    className="flex-1 bg-transparent text-[#0F172A] placeholder-slate-400 text-sm focus:outline-none" />
-                </div>
-              </div>
+              <PasmalInput
+                type="email"
+                label="E-mail"
+                placeholder="vous@exemple.fr"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+                icon={<I.Mail size={15} />}
+              />
 
               {/* Password */}
               <div>
                 <div className="flex items-baseline justify-between mb-1.5">
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest">
-                    Mot de passe
-                  </label>
+                  <span className="text-sm font-medium text-slate-600">Mot de passe</span>
                   <Link to="/auth/forgot" className="text-[11px] text-orange-600 hover:text-orange-700 font-semibold transition">
                     Oublié ?
                   </Link>
                 </div>
-                <div className="flex items-center gap-3 px-4 h-12 rounded-xl border-2 border-slate-200 bg-slate-50 focus-within:border-orange-400 focus-within:ring-2 focus-within:ring-orange-100 transition-all">
-                  <I.Lock size={15} className="text-slate-400 shrink-0" />
-                  <input type={showPwd ? 'text' : 'password'} required value={password} onChange={e => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="flex-1 bg-transparent text-[#0F172A] placeholder-slate-400 text-sm focus:outline-none" />
-                  <button type="button" onClick={() => setShowPwd(v => !v)}
-                    className="text-slate-400 hover:text-slate-600 transition shrink-0">
-                    {showPwd ? <I.EyeOff size={14} /> : <I.Eye size={14} />}
-                  </button>
-                </div>
+                <PasmalInput
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                  icon={<I.Lock size={15} />}
+                />
               </div>
 
               {/* Error */}

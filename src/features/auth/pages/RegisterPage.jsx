@@ -5,6 +5,8 @@ import { I, BrandLogo, PasswordStrength } from '../../../lib/ui.jsx'
 import { useAuthAction, svc } from '../hooks/useAuth.js'
 import { isValidEmail } from '../validators/authValidators.js'
 import { startPremiumAlertsCheckout } from '../../subscription/subscriptionService.js'
+import { PasmalInput } from '../../../components/ui/PasmalInput'
+import { PasmalCheckbox } from '../../../components/ui/PasmalCheckbox'
 
 const DRAFT_KEY = 'pasmal_pro_reg_draft'
 
@@ -169,39 +171,31 @@ function Field({ label, optional, error, children }) {
   )
 }
 
-// ── Text input ────────────────────────────────────────────────────────────────
+// ── Text input (delegates to Design System) ───────────────────────────────────
 function TextInput({ value, onChange, placeholder, type = 'text', icon: Icon, error }) {
   return (
-    <div className={`flex items-center gap-3 px-4 h-12 rounded-xl border-2 bg-slate-50 transition-all ${
-      error
-        ? 'border-rose-300 bg-rose-50/50 focus-within:border-rose-400 focus-within:ring-2 focus-within:ring-rose-100'
-        : 'border-slate-200 focus-within:border-orange-400 focus-within:ring-2 focus-within:ring-orange-100'
-    }`}>
-      {Icon && <Icon size={15} className={`shrink-0 ${error ? 'text-rose-400' : 'text-slate-400'}`} />}
-      <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
-        className="flex-1 bg-transparent text-[#0F172A] placeholder-slate-400 text-sm focus:outline-none" />
-    </div>
+    <PasmalInput
+      type={type}
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      placeholder={placeholder}
+      icon={Icon ? <Icon size={15} /> : undefined}
+      error={error}
+    />
   )
 }
 
-// ── Password input ────────────────────────────────────────────────────────────
+// ── Password input (delegates to Design System) ───────────────────────────────
 function PwdInput({ label, value, onChange, showStrength, error }) {
-  const [show, setShow] = useState(false)
   return (
     <Field label={label} error={error}>
-      <div className={`flex items-center gap-3 px-4 h-12 rounded-xl border-2 bg-slate-50 transition-all ${
-        error
-          ? 'border-rose-300 bg-rose-50/50 focus-within:border-rose-400 focus-within:ring-2 focus-within:ring-rose-100'
-          : 'border-slate-200 focus-within:border-orange-400 focus-within:ring-2 focus-within:ring-orange-100'
-      }`}>
-        <I.Lock size={15} className={`shrink-0 ${error ? 'text-rose-400' : 'text-slate-400'}`} />
-        <input type={show ? 'text' : 'password'} value={value} onChange={e => onChange(e.target.value)}
-          placeholder="••••••••"
-          className="flex-1 bg-transparent text-[#0F172A] placeholder-slate-400 text-sm focus:outline-none" />
-        <button type="button" onClick={() => setShow(s => !s)} className="text-slate-400 hover:text-slate-600 transition shrink-0">
-          {show ? <I.EyeOff size={14} /> : <I.Eye size={14} />}
-        </button>
-      </div>
+      <PasmalInput
+        type="password"
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder="••••••••"
+        icon={<I.Lock size={15} />}
+      />
       {showStrength && value && <PasswordStrength password={value} />}
     </Field>
   )
@@ -343,19 +337,16 @@ function Toggle({ checked, onChange, label, desc }) {
   )
 }
 
-// ── Checkbox ──────────────────────────────────────────────────────────────────
+// ── Checkbox (delegates to Design System) ────────────────────────────────────
 function Checkbox({ checked, onChange, children, error }) {
   return (
     <div>
-      <div onClick={() => onChange(v => !v)}
-        className="flex items-start gap-3 cursor-pointer group px-1 py-2 rounded-xl hover:bg-orange-50/60 transition-colors">
-        <div className={`mt-0.5 w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all ${
-          checked ? 'bg-orange-500 border-orange-500' : 'border-slate-300 group-hover:border-orange-400'
-        }`}>
-          {checked && <I.Check size={11} className="text-white" />}
-        </div>
-        <span className="text-sm text-slate-600 leading-relaxed select-none">{children}</span>
-      </div>
+      <PasmalCheckbox
+        checked={checked}
+        onChange={() => onChange(v => !v)}
+        label={children}
+        className="px-1 py-2 rounded-xl hover:bg-orange-50/60 transition-colors"
+      />
       <AnimatePresence>
         {error && (
           <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}

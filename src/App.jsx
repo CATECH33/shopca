@@ -14,6 +14,7 @@ import LoggedInHome          from './components/LoggedInHome.jsx'
 import PersonalDashboard     from './components/PersonalDashboard.jsx'
 import ProfessionalDashboard from './components/ProfessionalDashboard.jsx'
 import { PasmalSelect } from './components/ui/PasmalSelect'
+import { CitySearch } from './components/ui/CitySearch'
 
 /* ============================================================================
    Inline SVG icons (no external lib)
@@ -623,15 +624,16 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
             <Icons.MapPin size={20} className="text-orange-600 shrink-0 group-focus-within:scale-110 transition-transform duration-200" />
             <div className="flex-1 min-w-0">
               <div className="text-[11px] font-semibold text-slate-600 uppercase tracking-wider">Localisation</div>
-              <LocationAutocomplete
+              <CitySearch
+                bare
                 value={filters.location}
-                onChange={(name) => setFilters((f) => ({ ...f, location: name || '' }))}
-                onSelect={(city) => {
+                onChange={name => setFilters(f => ({ ...f, location: name || '' }))}
+                onSelect={city => {
                   if (city) {
-                    setFilters((f) => ({ ...f, location: city.name }))
+                    setFilters(f => ({ ...f, location: city.name }))
                     onSearch({ location: city.name })
                   } else {
-                    setFilters((f) => ({ ...f, location: '' }))
+                    setFilters(f => ({ ...f, location: '' }))
                   }
                 }}
                 placeholder="Paris, Lyon, Bordeaux…"
@@ -4892,7 +4894,7 @@ function PublierView({ user, onSignIn }) {
                 <PublierField label="Ville / Code postal" error={errors.city}>
                   <div className={`flex items-center gap-2 px-4 h-12 bg-white rounded-2xl border transition ${errors.city ? 'border-red-400' : 'border-slate-200 focus-within:border-orange-400 focus-within:shadow-orange-100/60 focus-within:shadow-md'}`}>
                     <Icons.MapPin size={14} className="text-orange-500 shrink-0" />
-                    <LocationSearch
+                    <CitySearch
                       bare
                       value={form.city}
                       onChange={v => set('city', v)}

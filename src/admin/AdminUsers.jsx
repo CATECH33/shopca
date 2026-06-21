@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, Counter, Button, Avatar, Badge } from '../lib/ui.jsx'
 import { PasmalSelect } from '../components/ui/PasmalSelect'
+import { PasmalCheckbox } from '../components/ui/PasmalCheckbox'
 
 /* ============================================================
    Super Admin — Users Management
@@ -212,7 +213,7 @@ export default function AdminUsers() {
             <thead className="bg-current/[0.04] text-[10px] font-bold uppercase tracking-wider opacity-60">
               <tr>
                 <th className="w-10 pl-4 py-3">
-                  <input type="checkbox" checked={allChecked} ref={(el) => { if (el) el.indeterminate = !allChecked && someChecked }} onChange={toggleAll} className="accent-orange-500"/>
+                  <PasmalCheckbox checked={allChecked} indeterminate={!allChecked && someChecked} onChange={toggleAll} dark />
                 </th>
                 <th className="text-left py-3 pr-3">Utilisateur</th>
                 <th className="text-left py-3 pr-3">Rôle</th>
@@ -234,7 +235,7 @@ export default function AdminUsers() {
                   onClick={() => setSelectedUserId(u.id)}
                 >
                   <td className="pl-4 py-3" onClick={(e) => e.stopPropagation()}>
-                    <input type="checkbox" checked={selected.has(u.id)} onChange={() => toggleOne(u.id)} className="accent-orange-500"/>
+                    <PasmalCheckbox checked={selected.has(u.id)} onChange={() => toggleOne(u.id)} dark />
                   </td>
                   <td className="py-3 pr-3">
                     <div className="flex items-center gap-3 min-w-0">

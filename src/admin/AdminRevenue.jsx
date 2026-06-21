@@ -5,6 +5,7 @@ import {
   ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid,
 } from 'recharts'
 import { I, Counter, Button, Avatar, Badge } from '../lib/ui.jsx'
+import { PasmalCheckbox } from '../components/ui/PasmalCheckbox'
 
 /* ============================================================
    Super Admin — Revenue Analytics (Stripe-style)
@@ -100,10 +101,13 @@ export default function AdminRevenue() {
           <p className="opacity-60 mt-1 text-sm">Flux financiers en temps réel — abonnements, boosts, méthodes de paiement.</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <label className="flex items-center gap-1.5 text-[11px] font-semibold opacity-70 cursor-pointer">
-            <input type="checkbox" checked={compare} onChange={(e) => setCompare(e.target.checked)} className="accent-orange-500"/>
-            Comparer N-1
-          </label>
+          <PasmalCheckbox
+            checked={compare}
+            onChange={setCompare}
+            label="Comparer N-1"
+            dark
+            className="text-[11px] font-semibold opacity-70"
+          />
           <div className="flex items-center gap-0.5 p-1 rounded-full border border-current/10 bg-current/[0.03]">
             {RANGES.map(([k, l]) => (
               <button

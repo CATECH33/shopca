@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, Button, Badge } from '../lib/ui.jsx'
+import { PasmalCheckbox } from '../components/ui/PasmalCheckbox'
+import { PasmalRadio } from '../components/ui/PasmalRadio'
 
 /* ============================================================
    Listing Creation Wizard
@@ -594,29 +596,44 @@ function StepPublish({ data, set }) {
 
       <div className="space-y-3 max-w-2xl">
         {[
-          { id: 'free', name: 'Standard', price: 'Gratuit', perks: ['Annonce publiée 30 jours', 'Diffusion standard'] },
-          { id: 'boost', name: 'Pack Visibilité', price: '+49 €', perks: ['Mise en avant Premium', 'Badge "À la Une"', '4× plus de contacts'], highlight: true },
-        ].map((p) => (
-          <label key={p.id} className={`flex items-start gap-4 p-5 rounded-2xl border-2 cursor-pointer transition-all ${p.highlight ? 'border-orange-200 bg-orange-50/40' : 'border-slate-200 bg-white hover:border-slate-300'}`}>
-            <input type="radio" name="plan" defaultChecked={p.highlight} className="mt-1 accent-orange-600"/>
-            <div className="flex-1">
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <div className="font-bold text-navy-900 flex items-center gap-2">{p.name} {p.highlight && <Badge tone="orange">Recommandé</Badge>}</div>
-                <div className="font-extrabold text-navy-900">{p.price}</div>
+          { id: 'free',  name: 'Standard',       price: 'Gratuit', perks: ['Annonce publiée 30 jours', 'Diffusion standard'] },
+          { id: 'boost', name: 'Pack Visibilité', price: '+49 €',   perks: ['Mise en avant Premium', 'Badge "À la Une"', '4× plus de contacts'], highlight: true },
+        ].map((p) => {
+          const selected = (data.plan ?? 'boost') === p.id
+          return (
+            <div
+              key={p.id}
+              onClick={() => set({ plan: p.id })}
+              className={`flex items-start gap-4 p-5 rounded-2xl border-2 cursor-pointer transition-all ${
+                selected ? 'border-orange-400 bg-orange-50/50 shadow-sm shadow-orange-100'
+                : p.highlight ? 'border-orange-200 bg-orange-50/20 hover:border-orange-300'
+                : 'border-slate-200 bg-white hover:border-slate-300'
+              }`}
+            >
+              <PasmalRadio value={p.id} checked={selected} onChange={() => set({ plan: p.id })} />
+              <div className="flex-1">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="font-bold text-navy-900 flex items-center gap-2">{p.name} {p.highlight && <Badge tone="orange">Recommandé</Badge>}</div>
+                  <div className="font-extrabold text-navy-900">{p.price}</div>
+                </div>
+                <ul className="text-xs text-slate-600 mt-2 space-y-1">
+                  {p.perks.map((perk) => <li key={perk} className="flex items-center gap-1.5"><I.Check size={11} className="text-emerald-600"/>{perk}</li>)}
+                </ul>
               </div>
-              <ul className="text-xs text-slate-600 mt-2 space-y-1">
-                {p.perks.map((perk) => <li key={perk} className="flex items-center gap-1.5"><I.Check size={11} className="text-emerald-600"/>{perk}</li>)}
-              </ul>
             </div>
-          </label>
-        ))}
+          )
+        })}
 
-        <label className="flex items-start gap-3 mt-4 cursor-pointer">
-          <input type="checkbox" checked={data.agreedTerms} onChange={(e) => set({ agreedTerms: e.target.checked })} className="mt-1 accent-orange-600"/>
-          <div className="text-xs text-slate-600">
-            J'accepte les <a href="#" className="text-orange-600 underline">conditions de publication</a> et confirme que je suis autorisé à publier ce bien sur PASMAL.
-          </div>
-        </label>
+        <PasmalCheckbox
+          checked={data.agreedTerms}
+          onChange={v => set({ agreedTerms: v })}
+          className="mt-4"
+          label={
+            <span className="text-xs text-slate-600">
+              J'accepte les <a href="#" className="text-orange-600 underline">conditions de publication</a> et confirme que je suis autorisé à publier ce bien sur PASMAL.
+            </span>
+          }
+        />
       </div>
     </div>
   )
