@@ -5,6 +5,13 @@ import Stripe from 'https://esm.sh/stripe@13?target=deno'
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2023-10-16' })
 const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET')!
 
+function planFromType(type: string): string {
+  if (type.includes('enterprise')) return 'enterprise'
+  if (type.includes('pro'))        return 'premium'
+  if (type.includes('starter'))    return 'basic'
+  return 'premium' // premium_alerts and unknown → premium
+}
+
 serve(async (req) => {
   const signature = req.headers.get('stripe-signature')
   if (!signature) {
@@ -35,26 +42,43 @@ serve(async (req) => {
         if (!userId) break
 
         const status = sub.status === 'active' || sub.status === 'trialing' ? 'active' : sub.status
+        const type   = sub.metadata?.type || 'premium_alerts'
+        const plan   = planFromType(type)
+
+        const item           = sub.items?.data?.[0]
+        const price_amount   = item?.price?.unit_amount ?? null
+        const price_currency = item?.price?.currency    ?? 'eur'
+        const price_interval = item?.price?.recurring?.interval ?? 'month'
+
+        const periodStart = new Date(sub.current_period_start * 1000).toISOString()
+        const periodEnd   = new Date(sub.current_period_end   * 1000).toISOString()
 
         await supabase.from('subscriptions').upsert({
           user_id: userId,
           stripe_subscription_id: sub.id,
           stripe_customer_id: sub.customer as string,
-          type: sub.metadata?.type || 'premium_alerts',
+          type,
+          plan,
           status,
-          current_period_start: new Date(sub.current_period_start * 1000).toISOString(),
-          current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
+          start_date: periodStart,
+          end_date:   periodEnd,
+          current_period_start: periodStart,
+          current_period_end:   periodEnd,
           cancel_at_period_end: sub.cancel_at_period_end,
-          price_amount: 750,
-          price_currency: 'eur',
-          price_interval: 'month',
+          price:         price_amount,
+          price_amount,
+          price_currency,
+          price_interval,
         }, { onConflict: 'stripe_subscription_id' })
 
-        // Activate/deactivate premium_alerts
         await supabase
           .from('profiles')
           .update({ premium_alerts: status === 'active' })
           .eq('id', userId)
+
+        if (type.startsWith('agency_')) {
+          await supabase.from('agencies').update({ plan }).eq('user_id', userId)
+        }
 
         break
       }
