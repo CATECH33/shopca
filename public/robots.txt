@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Pages privées — pas d'indexation
+Disallow: /auth/
+Disallow: /mon-espace
+Disallow: /pro
+Disallow: /crm
+Disallow: /forms
+Disallow: /debug-auth
+Disallow: /onboarding
+Disallow: /account
+Disallow: /early-access
+Disallow: /subscription/
+
+# Sitemap
+Sitemap: https://pasmal.shop/sitemap.xml

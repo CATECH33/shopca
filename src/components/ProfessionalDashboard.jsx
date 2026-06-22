@@ -19,6 +19,7 @@ import AdminInsights from './prodash/admin/AdminInsights.jsx'
 import AdminSubscriptions from './prodash/admin/AdminSubscriptions.jsx'
 import AdminFavorites from './prodash/admin/AdminFavorites.jsx'
 import AdminProfile from './prodash/admin/AdminProfile.jsx'
+import AdminSeo from './prodash/admin/AdminSeo.jsx'
 
 const PRO_PAGES = {
   overview:     PageOverview,
@@ -40,6 +41,7 @@ const ADMIN_PAGES = {
   'admin-subscriptions':  AdminSubscriptions,
   'admin-favorites':      AdminFavorites,
   'admin-profile':        AdminProfile,
+  'admin-seo':            AdminSeo,
 }
 
 export default function ProfessionalDashboard({ onExit }) {

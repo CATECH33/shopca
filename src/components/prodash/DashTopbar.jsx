@@ -23,6 +23,7 @@ const PAGE_TITLES = {
   'admin-subscriptions': 'Abonnements',
   'admin-favorites':     'Favoris',
   'admin-profile':       'Mon profil',
+  'admin-seo':           'SEO & Indexation',
 }
 
 function timeAgo(iso) {

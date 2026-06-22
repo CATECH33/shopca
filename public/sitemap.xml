@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Pages principales -->
+  <url>
+    <loc>https://pasmal.shop/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://pasmal.shop/annonces</loc>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://pasmal.shop/agences</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pasmal.shop/guides</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pasmal.shop/tarifs</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://pasmal.shop/simulateur</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://pasmal.shop/estimation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Pages SEO — Achat national -->
+  <url>
+    <loc>https://pasmal.shop/acheter</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://pasmal.shop/louer</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://pasmal.shop/programmes-neufs</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Pages SEO — Achat par ville -->
+  <url><loc>https://pasmal.shop/acheter/paris</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://pasmal.shop/acheter/lyon</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://pasmal.shop/acheter/marseille</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://pasmal.shop/acheter/bordeaux</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://pasmal.shop/acheter/toulouse</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://pasmal.shop/acheter/nice</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://pasmal.shop/acheter/nantes</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://pasmal.shop/acheter/strasbourg</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/acheter/montpellier</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/acheter/lille</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/acheter/rennes</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/acheter/grenoble</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/acheter/toulon</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/acheter/aix-en-provence</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/acheter/angers</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/acheter/brest</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/acheter/dijon</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/acheter/nimes</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/acheter/le-havre</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/acheter/reims</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/acheter/rouen</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/acheter/tours</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/acheter/metz</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/acheter/clermont-ferrand</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/acheter/perpignan</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/acheter/caen</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/acheter/nancy</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/acheter/orleans</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+  <!-- Pages SEO — Location par ville -->
+  <url><loc>https://pasmal.shop/louer/paris</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://pasmal.shop/louer/lyon</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://pasmal.shop/louer/marseille</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://pasmal.shop/louer/bordeaux</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://pasmal.shop/louer/toulouse</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://pasmal.shop/louer/nice</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://pasmal.shop/louer/nantes</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://pasmal.shop/louer/strasbourg</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/louer/montpellier</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/louer/lille</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/louer/rennes</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/louer/grenoble</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/toulon</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/aix-en-provence</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/angers</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/brest</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/dijon</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/nimes</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/le-havre</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/reims</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/rouen</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/louer/tours</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/louer/metz</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/louer/clermont-ferrand</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/louer/perpignan</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/louer/caen</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/louer/nancy</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/louer/orleans</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+  <!-- Pages SEO — Agences par ville -->
+  <url><loc>https://pasmal.shop/agences/paris</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/agences/lyon</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/agences/marseille</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/agences/bordeaux</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/agences/toulouse</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/agences/nice</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/agences/nantes</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/agences/lille</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/agences/strasbourg</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/agences/montpellier</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/agences/rennes</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <!-- Pages SEO — Achat maison par ville (top 10) -->
+  <url><loc>https://pasmal.shop/acheter/maison/paris</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://pasmal.shop/acheter/maison/lyon</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/acheter/maison/marseille</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/acheter/maison/bordeaux</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/acheter/maison/toulouse</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/acheter/maison/nice</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/acheter/maison/nantes</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/acheter/maison/lille</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/acheter/maison/rennes</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/acheter/maison/montpellier</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+
+  <!-- Pages SEO — Achat appartement par ville (top 10) -->
+  <url><loc>https://pasmal.shop/acheter/appartement/paris</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://pasmal.shop/acheter/appartement/lyon</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/acheter/appartement/marseille</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/acheter/appartement/bordeaux</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/acheter/appartement/toulouse</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/acheter/appartement/nice</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/acheter/appartement/nantes</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/acheter/appartement/lille</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/acheter/appartement/rennes</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/acheter/appartement/montpellier</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+
+  <!-- Pages SEO — Location maison par ville (top 10) -->
+  <url><loc>https://pasmal.shop/louer/maison/paris</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/louer/maison/lyon</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/maison/marseille</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/maison/bordeaux</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/maison/toulouse</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/maison/nice</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/maison/nantes</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/maison/lille</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/louer/maison/rennes</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/louer/maison/montpellier</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+  <!-- Pages SEO — Location appartement par ville (top 10) -->
+  <url><loc>https://pasmal.shop/louer/appartement/paris</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pasmal.shop/louer/appartement/lyon</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/appartement/marseille</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/appartement/bordeaux</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/appartement/toulouse</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/appartement/nice</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/appartement/nantes</loc><changefreq>daily</changefreq><priority>0.75</priority></url>
+  <url><loc>https://pasmal.shop/louer/appartement/lille</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/louer/appartement/rennes</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pasmal.shop/louer/appartement/montpellier</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+</urlset>

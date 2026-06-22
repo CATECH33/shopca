@@ -22,6 +22,7 @@ const NAV_ADMIN = [
   { id: 'admin-subscriptions',  label: 'Abonnements',            Icon: I.CreditCard     },
   { id: 'admin-favorites',      label: 'Favoris',                Icon: I.Heart          },
   { id: 'admin-profile',        label: 'Mon profil',             Icon: I.User           },
+  { id: 'admin-seo',           label: 'SEO & Indexation',       Icon: I.TrendingUp     },
 ]
 
 export default function DashSidebar({ page, setPage, dark, setDark, onExit, isAdmin }) {

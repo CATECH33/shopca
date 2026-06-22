@@ -1,35 +1,63 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import App from './App.jsx'
-import LoginPage        from './features/auth/pages/LoginPage.jsx'
-import RegisterPage     from './features/auth/pages/RegisterPage.jsx'
-import ProDashboardPage from './features/pro/ProDashboardPage.jsx'
-import ProtectedRoute   from './lib/ProtectedRoute.jsx'
-import ForgotPage       from './features/auth/pages/ForgotPage.jsx'
-import VerifyPendingPage from './features/auth/pages/VerifyPendingPage.jsx'
-import ResetPage          from './features/auth/pages/ResetPage.jsx'
-import CallbackPage       from './features/auth/pages/CallbackPage.jsx'
-import LogoutPage         from './features/auth/pages/LogoutPage.jsx'
-import AccountPage        from './features/auth/pages/AccountPage.jsx'
-import OnboardingPage    from './features/auth/pages/OnboardingPage.jsx'
-import ListingsPage       from './features/listings/ListingsPage.jsx'
-import ListingDetailPage  from './features/listings/ListingDetailPage.jsx'
-import EarlyAccessPage  from './earlyaccess/EarlyAccessPage.jsx'
-import CRMPage          from './features/crm/CRMPage.jsx'
-import FormsPage        from './features/forms/FormsPage.jsx'
-import AgencesPage      from './features/agencies/AgencesPage.jsx'
-import TarifsPage      from './features/tarifs/TarifsPage.jsx'
-import SimulateurPage from './features/simulateur/SimulateurPage.jsx'
-import EstimationPage from './features/estimation/EstimationPage.jsx'
-import GuidesPage       from './features/guides/GuidesPage.jsx'
-import ProRegisterPage          from './features/pro/ProRegisterPage.jsx'
-import AgencyVerificationPage  from './features/pro/AgencyVerificationPage.jsx'
-import SubscriptionSuccessPage from './features/subscription/SubscriptionSuccessPage.jsx'
-import PersonalDashboardPage   from './features/dashboard/PersonalDashboardPage.jsx'
-import DebugAuthPage           from './features/debug/DebugAuthPage.jsx'
+import { HelmetProvider } from 'react-helmet-async'
 import { AuthProvider } from './features/auth/providers/AuthProvider.jsx'
+import ProtectedRoute from './lib/ProtectedRoute.jsx'
 import './index.css'
+
+// ── Chargement immédiat (critique pour le rendu initial) ──────────────────────
+import App from './App.jsx'
+
+// ── Lazy loading (code splitting automatique) ─────────────────────────────────
+const LoginPage              = lazy(() => import('./features/auth/pages/LoginPage.jsx'))
+const RegisterPage           = lazy(() => import('./features/auth/pages/RegisterPage.jsx'))
+const ProRegisterPage        = lazy(() => import('./features/pro/ProRegisterPage.jsx'))
+const AgencyVerificationPage = lazy(() => import('./features/pro/AgencyVerificationPage.jsx'))
+const ForgotPage             = lazy(() => import('./features/auth/pages/ForgotPage.jsx'))
+const VerifyPendingPage      = lazy(() => import('./features/auth/pages/VerifyPendingPage.jsx'))
+const ResetPage              = lazy(() => import('./features/auth/pages/ResetPage.jsx'))
+const CallbackPage           = lazy(() => import('./features/auth/pages/CallbackPage.jsx'))
+const LogoutPage             = lazy(() => import('./features/auth/pages/LogoutPage.jsx'))
+const AccountPage            = lazy(() => import('./features/auth/pages/AccountPage.jsx'))
+const OnboardingPage         = lazy(() => import('./features/auth/pages/OnboardingPage.jsx'))
+const ListingsPage           = lazy(() => import('./features/listings/ListingsPage.jsx'))
+const ListingDetailPage      = lazy(() => import('./features/listings/ListingDetailPage.jsx'))
+const EarlyAccessPage        = lazy(() => import('./earlyaccess/EarlyAccessPage.jsx'))
+const CRMPage                = lazy(() => import('./features/crm/CRMPage.jsx'))
+const FormsPage              = lazy(() => import('./features/forms/FormsPage.jsx'))
+const AgencesPage            = lazy(() => import('./features/agencies/AgencesPage.jsx'))
+const TarifsPage             = lazy(() => import('./features/tarifs/TarifsPage.jsx'))
+const SimulateurPage         = lazy(() => import('./features/simulateur/SimulateurPage.jsx'))
+const EstimationPage         = lazy(() => import('./features/estimation/EstimationPage.jsx'))
+const GuidesPage             = lazy(() => import('./features/guides/GuidesPage.jsx'))
+const SubscriptionSuccessPage = lazy(() => import('./features/subscription/SubscriptionSuccessPage.jsx'))
+const PersonalDashboardPage  = lazy(() => import('./features/dashboard/PersonalDashboardPage.jsx'))
+const ProDashboardPage       = lazy(() => import('./features/pro/ProDashboardPage.jsx'))
+const DebugAuthPage          = lazy(() => import('./features/debug/DebugAuthPage.jsx'))
+
+// ── Pages SEO ─────────────────────────────────────────────────────────────────
+const AcheterPage        = lazy(() => import('./features/seo/AcheterPage.jsx'))
+const LouerPage          = lazy(() => import('./features/seo/LouerPage.jsx'))
+const ProgrammesNeufsPage = lazy(() => import('./features/seo/ProgrammesNeufsPage.jsx'))
+const CityPage           = lazy(() => import('./features/seo/CityPage.jsx'))
+const TypeCityPage       = lazy(() => import('./features/seo/TypeCityPage.jsx'))
+const AgencesVillePage   = lazy(() => import('./features/seo/AgencesVillePage.jsx'))
+
+// ── Fallback pendant le chargement lazy ───────────────────────────────────────
+function PageLoader() {
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-slate-50">
+      <svg className="animate-spin text-orange-500" width="24" height="24" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/>
+        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/>
+        <line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/>
+        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/>
+      </svg>
+    </div>
+  )
+}
 
 class ErrorBoundary extends React.Component {
   constructor(props) { super(props); this.state = { error: null } }
@@ -55,58 +83,83 @@ class ErrorBoundary extends React.Component {
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/"                    element={<App />} />
-          <Route path="/auth/login"          element={<LoginPage />} />
-          <Route path="/auth/register"       element={<RegisterPage />} />
-          <Route path="/auth/register/pro"          element={<ProRegisterPage />} />
-          <Route path="/verification/agence"        element={<AgencyVerificationPage />} />
-          <Route path="/auth/forgot"         element={<ForgotPage />} />
-          <Route path="/auth/verify-pending" element={<VerifyPendingPage />} />
-          <Route path="/auth/reset"          element={<ResetPage />} />
-          <Route path="/auth/callback"      element={<CallbackPage />} />
-          <Route path="/auth/logout"        element={<LogoutPage />} />
-          <Route path="/account"             element={<AccountPage />} />
-          <Route path="/onboarding"          element={<OnboardingPage />} />
-          <Route path="/annonces"            element={<ListingsPage />} />
-          <Route path="/annonces/:id"        element={<ListingDetailPage />} />
-          <Route path="/early-access"        element={<EarlyAccessPage />} />
-          <Route path="/agences"           element={<AgencesPage />} />
-          <Route path="/tarifs"            element={<TarifsPage />} />
-          <Route path="/simulateur"        element={<SimulateurPage />} />
-          <Route path="/estimation"         element={<EstimationPage />} />
-          <Route path="/guides"            element={<GuidesPage />} />
-          <Route path="/crm" element={
-            <ProtectedRoute anyOf={['pro_user', 'agency', 'agency_admin', 'super_admin']}>
-              <CRMPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/forms" element={
-            <ProtectedRoute anyOf={['pro_user', 'agency', 'agency_admin', 'super_admin']}>
-              <FormsPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/subscription/success" element={<SubscriptionSuccessPage />} />
-          <Route path="/mon-espace" element={
-            <ProtectedRoute>
-              <PersonalDashboardPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/debug-auth" element={
-            <ProtectedRoute anyOf={['super_admin']}>
-              <DebugAuthPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/pro" element={
-            <ProtectedRoute anyOf={['pro_user', 'agency', 'agency_admin', 'super_admin']}>
-              <ProDashboardPage />
-            </ProtectedRoute>
-          } />
-        </Routes>
-      </BrowserRouter>
-      </AuthProvider>
+      <HelmetProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                {/* ── Page d'accueil ── */}
+                <Route path="/" element={<App />} />
+
+                {/* ── Auth ── */}
+                <Route path="/auth/login"          element={<LoginPage />} />
+                <Route path="/auth/register"       element={<RegisterPage />} />
+                <Route path="/auth/register/pro"   element={<ProRegisterPage />} />
+                <Route path="/verification/agence" element={<AgencyVerificationPage />} />
+                <Route path="/auth/forgot"         element={<ForgotPage />} />
+                <Route path="/auth/verify-pending" element={<VerifyPendingPage />} />
+                <Route path="/auth/reset"          element={<ResetPage />} />
+                <Route path="/auth/callback"       element={<CallbackPage />} />
+                <Route path="/auth/logout"         element={<LogoutPage />} />
+                <Route path="/account"             element={<AccountPage />} />
+                <Route path="/onboarding"          element={<OnboardingPage />} />
+
+                {/* ── Annonces ── */}
+                <Route path="/annonces"     element={<ListingsPage />} />
+                <Route path="/annonces/:id" element={<ListingDetailPage />} />
+
+                {/* ── Pages SEO — Achat ── */}
+                <Route path="/acheter"                       element={<AcheterPage />} />
+                <Route path="/acheter/:ville"                element={<CityPage mode="achat" />} />
+                <Route path="/acheter/:type/:ville"          element={<TypeCityPage mode="achat" />} />
+
+                {/* ── Pages SEO — Location ── */}
+                <Route path="/louer"                         element={<LouerPage />} />
+                <Route path="/louer/:ville"                  element={<CityPage mode="location" />} />
+                <Route path="/louer/:type/:ville"            element={<TypeCityPage mode="location" />} />
+
+                {/* ── Pages SEO — Agences & Neufs ── */}
+                <Route path="/agences"        element={<AgencesPage />} />
+                <Route path="/agences/:ville" element={<AgencesVillePage />} />
+                <Route path="/programmes-neufs" element={<ProgrammesNeufsPage />} />
+
+                {/* ── Outils ── */}
+                <Route path="/tarifs"       element={<TarifsPage />} />
+                <Route path="/simulateur"   element={<SimulateurPage />} />
+                <Route path="/estimation"   element={<EstimationPage />} />
+                <Route path="/guides"       element={<GuidesPage />} />
+                <Route path="/early-access" element={<EarlyAccessPage />} />
+
+                {/* ── Abonnement ── */}
+                <Route path="/subscription/success" element={<SubscriptionSuccessPage />} />
+
+                {/* ── Espaces protégés ── */}
+                <Route path="/mon-espace" element={
+                  <ProtectedRoute><PersonalDashboardPage /></ProtectedRoute>
+                } />
+                <Route path="/pro" element={
+                  <ProtectedRoute anyOf={['pro_user', 'agency', 'agency_admin', 'super_admin']}>
+                    <ProDashboardPage />
+                  </ProtectedRoute>
+                } />
+                <Route path="/crm" element={
+                  <ProtectedRoute anyOf={['pro_user', 'agency', 'agency_admin', 'super_admin']}>
+                    <CRMPage />
+                  </ProtectedRoute>
+                } />
+                <Route path="/forms" element={
+                  <ProtectedRoute anyOf={['pro_user', 'agency', 'agency_admin', 'super_admin']}>
+                    <FormsPage />
+                  </ProtectedRoute>
+                } />
+                <Route path="/debug-auth" element={
+                  <ProtectedRoute anyOf={['super_admin']}><DebugAuthPage /></ProtectedRoute>
+                } />
+              </Routes>
+            </Suspense>
+          </BrowserRouter>
+        </AuthProvider>
+      </HelmetProvider>
     </ErrorBoundary>
   </React.StrictMode>,
 )
