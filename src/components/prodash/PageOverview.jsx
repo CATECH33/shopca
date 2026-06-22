@@ -78,7 +78,7 @@ function MiniBarChart({ dark }) {
   )
 }
 
-export default function PageOverview({ dark }) {
+export default function PageOverview({ dark, setPage }) {
   const { user, profile } = useAuth()
   const [agency,  setAgency]  = useState(null)
   const [stats,   setStats]   = useState({ views: null, contacts: null, active: null })
@@ -180,7 +180,8 @@ export default function PageOverview({ dark }) {
             </p>
           </div>
           {agency?.plan !== 'premium' && agency?.plan !== 'enterprise' && (
-            <button className="mt-4 w-full h-9 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold transition">
+            <button onClick={() => setPage?.('billing')}
+              className="mt-4 w-full h-9 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold transition">
               Passer Premium →
             </button>
           )}

@@ -7,9 +7,11 @@ const NAV_PRO = [
   { id: 'listings',      label: 'Mes annonces',    Icon: I.Building   },
   { id: 'leads',         label: 'Leads',           Icon: I.Users,  badge: 3 },
   { id: 'analytics',     label: 'Analytiques',     Icon: I.TrendingUp },
-  { id: 'billing',       label: 'Facturation',     Icon: I.Star       },
+  { id: 'billing',       label: 'Facturation',     Icon: I.CreditCard },
   { id: 'verification',  label: 'Vérification',    Icon: I.Shield     },
   { id: 'profile',       label: 'Profil agence',   Icon: I.Globe      },
+  { id: 'settings',      label: 'Paramètres',      Icon: I.Settings   },
+  { id: 'security',      label: 'Sécurité',        Icon: I.Key        },
 ]
 
 const NAV_ADMIN = [

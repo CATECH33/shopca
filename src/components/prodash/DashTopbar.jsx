@@ -14,6 +14,8 @@ const PAGE_TITLES = {
   billing:      'Facturation',
   verification: 'Vérification',
   profile:      'Profil agence',
+  settings:     'Paramètres',
+  security:     'Sécurité',
   'admin-overview':      'Vue d\'ensemble',
   'admin-searches':      'Recherches sauvegardées',
   'admin-notifications': 'Notifications',
@@ -201,10 +203,10 @@ export default function DashTopbar({ page, dark, setPage, onExit, isAdmin }) {
                     <p className={`text-xs ${sub} truncate`}>{user?.email}</p>
                   </div>
                   {[
-                    { icon: I.User,       label: 'Mon profil',   page: isAdmin ? 'admin-profile' : 'profile' },
-                    { icon: I.Settings,   label: 'Paramètres',   page: isAdmin ? 'admin-profile' : 'profile' },
-                    { icon: I.CreditCard, label: 'Facturation',  page: 'billing' },
-                    { icon: I.Key,        label: 'Sécurité',     page: isAdmin ? 'admin-profile' : 'profile' },
+                    { icon: I.User,       label: 'Mon profil',  page: isAdmin ? 'admin-profile' : 'profile'  },
+                    { icon: I.Settings,   label: 'Paramètres',  page: isAdmin ? 'admin-profile' : 'settings' },
+                    ...(!isAdmin ? [{ icon: I.CreditCard, label: 'Facturation', page: 'billing' }] : []),
+                    { icon: I.Key,        label: 'Sécurité',    page: isAdmin ? 'admin-profile' : 'security' },
                   ].map(item => {
                     const Icon = item.icon
                     return (

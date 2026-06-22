@@ -10,6 +10,8 @@ import PageAnalytics from './prodash/PageAnalytics.jsx'
 import PageBilling from './prodash/PageBilling.jsx'
 import PageVerification from './prodash/PageVerification.jsx'
 import PageProfile from './prodash/PageProfile.jsx'
+import PageSettings from './prodash/PageSettings.jsx'
+import PageSecurity from './prodash/PageSecurity.jsx'
 import AdminOverview from './prodash/admin/AdminOverview.jsx'
 import AdminSavedSearches from './prodash/admin/AdminSavedSearches.jsx'
 import AdminNotifications from './prodash/admin/AdminNotifications.jsx'
@@ -26,6 +28,8 @@ const PRO_PAGES = {
   billing:      PageBilling,
   verification: PageVerification,
   profile:      PageProfile,
+  settings:     PageSettings,
+  security:     PageSecurity,
 }
 
 const ADMIN_PAGES = {
