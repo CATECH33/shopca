@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+﻿import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, Button, Badge } from '../lib/ui.jsx'
-import { PasmalCheckbox } from '../components/ui/PasmalCheckbox'
-import { PasmalRadio } from '../components/ui/PasmalRadio'
+import { ShopCACheckbox } from '../components/ui/ShopCACheckbox'
+import { ShopCARadio } from '../components/ui/ShopCARadio'
 
 /* ============================================================
    Listing Creation Wizard
@@ -11,7 +11,7 @@ import { PasmalRadio } from '../components/ui/PasmalRadio'
    - Reuses design system from lib/ui.jsx
    ============================================================ */
 
-const DRAFT_KEY = 'pasmal:listing-draft'
+const DRAFT_KEY = 'shopca:listing-draft'
 
 const STEPS = [
   { id: 'type', label: 'Type de bien', icon: I.Building },
@@ -426,7 +426,7 @@ function StepPhotos({ data, set }) {
 function StepDescription({ data, set, aiLoading, onGenerateAI }) {
   return (
     <div>
-      <StepHeader kicker="Étape 4" title="Rédigez une description engageante" subtitle="Inspirez-vous de l'IA PASMAL ou écrivez votre propre texte." />
+      <StepHeader kicker="Étape 4" title="Rédigez une description engageante" subtitle="Inspirez-vous de l'IA SHOPCA ou écrivez votre propre texte." />
 
       <div className="space-y-4 max-w-2xl">
         <div className="flex items-center justify-between mb-2">
@@ -496,7 +496,7 @@ function StepPricing({ data, set }) {
 
         <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm">
           <div className="flex items-center gap-2 text-navy-900 font-semibold mb-1.5">
-            <I.TrendingUp size={14} className="text-emerald-600"/> Estimation marché PASMAL
+            <I.TrendingUp size={14} className="text-emerald-600"/> Estimation marché SHOPCA
           </div>
           <div className="text-slate-600 text-xs">
             Pour un {data.type || 'bien'} {data.surface ? `de ${data.surface} m² ` : ''}à {data.city || 'votre ville'}, le prix moyen observé est de <span className="font-bold text-navy-900">{monthly ? '1 350 €/mois' : '485 000 €'}</span>. Votre prix est <span className="font-bold text-emerald-600">cohérent</span>.
@@ -543,7 +543,7 @@ function StepPreview({ data }) {
   const fmt = data.price ? `${Number(data.price).toLocaleString('fr-FR')} €${data.transaction === 'louer' ? '/mois' : ''}` : '—'
   return (
     <div>
-      <StepHeader kicker="Étape 7" title="Aperçu avant publication" subtitle="Voici à quoi votre annonce ressemblera dans le catalogue PASMAL." />
+      <StepHeader kicker="Étape 7" title="Aperçu avant publication" subtitle="Voici à quoi votre annonce ressemblera dans le catalogue SHOPCA." />
 
       <div className="max-w-md bg-white rounded-3xl overflow-hidden shadow-card border border-slate-100">
         <div className="relative aspect-[4/3] bg-slate-100">
@@ -610,7 +610,7 @@ function StepPublish({ data, set }) {
                 : 'border-slate-200 bg-white hover:border-slate-300'
               }`}
             >
-              <PasmalRadio value={p.id} checked={selected} onChange={() => set({ plan: p.id })} />
+              <ShopCARadio value={p.id} checked={selected} onChange={() => set({ plan: p.id })} />
               <div className="flex-1">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div className="font-bold text-navy-900 flex items-center gap-2">{p.name} {p.highlight && <Badge tone="orange">Recommandé</Badge>}</div>
@@ -624,13 +624,13 @@ function StepPublish({ data, set }) {
           )
         })}
 
-        <PasmalCheckbox
+        <ShopCACheckbox
           checked={data.agreedTerms}
           onChange={v => set({ agreedTerms: v })}
           className="mt-4"
           label={
             <span className="text-xs text-slate-600">
-              J'accepte les <a href="#" className="text-orange-600 underline">conditions de publication</a> et confirme que je suis autorisé à publier ce bien sur PASMAL.
+              J'accepte les <a href="#" className="text-orange-600 underline">conditions de publication</a> et confirme que je suis autorisé à publier ce bien sur SHOPCA.
             </span>
           }
         />

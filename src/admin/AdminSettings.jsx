@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, Badge } from '../lib/ui.jsx'
 
@@ -10,10 +10,10 @@ const SECTIONS = [
 ]
 
 const TEAM = [
-  { id: 't1', name: 'Jean Kevin PEMOU',  email: 'admin@pasmal.shop',   role: 'super_admin', avatar: 'JK', color: '#0B1F3A', lastSeen: 'En ligne',        active: true  },
-  { id: 't2', name: 'Sophie Martin',     email: 'mod@pasmal.shop',     role: 'moderator',   avatar: 'SM', color: '#F59E0B', lastSeen: 'Il y a 2 h',      active: true  },
-  { id: 't3', name: 'Lucas Durand',      email: 'lucas@pasmal.shop',   role: 'moderator',   avatar: 'LD', color: '#6366F1', lastSeen: 'Il y a 1 j',      active: true  },
-  { id: 't4', name: 'Noémie Lefebvre',   email: 'noemie@pasmal.shop',  role: 'admin',       avatar: 'NL', color: '#10B981', lastSeen: 'Il y a 3 j',      active: false },
+  { id: 't1', name: 'Jean Kevin PEMOU',  email: 'admin@shopca.fr',   role: 'super_admin', avatar: 'JK', color: '#0B1F3A', lastSeen: 'En ligne',        active: true  },
+  { id: 't2', name: 'Sophie Martin',     email: 'mod@shopca.fr',     role: 'moderator',   avatar: 'SM', color: '#F59E0B', lastSeen: 'Il y a 2 h',      active: true  },
+  { id: 't3', name: 'Lucas Durand',      email: 'lucas@shopca.fr',   role: 'moderator',   avatar: 'LD', color: '#6366F1', lastSeen: 'Il y a 1 j',      active: true  },
+  { id: 't4', name: 'Noémie Lefebvre',   email: 'noemie@shopca.fr',  role: 'admin',       avatar: 'NL', color: '#10B981', lastSeen: 'Il y a 3 j',      active: false },
 ]
 
 const ROLE_LABEL = {
@@ -90,9 +90,9 @@ export default function AdminSettings() {
                   <h2 className="font-bold text-base">Informations plateforme</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {[
-                      { label: 'Nom de la plateforme', value: 'PASMAL', type: 'text' },
-                      { label: 'Domaine',              value: 'pasmal.shop',  type: 'text' },
-                      { label: 'E-mail support',       value: 'support@pasmal.shop', type: 'email' },
+                      { label: 'Nom de la plateforme', value: 'SHOPCA', type: 'text' },
+                      { label: 'Domaine',              value: 'shopca.fr',  type: 'text' },
+                      { label: 'E-mail support',       value: 'support@shopca.fr', type: 'email' },
                       { label: 'Téléphone support',    value: '+33 1 23 45 67 89',   type: 'tel' },
                     ].map(({ label, value, type }) => (
                       <div key={label}>

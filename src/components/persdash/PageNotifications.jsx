@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I } from '../../lib/ui.jsx'
 import { useAuth } from '../../features/auth/providers/AuthProvider.jsx'
@@ -23,7 +23,7 @@ const FALLBACK = [
   { id:'2', type:'price',  title:'Baisse de prix : Loft Bastille 2P → 2 400 €/mois (−15 000 €)', created_at: new Date(Date.now() - 10800000).toISOString(), is_read:false },
   { id:'3', type:'update', title:'Votre favori "Villa Neuilly" a été mis à jour par l\'agence',   created_at: new Date(Date.now() - 86400000).toISOString(), is_read:false },
   { id:'4', type:'match',  title:'9 nouvelles annonces : Location Paris 11e ≤ 2 500 €/mois',     created_at: new Date(Date.now() - 86400000*2).toISOString(), is_read:true },
-  { id:'5', type:'system', title:'Bienvenue sur PASMAL ! Complétez votre profil pour de meilleures suggestions.', created_at: new Date(Date.now() - 86400000*3).toISOString(), is_read:true },
+  { id:'5', type:'system', title:'Bienvenue sur SHOPCA ! Complétez votre profil pour de meilleures suggestions.', created_at: new Date(Date.now() - 86400000*3).toISOString(), is_read:true },
 ]
 
 function timeAgo(dateStr) {

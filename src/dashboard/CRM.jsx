@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, useRef } from 'react'
+﻿import React, { useMemo, useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   DndContext, DragOverlay, PointerSensor, KeyboardSensor,
@@ -10,8 +10,8 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { I, Button, Avatar } from '../lib/ui.jsx'
-import { PasmalSelect } from '../components/ui/PasmalSelect'
-import { PasmalTextarea } from '../components/ui/PasmalTextarea'
+import { ShopCASelect } from '../components/ui/ShopCASelect'
+import { ShopCATextarea } from '../components/ui/ShopCATextarea'
 
 /* ============================================================
    CRM Leads — Kanban premium (HubSpot-style)
@@ -26,21 +26,21 @@ const COLUMNS = [
   { id: 'won',         label: 'Gagné',        accent: '#10B981', bg: 'from-emerald-50 to-emerald-50/0' },
 ]
 
-const SOURCES = ['SeLoger', 'Site PASMAL', 'Recommandation', 'Instagram', 'Salon']
+const SOURCES = ['SeLoger', 'Site SHOPCA', 'Recommandation', 'Instagram', 'Salon']
 
 const INITIAL_LEADS = [
   { id: 'l1',  status: 'new',         first: 'Camille',   last: 'Lefèvre',  city: 'Paris 11ᵉ',   type: 'T3',         budget: 480000,  score: 92, source: 'SeLoger',        lastSeen: 'Il y a 12 min', tags: ['Hot']   },
-  { id: 'l2',  status: 'new',         first: 'Julien',    last: 'Moreau',   city: 'Lyon 6ᵉ',     type: 'Studio',     budget: 240000,  score: 78, source: 'Site PASMAL',    lastSeen: 'Il y a 1h'      },
+  { id: 'l2',  status: 'new',         first: 'Julien',    last: 'Moreau',   city: 'Lyon 6ᵉ',     type: 'Studio',     budget: 240000,  score: 78, source: 'Site SHOPCA',    lastSeen: 'Il y a 1h'      },
   { id: 'l3',  status: 'new',         first: 'Sofia',     last: 'Benali',   city: 'Marseille',   type: 'T2',         budget: 195000,  score: 65, source: 'Instagram',      lastSeen: 'Il y a 3h'      },
   { id: 'l4',  status: 'contacted',   first: 'Marc',      last: 'Dubois',   city: 'Bordeaux',    type: 'Maison',     budget: 720000,  score: 88, source: 'Recommandation', lastSeen: 'Hier'            },
   { id: 'l5',  status: 'contacted',   first: 'Élodie',    last: 'Garnier',  city: 'Nantes',      type: 'T3',         budget: 365000,  score: 71, source: 'SeLoger',        lastSeen: 'Hier'            },
   { id: 'l6',  status: 'contacted',   first: 'Thomas',    last: 'Robert',   city: 'Toulouse',    type: 'Colocation', budget: 850,     score: 54, source: 'Salon',          lastSeen: 'Il y a 2j'      },
   { id: 'l7',  status: 'visit',       first: 'Inès',      last: 'Martin',   city: 'Paris 8ᵉ',    type: 'Villa',      budget: 1850000, score: 94, source: 'Recommandation', lastSeen: "Aujourd'hui",    tags: ['VIP']  },
   { id: 'l8',  status: 'visit',       first: 'Antoine',   last: 'Petit',    city: 'Nice',        type: 'T2',         budget: 320000,  score: 82, source: 'SeLoger',        lastSeen: 'Il y a 3j'      },
-  { id: 'l9',  status: 'negotiation', first: 'Léa',       last: 'Bernard',  city: 'Lille',       type: 'T3',         budget: 295000,  score: 86, source: 'Site PASMAL',    lastSeen: 'Il y a 4j',     tags: ['Offre']},
+  { id: 'l9',  status: 'negotiation', first: 'Léa',       last: 'Bernard',  city: 'Lille',       type: 'T3',         budget: 295000,  score: 86, source: 'Site SHOPCA',    lastSeen: 'Il y a 4j',     tags: ['Offre']},
   { id: 'l10', status: 'negotiation', first: 'Karim',     last: 'Hamidi',   city: 'Strasbourg',  type: 'Maison',     budget: 540000,  score: 79, source: 'SeLoger',        lastSeen: 'Il y a 5j'      },
   { id: 'l11', status: 'won',         first: 'Charlotte', last: 'Lemoine',  city: 'Rennes',      type: 'T2',         budget: 248000,  score: 100, source: 'Recommandation', lastSeen: 'La semaine dernière', tags: ['Signé'] },
-  { id: 'l12', status: 'won',         first: 'Hugo',      last: 'Vincent',  city: 'Montpellier', type: 'Studio',     budget: 178000,  score: 100, source: 'Site PASMAL',   lastSeen: 'La semaine dernière' },
+  { id: 'l12', status: 'won',         first: 'Hugo',      last: 'Vincent',  city: 'Montpellier', type: 'Studio',     budget: 178000,  score: 100, source: 'Site SHOPCA',   lastSeen: 'La semaine dernière' },
 ]
 
 const AVATARS = {
@@ -197,7 +197,7 @@ export default function CRM() {
               placeholder="Rechercher un lead, une ville, un type…"
               className="flex-1 bg-transparent text-sm text-navy-900 placeholder-slate-400 focus:outline-none" />
           </div>
-          <PasmalSelect
+          <ShopCASelect
             value={sourceFilter}
             onChange={setSourceFilter}
             options={[{ value: '', label: 'Toutes les sources' }, ...SOURCES.map(s => ({ value: s, label: s }))]}
@@ -539,7 +539,7 @@ function LeadDetailPanel({ lead, onClose, onStatusChange }) {
               {/* Notes */}
               <div className="px-5 py-4 pb-8">
                 <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Notes</div>
-                <PasmalTextarea
+                <ShopCATextarea
                   value={note}
                   onChange={e => setNote(e.target.value)}
                   placeholder="Ajouter une note sur ce lead…"

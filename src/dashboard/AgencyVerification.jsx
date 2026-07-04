@@ -1,7 +1,7 @@
-import React, { useCallback, useRef, useState } from 'react'
+﻿import React, { useCallback, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, Button, Badge } from '../lib/ui.jsx'
-import { PasmalSelect } from '../components/ui/PasmalSelect'
+import { ShopCASelect } from '../components/ui/ShopCASelect'
 
 /* ============================================================
    Agency Verification — Premium PropTech workflow
@@ -21,13 +21,13 @@ const initialEvent = () => ({ ts: new Date(), label: 'Dossier créé', text: 'Vo
 export default function AgencyVerification() {
   /* ---------- Agency state ---------- */
   const [agency, setAgency] = useState({
-    name: 'Pasmal Estate SAS',
+    name: 'ShopCA Estate SAS',
     siret: '892 410 388 00012',
     legalForm: 'SAS',
     capital: '50 000 €',
     address: '12 rue de Rivoli, 75001 Paris',
     contactName: 'Jean Kevin PEMOU',
-    email: 'jean@pasmal.fr',
+    email: 'jean@shopca.fr',
     phone: '+33 6 12 34 56 78',
   })
   const setField = (k) => (e) => setAgency((a) => ({ ...a, [k]: e.target.value }))
@@ -134,7 +134,7 @@ export default function AgencyVerification() {
         <span className="font-bold uppercase tracking-wider text-orange-700 text-[10px]">Simulation</span>
         <span className="text-orange-700/80">Démo locale — déclenchez manuellement les états :</span>
         <div className="flex items-center gap-1.5 ml-auto flex-wrap">
-          <button onClick={() => { setStatus('pending'); pushEvent('Mise en attente', 'Dossier en cours d\'examen par PASMAL Trust.', 'send', 'indigo') }} className="px-3 py-1.5 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition">Mettre en attente</button>
+          <button onClick={() => { setStatus('pending'); pushEvent('Mise en attente', 'Dossier en cours d\'examen par SHOPCA Trust.', 'send', 'indigo') }} className="px-3 py-1.5 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition">Mettre en attente</button>
           <button onClick={simulateApprove} className="px-3 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition">Approuver</button>
           <button onClick={simulateReject} className="px-3 py-1.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-semibold transition">Refuser</button>
         </div>
@@ -200,7 +200,7 @@ export default function AgencyVerification() {
                 <input value={agency.siret} onChange={setField('siret')} className="w-full bg-transparent text-navy-900 text-sm focus:outline-none font-mono"/>
               </Field>
               <Field label="Forme juridique">
-                <PasmalSelect
+                <ShopCASelect
                   value={agency.legalForm}
                   onChange={v => setAgency(a => ({ ...a, legalForm: v }))}
                   options={['SAS', 'SARL', 'EURL', 'SCI', 'SA', 'Auto-entrepreneur']}
@@ -428,7 +428,7 @@ function TrustCard({ status, agency }) {
             {verified && (
               <motion.span
                 initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', bounce: 0.5 }}
-                title="Agence vérifiée par PASMAL"
+                title="Agence vérifiée par SHOPCA"
               >
                 <I.BadgeCheck size={14} className="text-orange-400"/>
               </motion.span>

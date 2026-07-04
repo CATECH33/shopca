@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { BrandLogo, I } from '../../../lib/ui.jsx'
@@ -90,7 +90,7 @@ export default function AuthLayout({ children, title, subtitle, footer }) {
           </motion.div>
         </div>
         <div className="px-10 pb-6 flex items-center justify-between text-xs text-slate-400">
-          <span>© {new Date().getFullYear()} PASMAL</span>
+          <span>© {new Date().getFullYear()} SHOPCA</span>
           <div className="flex gap-4">
             <Link to="#" className="hover:text-slate-600">Aide</Link>
             <Link to="#" className="hover:text-slate-600">Confidentialité</Link>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I } from '../../../lib/ui.jsx'
 import { useAuth } from '../../../features/auth/providers/AuthProvider.jsx'
@@ -199,7 +199,7 @@ export default function AdminProfile({ dark }) {
             className={`rounded-2xl border shadow-sm p-5 space-y-4 ${bd}`}>
             <div className="space-y-3">
               {[
-                { id: 'emailOptIn', label: 'Recevoir les e-mails marketing', sub: 'Offres, nouveautés et actualités PASMAL', val: emailOptIn, set: setEmailOptIn },
+                { id: 'emailOptIn', label: 'Recevoir les e-mails marketing', sub: 'Offres, nouveautés et actualités SHOPCA', val: emailOptIn, set: setEmailOptIn },
                 { id: 'notifInApp', label: 'Notifications dans l\'application', sub: 'Alertes en temps réel dans le dashboard', val: notifInApp, set: setNotifInApp },
               ].map(({ id, label, sub, val, set }) => (
                 <label key={id} className={`flex items-center justify-between gap-4 p-3 rounded-xl cursor-pointer transition ${dark ? 'hover:bg-white/5' : 'hover:bg-slate-50'}`}>

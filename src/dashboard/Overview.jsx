@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import {
@@ -28,7 +28,7 @@ const SOURCE_COLORS = ['#FF6B00', '#0B1F3A', '#FB923C', '#94A3B8']
 const activity = [
   { who: 'Camille Lefèvre', what: 'a contacté l\'annonce', target: 'Studio Bastille', time: 'Il y a 4 min', icon: I.Mail, tone: 'orange' },
   { who: 'Julien Moreau', what: 'a planifié une visite', target: 'T3 Lyon Foch', time: 'Il y a 22 min', icon: I.Calendar, tone: 'indigo' },
-  { who: 'PASMAL Trust', what: 'a vérifié l\'annonce', target: 'Maison Bordeaux', time: 'Il y a 1h', icon: I.Shield, tone: 'emerald' },
+  { who: 'SHOPCA Trust', what: 'a vérifié l\'annonce', target: 'Maison Bordeaux', time: 'Il y a 1h', icon: I.Shield, tone: 'emerald' },
   { who: 'Sofia Benali', what: 'a marqué en favori', target: 'Villa Nice', time: 'Il y a 3h', icon: I.Heart, tone: 'rose' },
   { who: 'Stripe', what: 'a encaissé', target: 'Pack Visibilité — 49 €', time: 'Hier', icon: I.CreditCard, tone: 'navy' },
 ]

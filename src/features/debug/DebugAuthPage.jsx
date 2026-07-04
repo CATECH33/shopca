@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase, SUPABASE_URL, SUPABASE_KEY_SET, SUPABASE_IS_PLACEHOLDER } from '../../lib/supabase.js'
 
 const DEMO_ACCOUNTS = [
-  { label: 'Admin',        email: 'admin@pasmal.shop',   password: 'PasmalAdmin2026!*',  role: 'super_admin'    },
-  { label: 'Pro (T2)',     email: 'admin-t2@pasmal.shop', password: 'PasmalAdmin2026!!',  role: 'agency'         },
-  { label: 'Particulier',  email: 'admin-t1@pasmal.shop', password: 'PasmalAdmin2026**',  role: 'private_user'   },
+  { label: 'Admin',        email: 'admin@shopca.fr',   password: 'ShopCAAdmin2026!*',  role: 'super_admin'    },
+  { label: 'Pro (T2)',     email: 'admin-t2@shopca.fr', password: 'ShopCAAdmin2026!!',  role: 'agency'         },
+  { label: 'Particulier',  email: 'admin-t1@shopca.fr', password: 'ShopCAAdmin2026**',  role: 'private_user'   },
 ]
 
 function Badge({ ok, label }) {
@@ -134,7 +134,7 @@ export default function DebugAuthPage() {
         {/* Header */}
         <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#0f172a' }}>🔍 Debug Auth — PASMAL</h1>
+            <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#0f172a' }}>🔍 Debug Auth — SHOPCA</h1>
             <p style={{ margin: '4px 0 0', fontSize: 13, color: '#64748b' }}>
               Page de diagnostic — à supprimer avant mise en production
             </p>

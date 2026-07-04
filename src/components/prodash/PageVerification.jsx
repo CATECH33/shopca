@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+﻿import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { I } from '../../lib/ui.jsx'
 import { useAuth } from '../../features/auth/providers/AuthProvider.jsx'
@@ -150,7 +150,7 @@ export default function PageVerification({ dark }) {
       <div className={`rounded-2xl border p-4 flex gap-3 ${dark ? 'bg-[#1f2937] border-white/10' : 'bg-slate-50 border-slate-200'}`}>
         <I.Shield size={16} className="text-navy-700 shrink-0 mt-0.5" />
         <p className={`text-xs leading-relaxed ${sx}`}>
-          Tous les documents sont vérifiés manuellement par notre équipe sous 24 h ouvrées. Pour toute question : <span className="text-orange-500 font-semibold">verification@pasmal.fr</span>
+          Tous les documents sont vérifiés manuellement par notre équipe sous 24 h ouvrées. Pour toute question : <span className="text-orange-500 font-semibold">verification@shopca.fr</span>
         </p>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+﻿import React, { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { I } from '../../lib/ui.jsx'
@@ -109,7 +109,7 @@ export default function DashTopbar({ page, dark, setPage, onExit, isAdmin }) {
       <div>
         <h1 className={`text-base font-extrabold leading-none ${text}`}>{PAGE_TITLES[page] ?? page}</h1>
         <p className={`text-[11px] mt-0.5 ${sub}`}>
-          {isAdminRole ? 'PASMAL Super Admin' : (profile?.agencies?.name ?? firstName)}
+          {isAdminRole ? 'SHOPCA Super Admin' : (profile?.agencies?.name ?? firstName)}
         </p>
       </div>
 

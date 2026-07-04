@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+﻿import React, { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import SeoHead from '../../components/SeoHead.jsx'
 import SeoLayout, { FaqItem } from './SeoLayout.jsx'
@@ -33,7 +33,7 @@ export default function AgencesVillePage() {
   ]
 
   const faq = [
-    { q: `Comment choisir une agence immobilière à ${ville.nom} ?`, a: `Vérifiez la réputation, le nombre d'annonces actives, les avis clients et la spécialisation de l'agence (résidentiel, commercial, neuf...). Les agences certifiées PASMAL ont passé notre processus de vérification.` },
+    { q: `Comment choisir une agence immobilière à ${ville.nom} ?`, a: `Vérifiez la réputation, le nombre d'annonces actives, les avis clients et la spécialisation de l'agence (résidentiel, commercial, neuf...). Les agences certifiées SHOPCA ont passé notre processus de vérification.` },
     { q: `Combien coûte une agence immobilière à ${ville.nom} ?`, a: `Les honoraires d'agence représentent en général 3 à 8 % du prix de vente, à la charge du vendeur ou partagés. Pour une location, comptez 1 mois de loyer maximum (loi Alur).` },
     { q: `Puis-je vendre sans agence à ${ville.nom} ?`, a: `Oui, la vente de particulier à particulier est possible. Cependant, une agence apporte expertise du marché local, diffusion des annonces, visites et sécurisation juridique de la transaction.` },
   ]
@@ -58,7 +58,7 @@ export default function AgencesVillePage() {
               Agences immobilières à <span className="text-orange-400">{ville.nom}</span>
             </h1>
             <p className="text-white/70 mt-3 text-lg">
-              {ville.region} · Agences certifiées PASMAL
+              {ville.region} · Agences certifiées SHOPCA
             </p>
           </>
         }

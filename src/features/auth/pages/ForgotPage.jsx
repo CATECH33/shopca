@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BrandLogo, I } from '../../../lib/ui.jsx'
 import { useAuthAction, svc } from '../hooks/useAuth.js'
-import { PasmalInput } from '../../../components/ui/PasmalInput'
+import { ShopCAInput } from '../../../components/ui/ShopCAInput'
 
 const TIPS = [
   { Icon: I.Mail,    title: 'Vérifiez vos spams',       body: 'Le lien peut atterrir dans votre dossier indésirables.' },
@@ -191,7 +191,7 @@ export default function ForgotPage() {
 
                   <form onSubmit={submit} className="space-y-4">
                     {/* Email */}
-                    <PasmalInput
+                    <ShopCAInput
                       type="email"
                       label="E-mail"
                       placeholder="vous@exemple.fr"
@@ -232,7 +232,7 @@ export default function ForgotPage() {
 
         {/* Footer */}
         <div className="px-8 pb-5 flex items-center justify-between text-xs text-slate-400">
-          <span>© {new Date().getFullYear()} PASMAL</span>
+          <span>© {new Date().getFullYear()} SHOPCA</span>
           <div className="flex gap-4">
             <a href="#" className="hover:text-slate-600 transition">Aide</a>
             <a href="#" className="hover:text-slate-600 transition">Confidentialité</a>

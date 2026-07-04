@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react'
+﻿import React, { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I } from '../../lib/ui.jsx'
-import { PasmalSelect } from '../ui/PasmalSelect'
+import { ShopCASelect } from '../ui/ShopCASelect'
 import { useAuth } from '../../features/auth/providers/AuthProvider.jsx'
 import { supabase } from '../../lib/supabase.js'
 
@@ -177,7 +177,7 @@ export default function PageLeads({ dark }) {
                     </div>
                     <p className={`text-xs font-semibold ${tx} text-center break-all`}>{lead.email ?? 'Contact'}</p>
                     {/* Status selector */}
-                    <PasmalSelect
+                    <ShopCASelect
                       value={lead.status}
                       onChange={v => updateStatus(lead.id, v)}
                       options={STATUSES}

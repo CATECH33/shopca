@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import { Link } from 'react-router-dom'
 import SeoHead from '../../components/SeoHead.jsx'
 import SeoLayout, { FaqItem } from './SeoLayout.jsx'
@@ -15,8 +15,8 @@ export default function ProgrammesNeufsPage() {
   return (
     <>
       <SeoHead
-        title="Programmes neufs en France — Achat appartement neuf | PASMAL"
-        description="Découvrez tous les programmes immobiliers neufs en France. Appartements et maisons neufs, VEFA, PTZ, garanties constructeur. Investissez dans le neuf avec PASMAL."
+        title="Programmes neufs en France — Achat appartement neuf | SHOPCA"
+        description="Découvrez tous les programmes immobiliers neufs en France. Appartements et maisons neufs, VEFA, PTZ, garanties constructeur. Investissez dans le neuf avec SHOPCA."
         keywords="programme neuf France, appartement neuf, maison neuve, VEFA, PTZ, investissement neuf immobilier"
         canonical="/programmes-neufs"
         schemas={[

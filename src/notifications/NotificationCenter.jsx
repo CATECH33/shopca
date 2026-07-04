@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+﻿import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I } from '../lib/ui.jsx'
 import { supabase } from '../lib/supabase.js'
 
 /* ============================================================
-   PASMAL — Notification Center
+   SHOPCA — Notification Center
    - Realtime via Supabase channel (postgres_changes)
    - Bell badge with unread count
    - Dropdown panel: history, mark read, grouped by date

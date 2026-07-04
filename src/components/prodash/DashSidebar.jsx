@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import { motion } from 'framer-motion'
 import { I } from '../../lib/ui.jsx'
 
@@ -36,7 +36,7 @@ export default function DashSidebar({ page, setPage, dark, setDark, onExit, isAd
           <I.Building size={14} className="text-white" />
         </div>
         <div>
-          <p className="text-white font-extrabold text-sm leading-none">PASMAL</p>
+          <p className="text-white font-extrabold text-sm leading-none">SHOPCA</p>
           <p className="text-white/40 text-[10px] mt-0.5">{isAdmin ? 'Super Admin' : 'Espace Pro'}</p>
         </div>
       </div>

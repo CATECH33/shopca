@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+﻿import React, { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import SeoHead from '../../components/SeoHead.jsx'
 import SeoLayout, { FaqItem } from './SeoLayout.jsx'
@@ -64,7 +64,7 @@ export default function CityPage({ mode }) {
   ] : [
     { q: `Quel est le loyer moyen à ${ville.nom} ?`, a: `Le loyer moyen à ${ville.nom} dépend du type de bien et du quartier. Consultez nos annonces pour les prix actuels.` },
     { q: `Y a-t-il un encadrement des loyers à ${ville.nom} ?`, a: `L'encadrement des loyers s'applique dans plusieurs grandes villes françaises. Renseignez-vous auprès de la mairie de ${ville.nom} pour connaître les règles en vigueur.` },
-    { q: `Combien de temps faut-il pour trouver un logement à ${ville.nom} ?`, a: `Dans les zones tendues comme ${ville.nom}, prévoyez 2 à 8 semaines. Activer les alertes PASMAL augmente vos chances de trouver rapidement.` },
+    { q: `Combien de temps faut-il pour trouver un logement à ${ville.nom} ?`, a: `Dans les zones tendues comme ${ville.nom}, prévoyez 2 à 8 semaines. Activer les alertes SHOPCA augmente vos chances de trouver rapidement.` },
   ]
 
   const breadcrumb = [

@@ -1,8 +1,8 @@
-# Architecture Technique : PASMAL Ecosystem
+﻿# Architecture Technique : SHOPCA Ecosystem
 
 ## 🏗️ Structure des Fichiers
 ```text
-pasmal-saas/
+shopca-saas/
 ├── src/
 │   ├── components/      # Boutons, Modals (ex: UpsellModal.jsx)
 │   ├── views/           # Pages (Home.jsx, AdminDashboard.jsx)

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+﻿import React, { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence, useInView, animate } from 'framer-motion'
 import { I, BrandLogo } from '../../lib/ui.jsx'
@@ -38,7 +38,7 @@ const PLANS = [
   {
     name: 'Gratuit',
     price: '0', period: '€', duration: '7 jours en ligne',
-    desc: 'Pour publier sans engagement et tester PASMAL.',
+    desc: 'Pour publier sans engagement et tester SHOPCA.',
     features: ['3 photos par annonce', 'Visibilité standard', 'Messagerie incluse', 'Annonce active 7 jours'],
     cta: 'Commencer gratuitement', highlight: false,
   },
@@ -138,13 +138,13 @@ const SIM_METRICS = {
 }
 
 const VERSUS_ROWS = [
-  { label: 'Publication basique',      pasmal: '0 €',     seloger: '~299 €/mois', lbc: '~75 €/sem.' },
-  { label: 'Publication boostée',      pasmal: '9,90 €',  seloger: 'inclus',      lbc: 'inclus' },
-  { label: 'Sans engagement',          pasmal: true,      seloger: false,         lbc: true },
-  { label: 'Audience qualifiée achat', pasmal: true,      seloger: true,          lbc: false },
-  { label: 'Analytics vendeur',        pasmal: true,      seloger: false,         lbc: false },
-  { label: 'CRM leads intégré',        pasmal: true,      seloger: false,         lbc: false },
-  { label: 'Messagerie in-app',        pasmal: true,      seloger: true,          lbc: true },
+  { label: 'Publication basique',      shopca: '0 €',     seloger: '~299 €/mois', lbc: '~75 €/sem.' },
+  { label: 'Publication boostée',      shopca: '9,90 €',  seloger: 'inclus',      lbc: 'inclus' },
+  { label: 'Sans engagement',          shopca: true,      seloger: false,         lbc: true },
+  { label: 'Audience qualifiée achat', shopca: true,      seloger: true,          lbc: false },
+  { label: 'Analytics vendeur',        shopca: true,      seloger: false,         lbc: false },
+  { label: 'CRM leads intégré',        shopca: true,      seloger: false,         lbc: false },
+  { label: 'Messagerie in-app',        shopca: true,      seloger: true,          lbc: true },
 ]
 
 /* ── Sub-components ───────────────────────────────────────────── */
@@ -330,7 +330,7 @@ function AgencyPlans() {
   const AGENCY_CHECKOUT = {
     'Starter':    (y) => pay(y ? 'agency_starter_yearly' : 'agency_starter_monthly', () => checkout.agencyStarter(y)),
     'Pro':        (y) => pay(y ? 'agency_pro_yearly'     : 'agency_pro_monthly',     () => checkout.agencyPro(y)),
-    'Enterprise': () => { /* Contact sales */ window.location.href = 'mailto:sales@pasmal.fr?subject=Offre Enterprise' },
+    'Enterprise': () => { /* Contact sales */ window.location.href = 'mailto:sales@shopca.fr?subject=Offre Enterprise' },
   }
 
   return (
@@ -429,7 +429,7 @@ function AgencyPlans() {
         <div className="mt-10 text-center">
           <div className="inline-flex flex-col md:flex-row items-center gap-3 md:gap-5 bg-white/5 border border-white/10 rounded-full p-2 pl-5">
             <span className="text-sm text-white/80">Besoin d'une démo personnalisée ?</span>
-            <a href="mailto:contact@pasmal.fr?subject=Demande%20de%20d%C3%A9mo"
+            <a href="mailto:contact@shopca.fr?subject=Demande%20de%20d%C3%A9mo"
               className="inline-flex items-center gap-2 bg-white text-[#0B1F3A] hover:bg-orange-50 font-semibold text-sm px-5 py-2.5 rounded-full transition-all hover:-translate-y-0.5">
               Nous écrire <I.ArrowRight size={14} />
             </a>
@@ -530,7 +530,7 @@ export default function TarifsPage() {
               { value: 4,       suffix: '×',  label: 'Plus de contacts avec Pack Visibilité' },
               { value: 2400000, suffix: '',   label: 'Visiteurs par mois sur la plateforme' },
               { value: 11,      suffix: ' j', label: 'Délai moyen pour trouver un acheteur' },
-              { value: 98,      suffix: '%',  label: 'Propriétaires satisfaits de PASMAL' },
+              { value: 98,      suffix: '%',  label: 'Propriétaires satisfaits de SHOPCA' },
             ].map((s, i) => (
               <motion.div key={s.label} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
                 className="relative">
@@ -567,7 +567,7 @@ export default function TarifsPage() {
                 <I.TrendingUp size={11} /> Simulateur
               </div>
               <h2 className="text-2xl font-extrabold text-[#0B1F3A] tracking-tight">Estimez l'impact sur votre vente</h2>
-              <p className="text-slate-500 text-sm mt-2">Contacts reçus et délai moyen constatés sur PASMAL selon votre plan.</p>
+              <p className="text-slate-500 text-sm mt-2">Contacts reçus et délai moyen constatés sur SHOPCA selon votre plan.</p>
             </div>
             <div className="flex justify-center mb-8">
               <div className="inline-flex items-center bg-white border border-slate-200 p-1 rounded-full shadow-sm">
@@ -616,7 +616,7 @@ export default function TarifsPage() {
                 })}
               </motion.div>
             </AnimatePresence>
-            <p className="text-center text-[10px] text-slate-400 mt-5">Données moyennes constatées sur PASMAL. Résultats variables selon le bien, la ville et le marché.</p>
+            <p className="text-center text-[10px] text-slate-400 mt-5">Données moyennes constatées sur SHOPCA. Résultats variables selon le bien, la ville et le marché.</p>
           </div>
         </section>
       )}
@@ -704,7 +704,7 @@ export default function TarifsPage() {
         <section className="py-16 bg-white border-b border-slate-100">
           <div className="max-w-4xl mx-auto px-6 lg:px-10">
             <div className="text-center mb-10">
-              <div className="text-orange-600 font-semibold text-sm tracking-wider uppercase mb-3">Pourquoi PASMAL ?</div>
+              <div className="text-orange-600 font-semibold text-sm tracking-wider uppercase mb-3">Pourquoi SHOPCA ?</div>
               <h2 className="text-2xl font-extrabold text-[#0B1F3A] tracking-tight">Comparez par vous-même</h2>
               <p className="text-slate-500 text-sm mt-2">Des fonctionnalités pro à une fraction du prix des grandes plateformes.</p>
             </div>
@@ -714,7 +714,7 @@ export default function TarifsPage() {
                   <tr className="border-b border-slate-100">
                     <th className="px-5 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-400 w-2/5" />
                     <th className="px-5 py-4 text-center bg-[#0B1F3A] text-white text-sm font-extrabold">
-                      <div className="flex flex-col items-center gap-1"><span>PASMAL</span><span className="text-orange-400 text-[10px] font-semibold">dès 0 €</span></div>
+                      <div className="flex flex-col items-center gap-1"><span>SHOPCA</span><span className="text-orange-400 text-[10px] font-semibold">dès 0 €</span></div>
                     </th>
                     <th className="px-5 py-4 text-center text-slate-400 text-xs font-bold">SeLoger<br /><span className="text-[10px] font-normal">≈ 299 €/mois</span></th>
                     <th className="px-5 py-4 text-center text-slate-400 text-xs font-bold">LeBonCoin<br /><span className="text-[10px] font-normal">≈ 75 €/sem.</span></th>
@@ -726,9 +726,9 @@ export default function TarifsPage() {
                       className={`border-b border-slate-50 last:border-0 ${ri % 2 === 0 ? 'bg-white' : 'bg-slate-50/40'}`}>
                       <td className="px-5 py-3.5 text-sm text-slate-600 font-medium">{row.label}</td>
                       <td className="px-5 py-3.5 text-center bg-orange-50/40">
-                        {row.pasmal === true ? <I.CheckCircle size={16} className="text-orange-500 mx-auto" />
-                          : row.pasmal === false ? <span className="text-slate-300 text-base">—</span>
-                          : <span className="text-sm font-bold text-orange-600">{row.pasmal}</span>}
+                        {row.shopca === true ? <I.CheckCircle size={16} className="text-orange-500 mx-auto" />
+                          : row.shopca === false ? <span className="text-slate-300 text-base">—</span>
+                          : <span className="text-sm font-bold text-orange-600">{row.shopca}</span>}
                       </td>
                       {[row.seloger, row.lbc].map((v, ci) => (
                         <td key={ci} className="px-5 py-3.5 text-center">
@@ -803,7 +803,7 @@ export default function TarifsPage() {
                 </div>
               </div>
               <div className="shrink-0">
-                <a href="mailto:contact@pasmal.fr?subject=Offre%20Enterprise"
+                <a href="mailto:contact@shopca.fr?subject=Offre%20Enterprise"
                   className="inline-flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-full transition-all hover:-translate-y-0.5 whitespace-nowrap">
                   <I.Mail size={15} /> Nous contacter
                 </a>
@@ -822,7 +822,7 @@ export default function TarifsPage() {
             Garantie 30 jours — satisfait ou remboursé
           </div>
           <h2 className="text-white text-3xl md:text-4xl font-extrabold tracking-tight mb-4">Prêt à booster vos annonces ?</h2>
-          <p className="text-white/65 text-lg mb-8 max-w-xl mx-auto">Rejoignez plus de 1 850 propriétaires et agences qui font confiance à PASMAL pour leurs transactions immobilières.</p>
+          <p className="text-white/65 text-lg mb-8 max-w-xl mx-auto">Rejoignez plus de 1 850 propriétaires et agences qui font confiance à SHOPCA pour leurs transactions immobilières.</p>
           <div className="flex justify-center">
             <button onClick={() => navigate('/auth/register')}
               className="inline-flex items-center gap-2 px-7 py-3.5 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-full transition-all hover:-translate-y-0.5 hover:shadow-lg">
@@ -835,7 +835,7 @@ export default function TarifsPage() {
 
       {/* ── Footer ───────────────────────────────────────────── */}
       <footer className="bg-white border-t border-slate-100 py-6 px-8 flex items-center justify-between text-xs text-slate-400">
-        <span>© {new Date().getFullYear()} PASMAL</span>
+        <span>© {new Date().getFullYear()} SHOPCA</span>
         <div className="flex gap-4">
           <a href="#" className="hover:text-slate-600 transition">Aide</a>
           <a href="#" className="hover:text-slate600 transition">Confidentialité</a>

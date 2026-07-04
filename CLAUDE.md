@@ -1,4 +1,4 @@
-# Directives de Développement - PASMAL SaaS
+﻿# Directives de Développement - SHOPCA SaaS
 
 ## 🚫 RÈGLES IMPÉRATIVES CODE
 - **AUCUN IMPORT LUCIDE-REACT :** Utiliser uniquement les SVG de l'objet global `Icons` présent en haut du fichier principal pour éliminer tout risque d'Erreur 500.

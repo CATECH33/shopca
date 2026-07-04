@@ -1,10 +1,10 @@
-import React, { useState, useMemo } from 'react'
+﻿import React, { useState, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, BrandLogo } from '../../lib/ui.jsx'
-import { PasmalSelect } from '../../components/ui/PasmalSelect'
-import { PasmalInput } from '../../components/ui/PasmalInput'
-import { PasmalTextarea } from '../../components/ui/PasmalTextarea'
+import { ShopCASelect } from '../../components/ui/ShopCASelect'
+import { ShopCAInput } from '../../components/ui/ShopCAInput'
+import { ShopCATextarea } from '../../components/ui/ShopCATextarea'
 
 const unsplash = (id, w = 1200) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`
@@ -64,7 +64,7 @@ const AGENCY_REVIEWS_MAP = {
 }
 
 const AGENCY_CERT = {
-  trust:   { label: 'PASMAL Trust', bg: 'bg-orange-100', text: 'text-orange-600' },
+  trust:   { label: 'SHOPCA Trust', bg: 'bg-orange-100', text: 'text-orange-600' },
   partner: { label: 'Partenaire',   bg: 'bg-indigo-100', text: 'text-indigo-600' },
   none:    null,
 }
@@ -150,14 +150,14 @@ export default function AgencesPage() {
           style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.6) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.6) 1px,transparent 1px)', backgroundSize: '48px 48px' }} />
         <div className="relative max-w-7xl mx-auto px-6 lg:px-10 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-bold uppercase tracking-widest mb-5">
-            <I.BadgeCheck size={12} /> Agences certifiées PASMAL
+            <I.BadgeCheck size={12} /> Agences certifiées SHOPCA
           </div>
           <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-5">
             Votre agence idéale,<br />
             <span className="text-orange-400">vérifiée et approuvée.</span>
           </h1>
           <p className="text-white/70 text-lg max-w-2xl mx-auto mb-10">
-            Découvrez les agences partenaires PASMAL — sélectionnées pour leur sérieux, leurs résultats et la satisfaction de leurs clients.
+            Découvrez les agences partenaires SHOPCA — sélectionnées pour leur sérieux, leurs résultats et la satisfaction de leurs clients.
           </p>
           <div className="flex items-center justify-center gap-8 flex-wrap">
             {[
@@ -185,11 +185,11 @@ export default function AgencesPage() {
                 className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-orange-400 transition" />
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <PasmalSelect
+              <ShopCASelect
                 value={sortBy}
                 onChange={setSortBy}
                 options={[
-                  { value: 'score',    label: 'Score PASMAL' },
+                  { value: 'score',    label: 'Score SHOPCA' },
                   { value: 'rating',   label: 'Note clients' },
                   { value: 'listings', label: 'Annonces actives' },
                   { value: 'reviews',  label: "Nombre d'avis" },
@@ -274,7 +274,7 @@ export default function AgencesPage() {
                       <span className="flex items-center gap-1"><I.Check size={10} className="text-emerald-500" /> {agency.satisfaction}% satisf.</span>
                     </div>
                     <div className="mb-1 flex items-center justify-between">
-                      <span className="text-[10px] text-slate-400 font-semibold">Score PASMAL</span>
+                      <span className="text-[10px] text-slate-400 font-semibold">Score SHOPCA</span>
                       <span className="text-[11px] font-extrabold text-orange-600">{agency.score}/100</span>
                     </div>
                     <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
@@ -360,10 +360,10 @@ export default function AgencesPage() {
             <I.Building size={12} /> Vous êtes une agence ?
           </div>
           <h2 className="text-white text-3xl md:text-4xl font-extrabold tracking-tight mb-4">
-            Rejoignez le réseau PASMAL
+            Rejoignez le réseau SHOPCA
           </h2>
           <p className="text-white/70 mb-8 max-w-xl mx-auto">
-            Obtenez le badge de certification PASMAL Trust, accédez à nos 2,4 millions de visiteurs mensuels et bénéficiez d'outils pros exclusifs.
+            Obtenez le badge de certification SHOPCA Trust, accédez à nos 2,4 millions de visiteurs mensuels et bénéficiez d'outils pros exclusifs.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button onClick={() => navigate('/auth/register/pro')}
@@ -386,7 +386,7 @@ export default function AgencesPage() {
 
       {/* ── Footer ───────────────────────────────────── */}
       <footer className="bg-white border-t border-slate-100 py-6 px-8 flex items-center justify-between text-xs text-slate-400">
-        <span>© {new Date().getFullYear()} PASMAL</span>
+        <span>© {new Date().getFullYear()} SHOPCA</span>
         <div className="flex gap-4">
           <a href="#" className="hover:text-slate-600 transition">Aide</a>
           <a href="#" className="hover:text-slate-600 transition">Confidentialité</a>
@@ -459,7 +459,7 @@ export default function AgencesPage() {
                     </div>
                   </div>
                   <div>
-                    <div className="text-white font-extrabold text-sm mb-0.5">Score PASMAL</div>
+                    <div className="text-white font-extrabold text-sm mb-0.5">Score SHOPCA</div>
                     <div className="text-white/60 text-xs">Sur 100 — basé sur la réactivité, les avis et les performances.</div>
                   </div>
                 </div>
@@ -468,7 +468,7 @@ export default function AgencesPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                   {[
                     { label: 'Annonces actives',  value: selected.listings },
-                    { label: 'Sur PASMAL depuis', value: selected.since },
+                    { label: 'Sur SHOPCA depuis', value: selected.since },
                     { label: 'Temps de réponse',  value: selected.responseTime },
                     { label: 'Satisfaction',       value: `${selected.satisfaction}%` },
                   ].map(s => (
@@ -557,10 +557,10 @@ export default function AgencesPage() {
                   ) : (
                     <form onSubmit={handleContact} className="space-y-3">
                       <div className="grid grid-cols-2 gap-3">
-                        <PasmalInput size="sm" value={msgName} onChange={e => setMsgName(e.target.value)} required placeholder="Votre nom" icon={<I.User size={13}/>} />
-                        <PasmalInput type="email" size="sm" value={msgEmail} onChange={e => setMsgEmail(e.target.value)} required placeholder="Votre e-mail" icon={<I.Mail size={13}/>} />
+                        <ShopCAInput size="sm" value={msgName} onChange={e => setMsgName(e.target.value)} required placeholder="Votre nom" icon={<I.User size={13}/>} />
+                        <ShopCAInput type="email" size="sm" value={msgEmail} onChange={e => setMsgEmail(e.target.value)} required placeholder="Votre e-mail" icon={<I.Mail size={13}/>} />
                       </div>
-                      <PasmalTextarea rows={3} value={msgText} onChange={e => setMsgText(e.target.value)} required placeholder="Votre message…" />
+                      <ShopCATextarea rows={3} value={msgText} onChange={e => setMsgText(e.target.value)} required placeholder="Votre message…" />
                       <button type="submit"
                         className="w-full py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl text-sm transition-colors">
                         Envoyer le message

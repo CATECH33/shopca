@@ -1,8 +1,8 @@
-import React, { useMemo, useState } from 'react'
+﻿import React, { useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, Counter, Button, Avatar, Badge } from '../lib/ui.jsx'
-import { PasmalSelect } from '../components/ui/PasmalSelect'
-import { PasmalCheckbox } from '../components/ui/PasmalCheckbox'
+import { ShopCASelect } from '../components/ui/ShopCASelect'
+import { ShopCACheckbox } from '../components/ui/ShopCACheckbox'
 
 /* ============================================================
    Super Admin — Listings Moderation
@@ -160,7 +160,7 @@ export default function AdminListings() {
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Rechercher annonce, ville, propriétaire, ID…" className="flex-1 bg-transparent text-sm focus:outline-none"/>
         </div>
 
-        <PasmalSelect
+        <ShopCASelect
           value={sort}
           onChange={setSort}
           options={[
@@ -287,7 +287,7 @@ function ListingCard({ listing: l, checked, onToggle, onOpen, onApprove, onRejec
         {/* Body */}
         <div className="flex-1 p-4 flex flex-col gap-3 min-w-0">
           <div className="flex items-start gap-2">
-            <PasmalCheckbox checked={checked} onChange={onToggle} dark className="mt-1 shrink-0" />
+            <ShopCACheckbox checked={checked} onChange={onToggle} dark className="mt-1 shrink-0" />
             <div className="flex-1 min-w-0 cursor-pointer" onClick={onOpen}>
               <div className="flex items-center gap-1.5">
                 <span className="text-[10px] font-mono opacity-50">{l.id}</span>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BrandLogo, I } from '../../../lib/ui.jsx'
@@ -183,7 +183,7 @@ export default function LogoutPage() {
                   </div>
                   <h2 className="text-2xl font-extrabold text-[#0F172A] mb-2">Aucune session active</h2>
                   <p className="text-slate-500 text-sm leading-relaxed mb-8">
-                    Vous n'êtes pas connecté à PASMAL en ce moment.
+                    Vous n'êtes pas connecté à SHOPCA en ce moment.
                   </p>
                   <Link to="/auth/login"
                     className="inline-flex items-center gap-2 px-6 h-12 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm transition shadow-lg shadow-orange-200">
@@ -304,7 +304,7 @@ export default function LogoutPage() {
 
         {/* Footer */}
         <div className="px-8 pb-5 flex items-center justify-between text-xs text-slate-400">
-          <span>© {new Date().getFullYear()} PASMAL</span>
+          <span>© {new Date().getFullYear()} SHOPCA</span>
           <div className="flex gap-4">
             <a href="#" className="hover:text-slate-600 transition">Aide</a>
             <a href="#" className="hover:text-slate-600 transition">Confidentialité</a>

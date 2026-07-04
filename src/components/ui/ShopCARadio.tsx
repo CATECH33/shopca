@@ -1,4 +1,4 @@
-import React, { useId, createContext, useContext } from 'react'
+﻿import React, { useId, createContext, useContext } from 'react'
 
 /* ── CSS (once) ─────────────────────────────────────────────── */
 const CSS = `
@@ -59,7 +59,7 @@ export function RadioGroup({
 }
 
 /* ── Radio option ───────────────────────────────────────────── */
-export interface PasmalRadioProps {
+export interface ShopCARadioProps {
   value:       string
   label?:      React.ReactNode
   hint?:       string
@@ -73,7 +73,7 @@ export interface PasmalRadioProps {
   className?:  string
 }
 
-export function PasmalRadio({
+export function ShopCARadio({
   value, label, hint, icon,
   disabled: disabledProp,
   dark: darkProp,
@@ -82,7 +82,7 @@ export function PasmalRadio({
   checked: checkedProp,
   onChange: onChangeProp,
   className = '',
-}: PasmalRadioProps) {
+}: ShopCARadioProps) {
   injectCss()
 
   const ctx    = useContext(RadioContext)

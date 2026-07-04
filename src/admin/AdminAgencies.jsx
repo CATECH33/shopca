@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, Badge, Button, Avatar } from '../lib/ui.jsx'
 
 const AGENCIES = [
-  { id: 'a1', name: 'Agence Prestige Immobilier', city: 'Paris', email: 'agence@pasmal.shop', siret: '12345678900012', plan: 'premium', status: 'approved', agents: 8, listings: 24, revenue: 7900, logo: 'PI', color: '#0B1F3A', created: '2026-04-06', approved: '2026-04-11' },
+  { id: 'a1', name: 'Agence Prestige Immobilier', city: 'Paris', email: 'agence@shopca.fr', siret: '12345678900012', plan: 'premium', status: 'approved', agents: 8, listings: 24, revenue: 7900, logo: 'PI', color: '#0B1F3A', created: '2026-04-06', approved: '2026-04-11' },
   { id: 'a2', name: 'Century21 Lyon Centre',       city: 'Lyon',     email: 'lyon@century21.fr',    siret: '98765432100021', plan: 'enterprise', status: 'approved', agents: 15, listings: 67, revenue: 19900, logo: 'C2', color: '#F59E0B', created: '2026-02-20', approved: '2026-02-25' },
   { id: 'a3', name: 'Nexity Bordeaux',             city: 'Bordeaux', email: 'bordeaux@nexity.fr',   siret: '45612378900033', plan: 'enterprise', status: 'approved', agents: 22, listings: 103, revenue: 19900, logo: 'NX', color: '#6366F1', created: '2026-01-21', approved: '2026-01-26' },
   { id: 'a4', name: 'ImmoSud Marseille',           city: 'Marseille', email: 'contact@immosud.fr',  siret: '78945612300044', plan: 'basic', status: 'pending',  agents: 3,  listings: 0, revenue: 0, logo: 'IS', color: '#EF4444', created: '2026-05-16', approved: null },

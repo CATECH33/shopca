@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BrandLogo, I } from '../../lib/ui.jsx'
 import { supabase } from '../../lib/supabase.js'
 import { FALLBACK, AGENCIES, DPE_COLORS, enrich, fmtPrice, fmtPricePerSqm, unsplash } from './listingsData.js'
-import { PasmalInput } from '../../components/ui/PasmalInput'
-import { PasmalTextarea } from '../../components/ui/PasmalTextarea'
+import { ShopCAInput } from '../../components/ui/ShopCAInput'
+import { ShopCATextarea } from '../../components/ui/ShopCATextarea'
 
 // ── Extra gallery images per property type ────────────────────────────────────
 const GALLERY_POOL = [
@@ -188,9 +188,9 @@ function ContactCard({ l }) {
         </motion.div>
       ) : (
         <form onSubmit={submit} className="space-y-3">
-          <PasmalInput required size="sm" value={name} onChange={e => setName(e.target.value)} placeholder="Votre nom" icon={<I.User size={14}/>} />
-          <PasmalInput type="tel" size="sm" value={phone} onChange={e => setPhone(e.target.value)} placeholder="Votre téléphone" icon={<I.Phone size={14}/>} />
-          <PasmalTextarea rows={4} value={msg} onChange={e => setMsg(e.target.value)} placeholder="Votre message…" />
+          <ShopCAInput required size="sm" value={name} onChange={e => setName(e.target.value)} placeholder="Votre nom" icon={<I.User size={14}/>} />
+          <ShopCAInput type="tel" size="sm" value={phone} onChange={e => setPhone(e.target.value)} placeholder="Votre téléphone" icon={<I.Phone size={14}/>} />
+          <ShopCATextarea rows={4} value={msg} onChange={e => setMsg(e.target.value)} placeholder="Votre message…" />
           <motion.button type="submit" whileHover={{ y: -1 }} whileTap={{ scale: 0.98 }}
             className="w-full py-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm transition shadow-lg shadow-orange-200/60 flex items-center justify-center gap-2">
             <I.Send size={15} /> Contacter l'agence
@@ -219,7 +219,7 @@ function ContactCard({ l }) {
 
       <div className="mt-4 flex items-center gap-2 text-xs text-slate-400">
         <I.Shield size={12} className="text-emerald-500" />
-        Annonce vérifiée par PASMAL · Référence #{l.id}
+        Annonce vérifiée par SHOPCA · Référence #{l.id}
       </div>
     </div>
   )
@@ -235,7 +235,7 @@ export default function ListingDetailPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0)
-    const savedIds = JSON.parse(localStorage.getItem('pasmal-saved') || '[]')
+    const savedIds = JSON.parse(localStorage.getItem('shopca-saved') || '[]')
     setSaved(savedIds.includes(id))
 
     const load = async () => {
@@ -251,9 +251,9 @@ export default function ListingDetailPage() {
   }, [id])
 
   const toggleSave = () => {
-    const prev = JSON.parse(localStorage.getItem('pasmal-saved') || '[]')
+    const prev = JSON.parse(localStorage.getItem('shopca-saved') || '[]')
     const next = saved ? prev.filter(x => x !== id) : [...prev, id]
-    localStorage.setItem('pasmal-saved', JSON.stringify(next))
+    localStorage.setItem('shopca-saved', JSON.stringify(next))
     setSaved(!saved)
   }
 

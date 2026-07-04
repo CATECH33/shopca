@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I } from '../lib/ui.jsx'
 
@@ -17,7 +17,7 @@ const CFG = {
   },
   verified: {
     label:    'Agence vérifiée',
-    sub:      'Identité confirmée · PASMAL Trust',
+    sub:      'Identité confirmée · SHOPCA Trust',
     Icon:     I.BadgeCheck,
     color:    '#059669',
     bg:       '#ECFDF5',
@@ -171,7 +171,7 @@ export default function VerificationBadge({ status = 'pending', size = 'md', sho
             <I.Check size={12} className="text-white" />
           </motion.div>
           <p className="text-[11px] font-semibold" style={{ color: c.dark ? '#94A3B8' : '#64748B' }}>
-            {status === 'trusted' ? 'Partenaire certifié PASMAL depuis 2024' : 'Vérifié par l\'équipe PASMAL Trust'}
+            {status === 'trusted' ? 'Partenaire certifié SHOPCA depuis 2024' : 'Vérifié par l\'équipe SHOPCA Trust'}
           </p>
         </div>
       )}

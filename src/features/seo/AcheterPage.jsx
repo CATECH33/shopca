@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import { Link } from 'react-router-dom'
 import SeoHead from '../../components/SeoHead.jsx'
 import SeoLayout, { FaqItem } from './SeoLayout.jsx'
@@ -35,7 +35,7 @@ export default function AcheterPage() {
               Acheter un bien immobilier en France
             </h1>
             <p className="text-white/70 mt-3 text-lg max-w-2xl">
-              Des milliers d'annonces vérifiées — maisons, appartements, terrains. Trouvez votre futur chez-vous sur PASMAL.
+              Des milliers d'annonces vérifiées — maisons, appartements, terrains. Trouvez votre futur chez-vous sur SHOPCA.
             </p>
             <Link to="/annonces?mode=achat"
               className="mt-6 inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-xl transition">
@@ -92,7 +92,7 @@ export default function AcheterPage() {
           <ol className="space-y-4">
             {[
               { n: 1, t: 'Définissez votre budget', d: 'Calculez votre capacité d\'emprunt, prévoyez les frais de notaire (7–8 % dans l\'ancien) et votre apport personnel.' },
-              { n: 2, t: 'Recherchez votre bien', d: 'Utilisez PASMAL pour consulter des milliers d\'annonces filtrées par ville, type, surface et prix.' },
+              { n: 2, t: 'Recherchez votre bien', d: 'Utilisez SHOPCA pour consulter des milliers d\'annonces filtrées par ville, type, surface et prix.' },
               { n: 3, t: 'Visitez et négociez', d: 'Préparez vos visites, posez les bonnes questions (DPE, charges, travaux) et faites une offre.' },
               { n: 4, t: 'Signez le compromis', d: 'Le compromis engage les deux parties. Vous disposez de 10 jours pour vous rétracter.' },
               { n: 5, t: 'Obtenez votre financement', d: 'Déposez votre dossier dans plusieurs banques. Vous avez 45 jours pour obtenir votre prêt.' },

@@ -1,8 +1,8 @@
-import React from 'react'
+﻿import React from 'react'
 import { Helmet } from 'react-helmet-async'
 import { canonicalUrl, ogImageUrl } from '../lib/seo.js'
 
-const SITE_NAME = 'PASMAL'
+const SITE_NAME = 'SHOPCA'
 const DEFAULT_OG_IMAGE = ogImageUrl('/og-default.png')
 
 export default function SeoHead({

@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import { Link } from 'react-router-dom'
 import SeoHead from '../../components/SeoHead.jsx'
 import SeoLayout, { FaqItem } from './SeoLayout.jsx'
@@ -35,7 +35,7 @@ export default function LouerPage() {
               Location immobilière en France
             </h1>
             <p className="text-white/70 mt-3 text-lg max-w-2xl">
-              Appartements meublés, maisons, studios — toutes les annonces de location vérifiées sur PASMAL.
+              Appartements meublés, maisons, studios — toutes les annonces de location vérifiées sur SHOPCA.
             </p>
             <Link to="/annonces?mode=location"
               className="mt-6 inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-xl transition">

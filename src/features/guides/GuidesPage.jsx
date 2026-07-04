@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, BrandLogo } from '../../lib/ui.jsx'
@@ -60,7 +60,7 @@ const ALL_GUIDES = [
     excerpt: "Estimation, home staging, timing de mise en vente... les secrets des vendeurs performants.",
     img: unsplash('photo-1600585154340-be6161a56a0c', 900), time: '6 min', date: '22 avr. 2026', author: 'Sophie Marchand',
     content: [
-      { h: 'Bien estimer son bien',  p: "Une surestimation fera fuir les acheteurs et rallongera les délais. Consultez plusieurs agents et les bases notariales pour les ventes récentes dans votre quartier. PASMAL propose une estimation gratuite en ligne." },
+      { h: 'Bien estimer son bien',  p: "Une surestimation fera fuir les acheteurs et rallongera les délais. Consultez plusieurs agents et les bases notariales pour les ventes récentes dans votre quartier. SHOPCA propose une estimation gratuite en ligne." },
       { h: 'Le home staging',        p: "La valorisation immobilière permet de vendre 10-15 % plus cher et 2-3× plus vite. Dépersonnalisez, désencombrez, rafraîchissez les peintures et soignez les photos (lumière naturelle, grand angle)." },
       { h: 'Choisir le bon moment',  p: "Le printemps (mars-juin) est la meilleure période de mise en vente pour les résidences principales. Évitez les fêtes et l'été. Une annonce publiée un jeudi obtient en moyenne 22 % de contacts supplémentaires." },
     ],
@@ -366,7 +366,7 @@ export default function GuidesPage() {
                 {/* CTA */}
                 <div className="mt-6 bg-gradient-to-r from-navy-900 to-[#162E52] rounded-2xl p-5 text-center">
                   <div className="text-white font-bold mb-1 text-sm">Prêt à passer à l'action ?</div>
-                  <p className="text-white/60 text-xs mb-4">Trouvez votre bien idéal sur PASMAL.</p>
+                  <p className="text-white/60 text-xs mb-4">Trouvez votre bien idéal sur SHOPCA.</p>
                   <button onClick={() => { setOpenId(null); navigate('/annonces') }}
                     className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-colors">
                     Voir les annonces <I.ArrowRight size={14} />

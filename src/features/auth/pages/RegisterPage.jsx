@@ -1,14 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react'
+﻿import React, { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, BrandLogo, PasswordStrength } from '../../../lib/ui.jsx'
 import { useAuthAction, svc } from '../hooks/useAuth.js'
 import { isValidEmail } from '../validators/authValidators.js'
 import { startPremiumAlertsCheckout } from '../../subscription/subscriptionService.js'
-import { PasmalInput } from '../../../components/ui/PasmalInput'
-import { PasmalCheckbox } from '../../../components/ui/PasmalCheckbox'
+import { ShopCAInput } from '../../../components/ui/ShopCAInput'
+import { ShopCACheckbox } from '../../../components/ui/ShopCACheckbox'
 
-const DRAFT_KEY = 'pasmal_pro_reg_draft'
+const DRAFT_KEY = 'shopca_pro_reg_draft'
 
 const STEPS = {
   personal: ['Identité', 'Sécurité', 'Préférences', 'Confirmation'],
@@ -95,7 +95,7 @@ function LeftPanel() {
             ))}
           </div>
           <p className="text-white/75 text-sm italic leading-relaxed mb-3">
-            "Grâce à PASMAL, j'ai trouvé mon appartement en 3 semaines. Service exceptionnel et équipe très réactive."
+            "Grâce à SHOPCA, j'ai trouvé mon appartement en 3 semaines. Service exceptionnel et équipe très réactive."
           </p>
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-[11px] font-bold shrink-0">MD</div>
@@ -174,7 +174,7 @@ function Field({ label, optional, error, children }) {
 // ── Text input (delegates to Design System) ───────────────────────────────────
 function TextInput({ value, onChange, placeholder, type = 'text', icon: Icon, error }) {
   return (
-    <PasmalInput
+    <ShopCAInput
       type={type}
       value={value}
       onChange={e => onChange(e.target.value)}
@@ -189,7 +189,7 @@ function TextInput({ value, onChange, placeholder, type = 'text', icon: Icon, er
 function PwdInput({ label, value, onChange, showStrength, error }) {
   return (
     <Field label={label} error={error}>
-      <PasmalInput
+      <ShopCAInput
         type="password"
         value={value}
         onChange={e => onChange(e.target.value)}
@@ -341,7 +341,7 @@ function Toggle({ checked, onChange, label, desc }) {
 function Checkbox({ checked, onChange, children, error }) {
   return (
     <div>
-      <PasmalCheckbox
+      <ShopCACheckbox
         checked={checked}
         onChange={() => onChange(v => !v)}
         label={children}
@@ -566,12 +566,12 @@ function PersonalConfirmStep({ rows, avatarUrl, prefs, cgu, setCgu, rgpd, setRgp
         <a href="#" onClick={e => e.stopPropagation()} className="text-orange-600 font-semibold hover:underline">CGU</a>{' '}
         et la{' '}
         <a href="#" onClick={e => e.stopPropagation()} className="text-orange-600 font-semibold hover:underline">politique de confidentialité</a>{' '}
-        de PASMAL.
+        de SHOPCA.
       </Checkbox>
       <Checkbox checked={rgpd} onChange={setRgpd} error={errors.rgpd}>
         Je consens au traitement de mes données personnelles conformément au{' '}
         <a href="#" onClick={e => e.stopPropagation()} className="text-orange-600 font-semibold hover:underline">RGPD</a>{' '}
-        aux seules fins de la gestion de mon compte et des services PASMAL.
+        aux seules fins de la gestion de mon compte et des services SHOPCA.
       </Checkbox>
     </div>
   )
@@ -669,12 +669,12 @@ function ProVerificationStep({ rows, logoUrl, cgu, setCgu, rgpd, setRgpd, errors
         <a href="#" onClick={e => e.stopPropagation()} className="text-orange-600 font-semibold hover:underline">CGU professionnelles</a>{' '}
         et la{' '}
         <a href="#" onClick={e => e.stopPropagation()} className="text-orange-600 font-semibold hover:underline">politique de confidentialité</a>{' '}
-        de PASMAL.
+        de SHOPCA.
       </Checkbox>
       <Checkbox checked={rgpd} onChange={setRgpd} error={errors.rgpd}>
         Je consens au traitement de mes données professionnelles conformément au{' '}
         <a href="#" onClick={e => e.stopPropagation()} className="text-orange-600 font-semibold hover:underline">RGPD</a>{' '}
-        aux fins de la gestion de mon compte professionnel PASMAL.
+        aux fins de la gestion de mon compte professionnel SHOPCA.
       </Checkbox>
     </div>
   )
@@ -698,7 +698,7 @@ function SuccessOverlay({ email, isPro }) {
 
         <motion.h2 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }}
           className="text-[26px] font-extrabold text-[#0F172A] mb-3">
-          {isPro ? 'Dossier soumis !' : 'Bienvenue sur PASMAL !'}
+          {isPro ? 'Dossier soumis !' : 'Bienvenue sur SHOPCA !'}
         </motion.h2>
 
         <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.38 }}
@@ -1179,7 +1179,7 @@ export default function RegisterPage() {
         // If user opted in for premium alerts, attempt Stripe Checkout
         if (tab === 'personal' && emailOptIn && result.session) {
           try {
-            localStorage.setItem('pasmal_premium_pending', 'true')
+            localStorage.setItem('shopca_premium_pending', 'true')
             await startPremiumAlertsCheckout()
             return // Stripe will redirect — don't show success overlay
           } catch (stripeErr) {
@@ -1228,7 +1228,7 @@ export default function RegisterPage() {
 
             <div className="mb-7">
               <h2 className="text-2xl font-extrabold text-[#0F172A] leading-tight">Créer un compte</h2>
-              <p className="text-slate-500 text-sm mt-1">Rejoignez des milliers de clients qui font confiance à PASMAL.</p>
+              <p className="text-slate-500 text-sm mt-1">Rejoignez des milliers de clients qui font confiance à SHOPCA.</p>
             </div>
 
             {/* Tab switcher */}

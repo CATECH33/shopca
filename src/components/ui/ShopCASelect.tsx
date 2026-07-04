@@ -1,15 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react'
+﻿import React, { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 
-export interface PasmalOption {
+export interface ShopCAOption {
   value: string
   label: string
 }
 
-interface PasmalSelectProps {
+interface ShopCASelectProps {
   value: string
   onChange: (value: string) => void
-  options: (PasmalOption | string)[]
+  options: (ShopCAOption | string)[]
   placeholder?: string
   icon?: React.ReactNode
   /** Auto-activé si options.length > 4 */
@@ -26,7 +26,7 @@ interface PasmalSelectProps {
   triggerClassName?: string
 }
 
-function norm(o: PasmalOption | string): PasmalOption {
+function norm(o: ShopCAOption | string): ShopCAOption {
   return typeof o === 'string' ? { value: o, label: o } : o
 }
 
@@ -50,7 +50,7 @@ const SIZES = {
   xs:      { h: 36, r: 10, fs: 12, px: 10, gap: 6  },
 }
 
-export function PasmalSelect({
+export function ShopCASelect({
   value,
   onChange,
   options,
@@ -64,7 +64,7 @@ export function PasmalSelect({
   error = false,
   className = '',
   triggerClassName = '',
-}: PasmalSelectProps) {
+}: ShopCASelectProps) {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [hi, setHi] = useState(0)
@@ -310,4 +310,4 @@ export function PasmalSelect({
   )
 }
 
-export default PasmalSelect
+export default ShopCASelect

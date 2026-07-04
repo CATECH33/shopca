@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+﻿import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { I } from '../../../lib/ui.jsx'
 import { supabase } from '../../../lib/supabase.js'
@@ -115,7 +115,7 @@ export default function AdminInsights({ dark }) {
           <I.Sparkles size={18} className="text-white" />
         </div>
         <div>
-          <p className={`text-sm font-extrabold ${tx}`}>Insights IA PASMAL</p>
+          <p className={`text-sm font-extrabold ${tx}`}>Insights IA SHOPCA</p>
           <p className={`text-xs ${sx}`}>Analyse statistique en temps réel de la plateforme · Mise à jour à chaque visite</p>
         </div>
       </div>

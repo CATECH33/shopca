@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+﻿import React, { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { MapContainer, TileLayer, CircleMarker, Tooltip } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -85,7 +85,7 @@ export default function Heatmap() {
           backdrop-filter: blur(8px);
         }
         .leaflet-control-zoom a:hover { background: ${dark ? 'rgba(255,255,255,0.15)' : '#F1F5F9'} !important; }
-        .pasmal-tip {
+        .shopca-tip {
           background: ${dark ? '#0B1F3A' : '#FFFFFF'} !important;
           color: ${dark ? '#FFFFFF' : '#0B1F3A'} !important;
           border: 1px solid ${dark ? 'rgba(255,255,255,0.12)' : '#E2E8F0'} !important;
@@ -93,7 +93,7 @@ export default function Heatmap() {
           padding: 10px 12px !important;
           box-shadow: 0 20px 50px rgba(11,31,58,0.15) !important;
         }
-        .pasmal-tip::before { display: none !important; }
+        .shopca-tip::before { display: none !important; }
       `}</style>
 
       {/* Header */}
@@ -174,7 +174,7 @@ export default function Heatmap() {
                         fillColor: color, fillOpacity: 0.85,
                       }}
                     >
-                      <Tooltip direction="top" offset={[0, -8]} opacity={1} className="pasmal-tip" sticky>
+                      <Tooltip direction="top" offset={[0, -8]} opacity={1} className="shopca-tip" sticky>
                         <CityTip city={c} />
                       </Tooltip>
                     </CircleMarker>

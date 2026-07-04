@@ -1,4 +1,4 @@
-export const unsplash = (id, w = 900) =>
+﻿export const unsplash = (id, w = 900) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`
 
 export const FALLBACK = [
@@ -16,7 +16,7 @@ export const FALLBACK = [
   { id:'f12', title:'Penthouse terrasse panorama',   location:'Paris 16ᵉ · Trocadéro',   price:2800000, rooms:5, surface:180, type:'acheter', property_type:'Appartement', is_prestige:true,  image_url:unsplash('photo-1512917774080-9991f1c4c750') },
 ]
 
-export const AGENCIES = ['Foncia Premium','Century 21 Élite','PASMAL Verified','Sotheby\'s Realty','BARNES','Engel & Völkers']
+export const AGENCIES = ['Foncia Premium','Century 21 Élite','SHOPCA Verified','Sotheby\'s Realty','BARNES','Engel & Völkers']
 export const DPE_COLORS = { A:'#00A651',B:'#51B948',C:'#BECE00',D:'#FECB00',E:'#FB7A08',F:'#EE3424',G:'#C50D13' }
 export const PROPERTY_TYPES = ['Appartement','Maison','Studio','T2','T3','Villa','Colocation','Commerce']
 

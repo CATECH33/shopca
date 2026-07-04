@@ -1,8 +1,8 @@
-import React, { useMemo, useState } from 'react'
+﻿import React, { useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, Counter, Button, Avatar, Badge } from '../lib/ui.jsx'
-import { PasmalSelect } from '../components/ui/PasmalSelect'
-import { PasmalCheckbox } from '../components/ui/PasmalCheckbox'
+import { ShopCASelect } from '../components/ui/ShopCASelect'
+import { ShopCACheckbox } from '../components/ui/ShopCACheckbox'
 
 /* ============================================================
    Super Admin — Users Management
@@ -23,7 +23,7 @@ const USERS = [
   { id: 'usr_009', name: 'Élodie Garnier',   email: 'elodie@protonmail.com',      role: 'particulier', subscription: 'visibility', status: 'active',    trust_score: 71, listings: 2,  created_at: '2026-03-11', last_active: 'il y a 1j',     phone_verified: true,  kyc: false, avatar: null },
   { id: 'usr_010', name: 'fast_seller_22',   email: 'cryptouser22@protonmail.com',role: 'particulier', subscription: 'free',        status: 'suspended', trust_score: 12, listings: 4,  created_at: '2026-05-08', last_active: 'il y a 6j',     phone_verified: false, kyc: false, avatar: null },
   { id: 'usr_011', name: 'inconnu_492',      email: 'inc492@yahoo.fr',            role: 'particulier', subscription: 'free',        status: 'suspended', trust_score: 18, listings: 2,  created_at: '2026-05-16', last_active: 'il y a 12h',    phone_verified: false, kyc: false, avatar: null },
-  { id: 'usr_012', name: 'Jean Kevin PEMOU', email: 'admin@pasmal.fr',             role: 'admin',       subscription: 'enterprise',  status: 'active',    trust_score: 100,listings: 0,  created_at: '2024-01-15', last_active: 'maintenant',    phone_verified: true,  kyc: true,  avatar: null },
+  { id: 'usr_012', name: 'Jean Kevin PEMOU', email: 'admin@shopca.fr',             role: 'admin',       subscription: 'enterprise',  status: 'active',    trust_score: 100,listings: 0,  created_at: '2024-01-15', last_active: 'maintenant',    phone_verified: true,  kyc: true,  avatar: null },
   { id: 'usr_013', name: 'Marc Dubois',      email: 'marc.dubois@gmail.com',       role: 'particulier', subscription: 'visibility', status: 'active',    trust_score: 82, listings: 4,  created_at: '2025-10-04', last_active: 'il y a 6h',     phone_verified: true,  kyc: true,  avatar: null },
   { id: 'usr_014', name: 'Léa Bernard',      email: 'lea.bernard@gmail.com',       role: 'particulier', subscription: 'premium',    status: 'active',    trust_score: 89, listings: 2,  created_at: '2025-12-20', last_active: 'il y a 30 min', phone_verified: true,  kyc: true,  avatar: null },
 ]
@@ -213,7 +213,7 @@ export default function AdminUsers() {
             <thead className="bg-current/[0.04] text-[10px] font-bold uppercase tracking-wider opacity-60">
               <tr>
                 <th className="w-10 pl-4 py-3">
-                  <PasmalCheckbox checked={allChecked} indeterminate={!allChecked && someChecked} onChange={toggleAll} dark />
+                  <ShopCACheckbox checked={allChecked} indeterminate={!allChecked && someChecked} onChange={toggleAll} dark />
                 </th>
                 <th className="text-left py-3 pr-3">Utilisateur</th>
                 <th className="text-left py-3 pr-3">Rôle</th>
@@ -235,7 +235,7 @@ export default function AdminUsers() {
                   onClick={() => setSelectedUserId(u.id)}
                 >
                   <td className="pl-4 py-3" onClick={(e) => e.stopPropagation()}>
-                    <PasmalCheckbox checked={selected.has(u.id)} onChange={() => toggleOne(u.id)} dark />
+                    <ShopCACheckbox checked={selected.has(u.id)} onChange={() => toggleOne(u.id)} dark />
                   </td>
                   <td className="py-3 pr-3">
                     <div className="flex items-center gap-3 min-w-0">
@@ -334,7 +334,7 @@ function StatTile({ icon: Icon, label, value, tone, pulse }) {
 
 function Select({ value, onChange, options }) {
   return (
-    <PasmalSelect
+    <ShopCASelect
       value={value}
       onChange={onChange}
       options={options.map(o => ({ value: o.id, label: o.label }))}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { I } from '../../../lib/ui.jsx'
 import { supabase } from '../../../lib/supabase.js'
@@ -193,8 +193,8 @@ export default function AdminSeo({ dark }) {
             <I.Globe size={16} className="text-emerald-500 mt-0.5 shrink-0" />
             <div>
               <p className={`text-sm font-semibold ${tx}`}>Sitemap.xml actif</p>
-              <a href="https://pasmal.shop/sitemap.xml" target="_blank" rel="noopener noreferrer"
-                className="text-xs text-orange-500 hover:underline">pasmal.shop/sitemap.xml</a>
+              <a href="https://shopca.fr/sitemap.xml" target="_blank" rel="noopener noreferrer"
+                className="text-xs text-orange-500 hover:underline">shopca.fr/sitemap.xml</a>
             </div>
             <span className="ml-auto text-xs font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">OK</span>
           </div>
@@ -202,15 +202,15 @@ export default function AdminSeo({ dark }) {
             <I.Shield size={16} className="text-emerald-500 mt-0.5 shrink-0" />
             <div>
               <p className={`text-sm font-semibold ${tx}`}>Robots.txt actif</p>
-              <a href="https://pasmal.shop/robots.txt" target="_blank" rel="noopener noreferrer"
-                className="text-xs text-orange-500 hover:underline">pasmal.shop/robots.txt</a>
+              <a href="https://shopca.fr/robots.txt" target="_blank" rel="noopener noreferrer"
+                className="text-xs text-orange-500 hover:underline">shopca.fr/robots.txt</a>
             </div>
             <span className="ml-auto text-xs font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">OK</span>
           </div>
           <div className={`p-4 rounded-xl ${dark ? 'bg-amber-500/10 border border-amber-500/20' : 'bg-amber-50 border border-amber-100'}`}>
             <p className="text-sm font-semibold text-amber-700">Soumettre le sitemap à Google Search Console</p>
             <p className="text-xs text-amber-600 mt-1">
-              Allez sur <strong>search.google.com/search-console</strong> → Votre propriété → Sitemaps → Ajouter un sitemap : <code>https://pasmal.shop/sitemap.xml</code>
+              Allez sur <strong>search.google.com/search-console</strong> → Votre propriété → Sitemaps → Ajouter un sitemap : <code>https://shopca.fr/sitemap.xml</code>
             </p>
           </div>
         </div>

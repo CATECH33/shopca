@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import * as svc from '../services/authService.js'
 import { friendlyAuthError } from '../validators/authValidators.js'
 import { SUPABASE_URL, SUPABASE_IS_PLACEHOLDER } from '../../../lib/supabase.js'
@@ -14,7 +14,7 @@ export function useAuthAction() {
       return await fn()
     } catch (err) {
       // Log complet en console pour debugging
-      console.error('[PASMAL Auth Error]', {
+      console.error('[SHOPCA Auth Error]', {
         message: err?.message,
         status:  err?.status,
         code:    err?.code,

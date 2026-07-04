@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react'
+﻿import React, { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I } from '../lib/ui.jsx'
 import { supabase } from '../lib/supabase.js'
-import { PasmalInput } from '../components/ui/PasmalInput'
+import { ShopCAInput } from '../components/ui/ShopCAInput'
 
 /* ============================================================
-   PASMAL — Smart Alerts System
+   SHOPCA — Smart Alerts System
    - Saved searches with real-time matching
    - Free plan (1 alert, daily) / Smart Alerts (∞, instant)
    - Full Supabase CRUD with RLS
@@ -606,9 +606,9 @@ function AlertCreatorModal({ alert: initial, isPremium, onSave, onClose }) {
               Budget {txType === 'rent' ? '(€/mois)' : '(€)'}
             </label>
             <div className="flex gap-2 items-center">
-              <PasmalInput type="number" size="sm" value={priceMin} onChange={e => setPriceMin(e.target.value)} placeholder="Min" />
+              <ShopCAInput type="number" size="sm" value={priceMin} onChange={e => setPriceMin(e.target.value)} placeholder="Min" />
               <span className="text-slate-400 text-sm font-medium">–</span>
-              <PasmalInput type="number" size="sm" value={priceMax} onChange={e => setPriceMax(e.target.value)} placeholder="Max" />
+              <ShopCAInput type="number" size="sm" value={priceMax} onChange={e => setPriceMax(e.target.value)} placeholder="Max" />
             </div>
           </div>
 
@@ -628,14 +628,14 @@ function AlertCreatorModal({ alert: initial, isPremium, onSave, onClose }) {
           {/* Surface */}
           <div>
             <label className="block text-xs font-semibold text-slate-500 mb-1.5">Surface minimum (m²)</label>
-            <PasmalInput type="number" size="sm" min="1" value={surfaceMin} onChange={e => setSurfaceMin(e.target.value)} placeholder="Ex: 40"
+            <ShopCAInput type="number" size="sm" min="1" value={surfaceMin} onChange={e => setSurfaceMin(e.target.value)} placeholder="Ex: 40"
               iconRight={surfaceMin ? <span className="text-xs text-slate-400">m²</span> : undefined} />
           </div>
 
           {/* Keywords */}
           <div>
             <label className="block text-xs font-semibold text-slate-500 mb-1.5">Mots-clés</label>
-            <PasmalInput size="sm" value={keywords} onChange={e => setKeywords(e.target.value)} placeholder="terrasse, parking, jardin…" />
+            <ShopCAInput size="sm" value={keywords} onChange={e => setKeywords(e.target.value)} placeholder="terrasse, parking, jardin…" />
             <p className="text-[10px] text-slate-400 mt-1">Séparés par des virgules. La recherche est insensible à la casse.</p>
           </div>
 

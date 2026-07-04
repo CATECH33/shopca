@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+﻿import React, { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I } from '../../../lib/ui.jsx'
 import { useAuth } from '../../../features/auth/providers/AuthProvider.jsx'
@@ -27,7 +27,7 @@ export default function AdminNotifications({ dark }) {
   const [events,    setEvents]    = useState([])
   const [loading,   setLoading]   = useState(true)
   const [readIds,   setReadIds]   = useState(() => {
-    try { return new Set(JSON.parse(localStorage.getItem('pasmal_read_notifs') ?? '[]')) }
+    try { return new Set(JSON.parse(localStorage.getItem('shopca_read_notifs') ?? '[]')) }
     catch { return new Set() }
   })
   const [tab,        setTab]       = useState('platform')
@@ -38,7 +38,7 @@ export default function AdminNotifications({ dark }) {
     setReadIds(prev => {
       const next = new Set(prev)
       next.add(id)
-      localStorage.setItem('pasmal_read_notifs', JSON.stringify([...next]))
+      localStorage.setItem('shopca_read_notifs', JSON.stringify([...next]))
       return next
     })
   }
@@ -47,7 +47,7 @@ export default function AdminNotifications({ dark }) {
     const allIds = [...notifs.map(n => n.id), ...events.map(e => e.id)]
     setReadIds(prev => {
       const next = new Set([...prev, ...allIds])
-      localStorage.setItem('pasmal_read_notifs', JSON.stringify([...next]))
+      localStorage.setItem('shopca_read_notifs', JSON.stringify([...next]))
       return next
     })
   }

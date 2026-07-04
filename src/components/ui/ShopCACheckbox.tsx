@@ -1,4 +1,4 @@
-import React, { useId } from 'react'
+﻿import React, { useId } from 'react'
 
 /* ── CSS injection (once) ───────────────────────────────────── */
 const CSS = `
@@ -15,7 +15,7 @@ function injectCss() {
 }
 
 /* ── Types ──────────────────────────────────────────────────── */
-export interface PasmalCheckboxProps {
+export interface ShopCACheckboxProps {
   checked?:        boolean
   defaultChecked?: boolean
   indeterminate?:  boolean
@@ -31,7 +31,7 @@ export interface PasmalCheckboxProps {
 }
 
 /* ── Component ──────────────────────────────────────────────── */
-export function PasmalCheckbox({
+export function ShopCACheckbox({
   checked,
   defaultChecked,
   indeterminate = false,
@@ -44,7 +44,7 @@ export function PasmalCheckbox({
   name,
   value,
   className = '',
-}: PasmalCheckboxProps) {
+}: ShopCACheckboxProps) {
   injectCss()
 
   const autoId = useId()

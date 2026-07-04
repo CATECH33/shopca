@@ -13,7 +13,7 @@ import { svc } from './features/auth/hooks/useAuth.js'
 import LoggedInHome          from './components/LoggedInHome.jsx'
 import PersonalDashboard     from './components/PersonalDashboard.jsx'
 import ProfessionalDashboard from './components/ProfessionalDashboard.jsx'
-import { PasmalSelect } from './components/ui/PasmalSelect'
+import { ShopCASelect } from './components/ui/ShopCASelect'
 import { CitySearch } from './components/ui/CitySearch'
 
 /* ============================================================================
@@ -96,7 +96,7 @@ function BrandLogo({ compact = false, dark = false }) {
   const orange = '#FB923C'
   return (
     <div className="flex items-center gap-2.5 select-none">
-      <svg width="44" height="44" viewBox="0 0 48 48" fill="none" aria-label="PASMAL">
+      <svg width="44" height="44" viewBox="0 0 48 48" fill="none" aria-label="SHOPCA">
         {/* House body */}
         <path
           d="M8 22 L24 8 L40 22 V40 a2 2 0 0 1-2 2 H10 a2 2 0 0 1-2-2 Z"
@@ -160,7 +160,7 @@ const CATEGORIES = [
   { label: 'Investissement', icon: Icons.TrendingUp, value: 'Investissement' },
 ]
 
-const AGENCIES = ['Foncia Premium', 'Century 21 Élite', 'PASMAL Verified', 'Sotheby\'s Realty', 'BARNES', 'Engel & Völkers']
+const AGENCIES = ['Foncia Premium', 'Century 21 Élite', 'SHOPCA Verified', 'Sotheby\'s Realty', 'BARNES', 'Engel & Völkers']
 
 const enrichWithMeta = (l, idx = 0) => {
   const seed = (typeof l.id === 'string' ? (l.id.charCodeAt(1) || idx + 1) : idx + 1)
@@ -189,7 +189,7 @@ const PLANS = [
     price: '0',
     period: '€',
     duration: '7 jours en ligne',
-    desc: 'Pour publier sans engagement et tester PASMAL.',
+    desc: 'Pour publier sans engagement et tester SHOPCA.',
     features: [
       '3 photos par annonce',
       'Visibilité standard',
@@ -299,7 +299,7 @@ const HOW_IT_WORKS_TABS = [
     id: 'acheteur', label: 'Acheteur', icon: Icons.Home, badge: '12 480 biens',
     steps: [
       { icon: Icons.Search,      title: 'Cherchez & filtrez',   desc: 'Accédez à + de 12 000 annonces vérifiées. Filtres avancés : surface, prix, DPE, quartier.' },
-      { icon: Icons.Eye,         title: 'Visitez en confiance', desc: 'Chaque annonce est certifiée PASMAL Trust. Visite virtuelle 3D disponible sur tous les biens Premium.' },
+      { icon: Icons.Eye,         title: 'Visitez en confiance', desc: 'Chaque annonce est certifiée SHOPCA Trust. Visite virtuelle 3D disponible sur tous les biens Premium.' },
       { icon: Icons.CheckCircle, title: 'Signez sereinement',   desc: 'Accompagnement juridique offert. De la promesse de vente à l\'acte authentique chez le notaire.' },
     ],
   },
@@ -643,7 +643,7 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
         </div>
         <div className="md:col-span-2">
           <Field icon={Icons.Home} label="Type" divider>
-            <PasmalSelect
+            <ShopCASelect
               value={filters.propertyType}
               onChange={v => setFilters({ ...filters, propertyType: v })}
               options={[
@@ -1025,7 +1025,7 @@ function HowItWorks() {
             Simple, rapide, sécurisé
           </h2>
           <p className="text-slate-500 mt-3 max-w-xl mx-auto">
-            Que vous achetiez, vendiez ou investissiez — PASMAL vous guide à chaque étape.
+            Que vous achetiez, vendiez ou investissiez — SHOPCA vous guide à chaque étape.
           </p>
         </div>
 
@@ -1251,12 +1251,12 @@ function EarlyAccessTeaser() {
 /* ============================================================================
    Why / Pricing / Testimonials / CTA / Footer
    ============================================================================ */
-function WhyPasmal() {
+function WhyShopCA() {
   return (
     <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <div className="text-orange-600 font-semibold text-sm tracking-wider uppercase mb-2">Pourquoi PASMAL</div>
+          <div className="text-orange-600 font-semibold text-sm tracking-wider uppercase mb-2">Pourquoi SHOPCA</div>
           <h2 className="text-3xl md:text-4xl font-extrabold text-navy-900 tracking-tight">Une expérience pensée pour vous</h2>
           <p className="text-slate-600 mt-4">Trois engagements simples qui font la différence entre une plateforme et une expérience premium.</p>
         </div>
@@ -1812,7 +1812,7 @@ function CTA({ onPublish }) {
           <div className="relative grid md:grid-cols-2 gap-10 items-center">
             <div>
               <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">Prêt à publier votre annonce ?</h2>
-              <p className="mt-4 text-white/80 max-w-md">Rejoignez plus de 18 000 propriétaires qui font confiance à PASMAL pour vendre ou louer leur bien.</p>
+              <p className="mt-4 text-white/80 max-w-md">Rejoignez plus de 18 000 propriétaires qui font confiance à SHOPCA pour vendre ou louer leur bien.</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 md:justify-end">
               <button onClick={onPublish} className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-7 py-3.5 rounded-full transition-all hover:-translate-y-0.5 hover:shadow-cardHover">Déposer une annonce</button>
@@ -1836,7 +1836,7 @@ function NewsletterForm() {
   }
   return (
     <form onSubmit={submit} className="mt-5">
-      <div className="text-white font-semibold text-sm mb-2">Newsletter PASMAL</div>
+      <div className="text-white font-semibold text-sm mb-2">Newsletter SHOPCA</div>
       <div className="text-white/60 text-xs mb-3">Les meilleures opportunités, chaque jeudi dans votre boîte.</div>
       <div className="flex items-center gap-2 bg-white/10 border border-white/15 rounded-full p-1 pl-4 focus-within:border-orange-500 transition-colors">
         <Icons.Mail size={14} className="text-white/70" />
@@ -1901,7 +1901,7 @@ function Footer({ setCurrentView }) {
           ))}
         </div>
         <div className="mt-12 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-white/55">
-          <div>© {new Date().getFullYear()} PASMAL — Le Marché Immobilier Premium. Tous droits réservés.</div>
+          <div>© {new Date().getFullYear()} SHOPCA — Le Marché Immobilier Premium. Tous droits réservés.</div>
           <div className="flex items-center gap-5">
             <a href="#" className="hover:text-white">Plan du site</a>
             <a href="#" className="hover:text-white">Contact</a>
@@ -2036,7 +2036,7 @@ function ProfilView({ user, onPublish }) {
     { id: 'phone',    label: 'Téléphone',          icon: Icons.Phone,          done: !!editPhone, desc: 'Numéro confirmé' },
     { id: 'identity', label: 'Identité',           icon: Icons.IdCard,         done: false,       desc: 'Pièce d\'identité' },
     { id: 'active',   label: 'Membre actif',       icon: Icons.BadgeCheck,     done: true,        desc: 'Compte en règle' },
-    { id: 'seller',   label: 'Certifié PASMAL',    icon: Icons.ShieldCheckBig, done: false,       desc: 'Validation équipe' },
+    { id: 'seller',   label: 'Certifié SHOPCA',    icon: Icons.ShieldCheckBig, done: false,       desc: 'Validation équipe' },
   ]
   const trustScore = Math.round((TRUST_BADGES.filter(b => b.done).length / TRUST_BADGES.length) * 100)
 
@@ -2420,7 +2420,7 @@ function ProfilView({ user, onPublish }) {
                   { key: 'newListings', label: 'Nouvelles annonces',    desc: 'Soyez alerté en temps réel quand un bien correspond à vos critères.', channel: 'E-mail' },
                   { key: 'priceDrops',  label: 'Baisses de prix',        desc: "Recevez une notification quand le prix d'un de vos favoris baisse.", channel: 'Push' },
                   { key: 'messages',    label: 'Nouveaux messages',      desc: "Notifications quand un propriétaire ou acheteur vous répond.", channel: 'E-mail + SMS' },
-                  { key: 'offers',      label: 'Offres et promotions',   desc: 'Recevez les offres exclusives et nouveautés PASMAL.', channel: 'E-mail' },
+                  { key: 'offers',      label: 'Offres et promotions',   desc: 'Recevez les offres exclusives et nouveautés SHOPCA.', channel: 'E-mail' },
                   { key: 'sms',         label: 'Alertes SMS',            desc: 'Recevez les alertes urgentes par SMS (bien rare, baisse significative).', channel: 'SMS' },
                   { key: 'push',        label: 'Notifications push',     desc: 'Activez les notifications dans votre navigateur.', channel: 'Push' },
                 ].map(s => (
@@ -2805,7 +2805,7 @@ const REVIEW_STATE = {
 }
 
 const BENEFITS = [
-  { id: 'badge',      Icon: Icons.BadgeCheck,      label: 'Badge vérifié',        desc: 'Un sceau officiel PASMAL affiché sur chaque annonce.',         minStatus: 'verified' },
+  { id: 'badge',      Icon: Icons.BadgeCheck,      label: 'Badge vérifié',        desc: 'Un sceau officiel SHOPCA affiché sur chaque annonce.',         minStatus: 'verified' },
   { id: 'seo',        Icon: Icons.TrendingUp,       label: 'Boost SEO',            desc: 'Vos annonces remontent en tête des résultats de recherche.',    minStatus: 'verified' },
   { id: 'visibility', Icon: Icons.Eye,              label: 'Meilleure visibilité', desc: 'Exposition prioritaire dans notre newsletter et les alertes.',   minStatus: 'verified' },
   { id: 'crm',        Icon: Icons.Users,            label: 'Accès CRM premium',    desc: 'Gérez tous vos contacts, leads et suivis depuis un seul outil.', minStatus: 'premium'  },
@@ -2902,7 +2902,7 @@ const SELLER_VER_BENEFITS = [
   { icon: Icons.BadgeCheck,     color: '#10b981', label: 'Badge certifié',          desc: 'Visible sur toutes vos annonces et votre profil.' },
   { icon: Icons.TrendingUp,     color: '#f97316', label: '3× plus de contacts',     desc: 'Les acheteurs font davantage confiance aux vendeurs vérifiés.' },
   { icon: Icons.Shield,         color: '#6366f1', label: 'Annonces prioritaires',   desc: 'Remontée automatique dans les résultats de recherche.' },
-  { icon: Icons.ShieldCheckBig, color: '#0ea5e9', label: 'Transaction sécurisée',   desc: 'Accès à l\'escrow PASMAL et aux outils de signature.' },
+  { icon: Icons.ShieldCheckBig, color: '#0ea5e9', label: 'Transaction sécurisée',   desc: 'Accès à l\'escrow SHOPCA et aux outils de signature.' },
 ]
 
 const DOC_TYPES = [
@@ -3011,7 +3011,7 @@ function OnboardingView({ user, setCurrentView, setFilters }) {
                 </motion.h1>
                 <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
                   className="text-slate-500 max-w-sm mx-auto">
-                  En 2 minutes, personnalisez PASMAL pour trouver exactement ce que vous cherchez.
+                  En 2 minutes, personnalisez SHOPCA pour trouver exactement ce que vous cherchez.
                 </motion.p>
               </div>
               <div className="grid grid-cols-1 gap-3 mb-8">
@@ -3390,7 +3390,7 @@ function SellerVerificationView({ setCurrentView }) {
                   <Icons.BadgeCheck size={30} className="text-white" />
                 </div>
                 <h1 className="text-2xl font-extrabold text-[#0B1F3A] mb-2">Devenez vendeur certifié</h1>
-                <p className="text-slate-500 max-w-md mx-auto">Vérifiez votre identité en 2 minutes et obtenez le badge de confiance PASMAL — visible par 2,4 M d'acheteurs.</p>
+                <p className="text-slate-500 max-w-md mx-auto">Vérifiez votre identité en 2 minutes et obtenez le badge de confiance SHOPCA — visible par 2,4 M d'acheteurs.</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
@@ -3584,7 +3584,7 @@ function SellerVerificationView({ setCurrentView }) {
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
                 <div className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full mb-4">
-                  <Icons.Check size={12} /> Vendeur certifié PASMAL
+                  <Icons.Check size={12} /> Vendeur certifié SHOPCA
                 </div>
                 <h2 className="text-2xl font-extrabold text-[#0B1F3A] mb-3">Félicitations, votre badge est actif !</h2>
                 <p className="text-slate-500 mb-8 max-w-sm mx-auto">Votre identité a été vérifiée. Le badge certifié apparaît désormais sur toutes vos annonces et votre profil.</p>
@@ -3615,7 +3615,7 @@ function SellerVerificationView({ setCurrentView }) {
                       <div className="font-semibold text-sm text-[#0B1F3A] truncate">{user?.user_metadata?.full_name || 'Vendeur particulier'}</div>
                       <div className="flex items-center gap-1 mt-0.5">
                         <Icons.BadgeCheck size={11} className="text-emerald-500" />
-                        <span className="text-[11px] text-emerald-600 font-semibold">Certifié PASMAL</span>
+                        <span className="text-[11px] text-emerald-600 font-semibold">Certifié SHOPCA</span>
                       </div>
                     </div>
                     <div className="text-[10px] font-bold text-emerald-600 bg-emerald-100 px-2 py-1 rounded-full">Vérifié</div>
@@ -3647,7 +3647,7 @@ function SellerVerificationView({ setCurrentView }) {
 
 const ACHAT_STEPS = [
   { icon: Icons.Search,     title: "Definir votre projet",    desc: "Budget, surface, localisation, criteres essentiels — posez les bases pour ne visiter que les biens qui vous correspondent vraiment." },
-  { icon: Icons.MapPin,     title: "Rechercher et visiter",   desc: "Activez vos alertes PASMAL et recevez les nouvelles annonces en temps reel. Planifiez vos visites directement depuis l'annonce." },
+  { icon: Icons.MapPin,     title: "Rechercher et visiter",   desc: "Activez vos alertes SHOPCA et recevez les nouvelles annonces en temps reel. Planifiez vos visites directement depuis l'annonce." },
   { icon: Icons.CreditCard, title: "Financer",                desc: "Simulez votre pret, obtenez votre accord de principe et comparez les offres bancaires grace a nos partenaires courtiers agrees." },
   { icon: Icons.CheckCircle,title: "Signer",                  desc: "De l'offre d'achat a l'acte notarie, notre equipe vous accompagne a chaque etape pour securiser votre acquisition en toute serenite." },
 ]
@@ -3765,7 +3765,7 @@ function AcheterView({ listings, loading, error, source, filters, setFilters, on
           <div className="text-center max-w-2xl mx-auto mb-14">
             <div className="text-orange-600 font-semibold text-sm tracking-wider uppercase mb-3">Votre parcours</div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-navy-900 tracking-tight">Acheter, etape par etape</h2>
-            <p className="text-slate-500 mt-3">{"De la recherche a la remise des cles, PASMAL vous accompagne a chaque etape."}</p>
+            <p className="text-slate-500 mt-3">{"De la recherche a la remise des cles, SHOPCA vous accompagne a chaque etape."}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
@@ -3920,7 +3920,7 @@ function AcheterView({ listings, loading, error, source, filters, setFilters, on
       <section className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <div className="text-orange-600 font-semibold text-sm tracking-wider uppercase mb-3">Pourquoi PASMAL</div>
+            <div className="text-orange-600 font-semibold text-sm tracking-wider uppercase mb-3">Pourquoi SHOPCA</div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-navy-900 tracking-tight">Tout pour reussir votre achat</h2>
             <p className="text-slate-500 mt-3">{"Des outils et un accompagnement penses pour les acheteurs exigeants."}</p>
           </div>
@@ -4143,7 +4143,7 @@ function LouerView({ listings, loading, error, source, filters, setFilters, onSe
           <div className="text-center max-w-2xl mx-auto mb-14">
             <div className="text-orange-600 font-semibold text-sm tracking-wider uppercase mb-3">Votre parcours</div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-navy-900 tracking-tight">Louer, etape par etape</h2>
-            <p className="text-slate-500 mt-3">{"De la recherche a la remise des cles, PASMAL vous accompagne a chaque etape."}</p>
+            <p className="text-slate-500 mt-3">{"De la recherche a la remise des cles, SHOPCA vous accompagne a chaque etape."}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
@@ -4326,7 +4326,7 @@ function LouerView({ listings, loading, error, source, filters, setFilters, onSe
       <section className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <div className="text-orange-600 font-semibold text-sm tracking-wider uppercase mb-3">Pourquoi PASMAL</div>
+            <div className="text-orange-600 font-semibold text-sm tracking-wider uppercase mb-3">Pourquoi SHOPCA</div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-navy-900 tracking-tight">Tout pour louer sereinement</h2>
             <p className="text-slate-500 mt-3">{"Des outils et une protection penses pour les locataires exigeants."}</p>
           </div>
@@ -4505,7 +4505,7 @@ function PublierView({ user, onSignIn }) {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <div className="text-orange-600 font-semibold text-sm tracking-wider uppercase mb-3">Pourquoi PASMAL</div>
+            <div className="text-orange-600 font-semibold text-sm tracking-wider uppercase mb-3">Pourquoi SHOPCA</div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-navy-900 tracking-tight">La plateforme des proprietaires exigeants</h2>
             <p className="text-slate-500 mt-3">{"Des outils qui vendent, une audience qui convertit."}</p>
           </div>
@@ -5149,15 +5149,15 @@ const ADMIN_MODULES = [
 ]
 
 const ADMIN_ACTIVITY = [
-  { actor: 'PASMAL Trust', action: "a bloque l'annonce",  target: 'PSM-2418 (Lille)',    icon: Icons.Shield,     tone: 'rose',    time: 'Il y a 3 min' },
+  { actor: 'SHOPCA Trust', action: "a bloque l'annonce",  target: 'PSM-2418 (Lille)',    icon: Icons.Shield,     tone: 'rose',    time: 'Il y a 3 min' },
   { actor: 'Camille L.',   action: 'a contacte',          target: 'Studio Bastille',     icon: Icons.Mail,       tone: 'orange',  time: 'Il y a 8 min' },
   { actor: 'BARNES Lyon',  action: 'a soumis son Kbis',   target: 'Dossier #PSM-AG-204', icon: Icons.FileText,   tone: 'indigo',  time: 'Il y a 14 min' },
   { actor: 'Stripe',       action: 'a encaisse',          target: '+4 870 € Visibilite', icon: Icons.CreditCard, tone: 'emerald', time: 'Il y a 22 min' },
-  { actor: 'PASMAL IA',    action: 'a detecte un doublon',target: '94% avec PSM-2401',   icon: Icons.Sparkles,   tone: 'rose',    time: 'Il y a 1h' },
+  { actor: 'SHOPCA IA',    action: 'a detecte un doublon',target: '94% avec PSM-2401',   icon: Icons.Sparkles,   tone: 'rose',    time: 'Il y a 1h' },
 ]
 
 const ADMIN_PLATFORM_STATUS = [
-  { label: 'API PASMAL',   uptime: '99.98%' },
+  { label: 'API SHOPCA',   uptime: '99.98%' },
   { label: 'Supabase DB',  uptime: '100%'   },
   { label: 'Stripe',       uptime: '99.95%' },
   { label: 'CDN / Images', uptime: '100%'   },
@@ -5956,7 +5956,7 @@ export default function App() {
 
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
     if (!supabaseUrl || supabaseUrl.includes('placeholder')) {
-      if (import.meta.env.DEV) console.error('[PASMAL] VITE_SUPABASE_URL manquant ou invalide — vérifier les variables d\'environnement Vercel/Vite.')
+      if (import.meta.env.DEV) console.error('[SHOPCA] VITE_SUPABASE_URL manquant ou invalide — vérifier les variables d\'environnement Vercel/Vite.')
       const filtered = applyClientFilters(FALLBACK_LISTINGS, currentFilters)
       setListings(filtered.length ? filtered : FALLBACK_LISTINGS)
       setSource('fallback')
@@ -5987,9 +5987,9 @@ export default function App() {
       const isCors = err?.message?.includes('CORS') || err?.message?.includes('NetworkError when attempting to fetch resource')
 
       let devHint = ''
-      if (isNetworkDown) devHint = `[PASMAL] Réseau inaccessible — URL: ${import.meta.env.VITE_SUPABASE_URL}`
-      else if (isCors) devHint = `[PASMAL] Erreur CORS — vérifier les origines dans Supabase Auth > URL Configuration`
-      else devHint = `[PASMAL] Erreur Supabase: ${err?.message}`
+      if (isNetworkDown) devHint = `[SHOPCA] Réseau inaccessible — URL: ${import.meta.env.VITE_SUPABASE_URL}`
+      else if (isCors) devHint = `[SHOPCA] Erreur CORS — vérifier les origines dans Supabase Auth > URL Configuration`
+      else devHint = `[SHOPCA] Erreur Supabase: ${err?.message}`
       if (import.meta.env.DEV) console.error(devHint, err)
 
       setError(err?.message || 'Erreur réseau')
@@ -6112,7 +6112,7 @@ export default function App() {
             <Listings listings={listings} loading={loading} error={error} source={source} />
             <HomeCities onSearch={handleSearch} />
             <EarlyAccessTeaser />
-            <WhyPasmal />
+            <WhyShopCA />
             <TrustSection />
             <Pricing />
             <AgencyPricing />
@@ -6696,7 +6696,7 @@ function SearchResultsPage({ listings, loading, error, source, filters, setFilte
 
               <div className="flex items-center gap-2 mr-auto">
                 <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Trier</span>
-                <PasmalSelect
+                <ShopCASelect
                   value={sortBy}
                   onChange={setSortBy}
                   options={[
@@ -7197,7 +7197,7 @@ function PropertyDetailPage({ listing: raw, idx = 0, onBack, onOpenListing, simi
                   </div>
                   <div style={{ width:12, height:12, background:'#F97316', transform:'rotate(45deg)', margin:'-6px auto 0' }} />
                 </div>
-                <div className="absolute bottom-2 right-3 text-white/25" style={{ fontSize:10 }}>© PASMAL Maps</div>
+                <div className="absolute bottom-2 right-3 text-white/25" style={{ fontSize:10 }}>© SHOPCA Maps</div>
               </div>
 
               {/* Scores */}
@@ -7399,7 +7399,7 @@ function PropertyDetailPage({ listing: raw, idx = 0, onBack, onOpenListing, simi
                     <Icons.User size={18} className="text-orange-600" />
                   </div>
                   <div>
-                    <div className="font-semibold text-navy-900 text-sm">Agence PASMAL</div>
+                    <div className="font-semibold text-navy-900 text-sm">Agence SHOPCA</div>
                     <div className="text-xs text-slate-400">{l.agency}</div>
                   </div>
                 </div>
@@ -7857,7 +7857,7 @@ function MonEspaceView({ setCurrentView }) {
             <Icons.Home size={16} className="text-white" />
           </div>
           <div>
-            <div className="text-sm font-extrabold text-white tracking-wide">PASMAL</div>
+            <div className="text-sm font-extrabold text-white tracking-wide">SHOPCA</div>
             <div className="text-[9px] text-slate-500 font-semibold uppercase tracking-widest">Premium Estate</div>
           </div>
         </div>
@@ -7941,7 +7941,7 @@ function MonEspaceView({ setCurrentView }) {
                 <div>
                   <p className="text-[11px] font-bold text-orange-500 uppercase tracking-widest mb-1">Mon Espace</p>
                   <h1 className="text-3xl font-extrabold text-white">Bonjour ðŸ‘‹</h1>
-                  <p className="text-slate-400 text-sm mt-1">Voici ce qui se passe sur votre espace PASMAL.</p>
+                  <p className="text-slate-400 text-sm mt-1">Voici ce qui se passe sur votre espace SHOPCA.</p>
                 </div>
                 <button className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm px-5 py-2.5 rounded-2xl transition-all shadow-sm flex-shrink-0">
                   <Icons.PlusSquare size={14} /> Nouvelle alerte
@@ -8735,7 +8735,7 @@ function CrmView({ setCurrentView }) {
                     {/* Source */}
                     <div>
                       <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color:sub }}>Source</label>
-                      <PasmalSelect
+                      <ShopCASelect
                         value={newForm.src}
                         onChange={v => setNewForm(f => ({ ...f, src: v }))}
                         options={["SeLoger","Leboncoin","PAP","Bien'ici","Instagram","Recommandation","Autre"]}

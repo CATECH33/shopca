@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, BrandLogo } from '../../lib/ui'
@@ -418,7 +418,7 @@ export default function FormsPage() {
                 <h3 className="text-sm font-bold mb-4" style={{ color:txt }}>Intégrations</h3>
                 <div className="space-y-3">
                   {[
-                    { label:'CRM PASMAL',   connected:true,  color:'#F97316' },
+                    { label:'CRM SHOPCA',   connected:true,  color:'#F97316' },
                     { label:'Mailchimp',    connected:false, color:'#FFE01B' },
                     { label:'HubSpot',      connected:false, color:'#FF7A59' },
                     { label:'Zapier',       connected:false, color:'#FF4F00' },
@@ -635,7 +635,7 @@ export default function FormsPage() {
                   <div className="flex gap-2">
                     <div className="flex-1 flex items-center px-3 h-9 rounded-xl text-xs truncate"
                       style={{ background:dark?'#0f172a':'#f1f5f9', color:sub }}>
-                      https://pasmal.fr/f/{selected.id}
+                      https://shopca.fr/f/{selected.id}
                     </div>
                     <button onClick={() => copyLink(selected.id)}
                       className="flex items-center gap-1.5 px-3 h-9 rounded-xl text-xs font-semibold transition-all"

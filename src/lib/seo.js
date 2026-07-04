@@ -1,4 +1,4 @@
-// ── Données villes ────────────────────────────────────────────────────────────
+﻿// ── Données villes ────────────────────────────────────────────────────────────
 export const VILLES = [
   { slug: 'paris',              nom: 'Paris',              region: 'Île-de-France',             dept: '75', pop: 2161000 },
   { slug: 'lyon',               nom: 'Lyon',               region: 'Auvergne-Rhône-Alpes',      dept: '69', pop: 522000  },
@@ -45,7 +45,7 @@ export const TYPES_BIENS = {
 }
 
 // ── SEO helpers ───────────────────────────────────────────────────────────────
-const BASE_URL = 'https://pasmal.shop'
+const BASE_URL = 'https://shopca.fr'
 
 export function canonicalUrl(path) {
   return `${BASE_URL}${path}`
@@ -58,25 +58,25 @@ export function ogImageUrl(path = '/og-default.png') {
 // ── Titres & descriptions dynamiques ─────────────────────────────────────────
 export function seoAcheter(ville) {
   if (!ville) return {
-    title: 'Acheter un bien immobilier en France | PASMAL',
-    description: 'Trouvez votre bien immobilier à acheter en France. Maisons, appartements, terrains. +10 000 annonces vérifiées sur PASMAL.',
+    title: 'Acheter un bien immobilier en France | SHOPCA',
+    description: 'Trouvez votre bien immobilier à acheter en France. Maisons, appartements, terrains. +10 000 annonces vérifiées sur SHOPCA.',
     keywords: 'acheter immobilier France, achat maison France, achat appartement France',
   }
   return {
-    title: `Acheter un bien immobilier à ${ville.nom} (${ville.dept}) | PASMAL`,
-    description: `Découvrez ${ville.nom > 0 ? 'les' : 'les'} annonces immobilières à vendre à ${ville.nom}. Maisons, appartements, terrains en ${ville.region}. Trouvez votre bien idéal sur PASMAL.`,
+    title: `Acheter un bien immobilier à ${ville.nom} (${ville.dept}) | SHOPCA`,
+    description: `Découvrez ${ville.nom > 0 ? 'les' : 'les'} annonces immobilières à vendre à ${ville.nom}. Maisons, appartements, terrains en ${ville.region}. Trouvez votre bien idéal sur SHOPCA.`,
     keywords: `acheter immobilier ${ville.nom}, achat maison ${ville.nom}, achat appartement ${ville.nom}, immobilier ${ville.nom} ${ville.dept}`,
   }
 }
 
 export function seoLouer(ville) {
   if (!ville) return {
-    title: 'Location immobilière en France | PASMAL',
-    description: 'Trouvez votre logement à louer en France. Maisons, appartements meublés et non meublés. +5 000 annonces de location sur PASMAL.',
+    title: 'Location immobilière en France | SHOPCA',
+    description: 'Trouvez votre logement à louer en France. Maisons, appartements meublés et non meublés. +5 000 annonces de location sur SHOPCA.',
     keywords: 'location immobilier France, louer maison France, louer appartement France',
   }
   return {
-    title: `Location immobilière à ${ville.nom} (${ville.dept}) | PASMAL`,
+    title: `Location immobilière à ${ville.nom} (${ville.dept}) | SHOPCA`,
     description: `Toutes les annonces de location à ${ville.nom}. Appartements, maisons, studios à louer en ${ville.region}. Trouvez rapidement votre prochain logement.`,
     keywords: `location ${ville.nom}, louer appartement ${ville.nom}, louer maison ${ville.nom}, location ${ville.dept}`,
   }
@@ -84,13 +84,13 @@ export function seoLouer(ville) {
 
 export function seoAgences(ville) {
   if (!ville) return {
-    title: 'Agences immobilières en France | PASMAL',
-    description: 'Trouvez les meilleures agences immobilières en France. Agences certifiées, notées et vérifiées sur PASMAL.',
+    title: 'Agences immobilières en France | SHOPCA',
+    description: 'Trouvez les meilleures agences immobilières en France. Agences certifiées, notées et vérifiées sur SHOPCA.',
     keywords: 'agence immobilière France, meilleures agences immobilières',
   }
   return {
-    title: `Agences immobilières à ${ville.nom} | PASMAL`,
-    description: `Liste des agences immobilières à ${ville.nom} et ses alentours. Agences certifiées PASMAL en ${ville.region}. Comparez, contactez et trouvez votre partenaire immobilier.`,
+    title: `Agences immobilières à ${ville.nom} | SHOPCA`,
+    description: `Liste des agences immobilières à ${ville.nom} et ses alentours. Agences certifiées SHOPCA en ${ville.region}. Comparez, contactez et trouvez votre partenaire immobilier.`,
     keywords: `agence immobilière ${ville.nom}, agences immo ${ville.nom}, ${ville.nom} immobilier agence`,
   }
 }
@@ -99,10 +99,10 @@ export function seoTypeVille(mode, type, ville) {
   const modeLabel = mode === 'acheter' ? 'Achat' : 'Location'
   const actionLabel = mode === 'acheter' ? 'acheter' : 'louer'
   const bien = TYPES_BIENS[type]
-  if (!bien || !ville) return { title: 'PASMAL Immobilier', description: '', keywords: '' }
+  if (!bien || !ville) return { title: 'SHOPCA Immobilier', description: '', keywords: '' }
   return {
-    title: `${modeLabel} ${bien.labelPluriel} à ${ville.nom} (${ville.dept}) | PASMAL`,
-    description: `${bien.labelPluriel.charAt(0).toUpperCase() + bien.labelPluriel.slice(1)} à ${actionLabel} à ${ville.nom}. ${modeLabel} de ${bien.label} en ${ville.region} — comparez les offres sur PASMAL.`,
+    title: `${modeLabel} ${bien.labelPluriel} à ${ville.nom} (${ville.dept}) | SHOPCA`,
+    description: `${bien.labelPluriel.charAt(0).toUpperCase() + bien.labelPluriel.slice(1)} à ${actionLabel} à ${ville.nom}. ${modeLabel} de ${bien.label} en ${ville.region} — comparez les offres sur SHOPCA.`,
     keywords: `${actionLabel} ${bien.label} ${ville.nom}, ${bien.labelPluriel} ${ville.nom}, ${bien.label} ${mode} ${ville.dept}`,
   }
 }
@@ -125,7 +125,7 @@ export function schemaOrganization() {
   return {
     '@context': 'https://schema.org',
     '@type': 'RealEstateAgent',
-    name: 'PASMAL',
+    name: 'SHOPCA',
     url: BASE_URL,
     logo: `${BASE_URL}/logo.png`,
     description: 'Plateforme immobilière premium en France — achat, location, agences.',

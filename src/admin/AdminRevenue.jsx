@@ -1,11 +1,11 @@
-import React, { useMemo, useState } from 'react'
+﻿import React, { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   AreaChart, Area, BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid,
 } from 'recharts'
 import { I, Counter, Button, Avatar, Badge } from '../lib/ui.jsx'
-import { PasmalCheckbox } from '../components/ui/PasmalCheckbox'
+import { ShopCACheckbox } from '../components/ui/ShopCACheckbox'
 
 /* ============================================================
    Super Admin — Revenue Analytics (Stripe-style)
@@ -101,7 +101,7 @@ export default function AdminRevenue() {
           <p className="opacity-60 mt-1 text-sm">Flux financiers en temps réel — abonnements, boosts, méthodes de paiement.</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <PasmalCheckbox
+          <ShopCACheckbox
             checked={compare}
             onChange={setCompare}
             label="Comparer N-1"

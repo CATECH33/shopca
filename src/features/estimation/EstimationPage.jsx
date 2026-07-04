@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, BrandLogo } from '../../lib/ui.jsx'
@@ -461,7 +461,7 @@ export default function EstimationPage() {
                   <div className="space-y-3 pt-1">
                     <button onClick={() => navigate('/annonces')}
                       className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 rounded-2xl transition-colors flex items-center justify-center gap-2 text-sm">
-                      <I.Plus size={16} /> Voir les annonces PASMAL
+                      <I.Plus size={16} /> Voir les annonces SHOPCA
                     </button>
                     <button onClick={() => navigate('/simulateur')}
                       className="w-full bg-white border-2 border-slate-200 hover:border-orange-300 text-navy-900 font-semibold py-3.5 rounded-2xl transition-colors text-sm flex items-center justify-center gap-2">

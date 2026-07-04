@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I } from '../../lib/ui.jsx'
@@ -18,7 +18,7 @@ const REVIEW_STATE = {
 }
 
 const BENEFITS = [
-  { id: 'badge',      Icon: I.BadgeCheck,  label: 'Badge vérifié',        desc: 'Un sceau officiel PASMAL affiché sur chaque annonce.',         minStatus: 'verified' },
+  { id: 'badge',      Icon: I.BadgeCheck,  label: 'Badge vérifié',        desc: 'Un sceau officiel SHOPCA affiché sur chaque annonce.',         minStatus: 'verified' },
   { id: 'seo',        Icon: I.TrendingUp,  label: 'Boost SEO',            desc: 'Vos annonces remontent en tête des résultats de recherche.',    minStatus: 'verified' },
   { id: 'visibility', Icon: I.Eye,         label: 'Meilleure visibilité', desc: 'Exposition prioritaire dans notre newsletter et les alertes.',   minStatus: 'verified' },
   { id: 'crm',        Icon: I.Users,       label: 'Accès CRM premium',    desc: 'Gérez tous vos contacts, leads et suivis depuis un seul outil.', minStatus: 'premium'  },
@@ -207,7 +207,7 @@ export default function AgencyVerificationPage() {
                       <I.Shield size={28} className="text-slate-400" />
                     </div>
                     <h3 className="font-extrabold text-navy-900 text-lg mb-2">Votre agence n'est pas encore vérifiée</h3>
-                    <p className="text-slate-500 text-sm max-w-md mx-auto mb-6">Soumettez vos documents pour obtenir le badge officiel PASMAL et multiplier vos contacts qualifiés.</p>
+                    <p className="text-slate-500 text-sm max-w-md mx-auto mb-6">Soumettez vos documents pour obtenir le badge officiel SHOPCA et multiplier vos contacts qualifiés.</p>
                     <button onClick={() => navigate('/auth/register/pro')}
                       className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-bold px-7 py-3 rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-lg">
                       Démarrer la vérification <I.ArrowRight size={16} />
@@ -226,7 +226,7 @@ export default function AgencyVerificationPage() {
                         <I.BadgeCheck size={24} className="text-emerald-600" />
                       </div>
                       <div>
-                        <h3 className="font-extrabold text-navy-900 text-base mb-1">Agence vérifiée PASMAL</h3>
+                        <h3 className="font-extrabold text-navy-900 text-base mb-1">Agence vérifiée SHOPCA</h3>
                         <p className="text-slate-500 text-sm mb-3">Votre badge est actif. Vos annonces bénéficient d'une exposition prioritaire auprès de 2,4 M d'acheteurs qualifiés.</p>
                         <div className="flex flex-wrap gap-3">
                           <div className="text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
@@ -256,7 +256,7 @@ export default function AgencyVerificationPage() {
                           <I.Sparkles size={10} /> Premium Partner
                         </div>
                         <h3 className="font-extrabold text-white text-base mb-1">Statut élite actif</h3>
-                        <p className="text-slate-400 text-sm">Vous bénéficiez de tous les avantages PASMAL, d'un CRM intégré et d'un conseiller dédié.</p>
+                        <p className="text-slate-400 text-sm">Vous bénéficiez de tous les avantages SHOPCA, d'un CRM intégré et d'un conseiller dédié.</p>
                       </div>
                     </div>
                   </div>

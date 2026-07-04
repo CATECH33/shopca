@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+﻿import React, { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import SeoHead from '../../components/SeoHead.jsx'
 import SeoLayout, { FaqItem } from './SeoLayout.jsx'
@@ -59,7 +59,7 @@ export default function TypeCityPage({ mode }) {
   const baseUrl     = mode === 'achat' ? '/acheter' : '/louer'
 
   const faq = [
-    { q: `Comment trouver une ${bien.label} à ${mode === 'achat' ? 'acheter' : 'louer'} à ${ville.nom} ?`, a: `Utilisez les filtres PASMAL pour cibler les ${bien.labelPluriel} disponibles à ${ville.nom}. Activez une alerte pour être notifié en temps réel des nouvelles annonces.` },
+    { q: `Comment trouver une ${bien.label} à ${mode === 'achat' ? 'acheter' : 'louer'} à ${ville.nom} ?`, a: `Utilisez les filtres SHOPCA pour cibler les ${bien.labelPluriel} disponibles à ${ville.nom}. Activez une alerte pour être notifié en temps réel des nouvelles annonces.` },
     { q: `Quel budget prévoir pour ${mode === 'achat' ? 'acheter' : 'louer'} une ${bien.label} à ${ville.nom} ?`, a: `Le budget dépend du quartier, de la surface et de l'état du bien. Consultez nos annonces actuelles pour une estimation réaliste du marché à ${ville.nom}.` },
     { q: `Y a-t-il des aides pour ${mode === 'achat' ? 'l\'achat' : 'la location'} d'une ${bien.label} à ${ville.nom} ?`, a: `Oui. Pour l'achat : PTZ (Prêt à Taux Zéro), MaPrimeRénov', ANAH. Pour la location : APL, ALF, ALS selon votre situation. Renseignez-vous auprès de la CAF.` },
   ]

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BrandLogo, I } from '../../../lib/ui.jsx'
@@ -62,7 +62,7 @@ function WelcomeStep({ user, profile }) {
 
       <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.4 }}
         className="text-slate-500 text-sm leading-relaxed max-w-xs mx-auto">
-        Votre compte est prêt. Prenons deux minutes pour personnaliser votre expérience PASMAL.
+        Votre compte est prêt. Prenons deux minutes pour personnaliser votre expérience SHOPCA.
       </motion.p>
     </div>
   )
@@ -285,7 +285,7 @@ export default function OnboardingPage() {
             {isDone ? (
               <button type="button" onClick={() => navigate('/')}
                 className="flex-1 h-12 flex items-center justify-center gap-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm transition shadow-lg shadow-orange-200/60 hover:-translate-y-0.5">
-                Explorer PASMAL <I.ArrowRight size={15} />
+                Explorer SHOPCA <I.ArrowRight size={15} />
               </button>
             ) : step === 2 ? (
               /* Location step: skip option */
@@ -324,7 +324,7 @@ export default function OnboardingPage() {
 
       {/* Footer */}
       <div className="shrink-0 px-8 pb-5 flex items-center justify-between text-xs text-slate-400">
-        <span>© {new Date().getFullYear()} PASMAL</span>
+        <span>© {new Date().getFullYear()} SHOPCA</span>
         {!isDone && (
           <button type="button" onClick={() => navigate('/')} className="hover:text-slate-600 transition">
             Passer l'onboarding

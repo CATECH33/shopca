@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+﻿import React, { useEffect, useRef, useState } from 'react'
 import { motion, useInView, animate } from 'framer-motion'
 
 /* Inline SVG icons (no external lib) */
@@ -86,7 +86,7 @@ export function BrandLogo({ compact = false, dark = false }) {
   const orange = '#FB923C'
   return (
     <div className="flex items-center gap-2.5 select-none">
-      <svg width="38" height="38" viewBox="0 0 48 48" fill="none" aria-label="PASMAL">
+      <svg width="38" height="38" viewBox="0 0 48 48" fill="none" aria-label="SHOPCA">
         <path d="M8 22 L24 8 L40 22 V40 a2 2 0 0 1-2 2 H10 a2 2 0 0 1-2-2 Z" stroke={navy} strokeWidth="2.6" strokeLinejoin="round" fill="white" />
         <path d="M20 42 V30 a4 4 0 0 1 8 0 V42" stroke={navy} strokeWidth="2.2" fill="white" />
         <path d="M12 34 L22 24 L28 30 L40 14" stroke={orange} strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I } from '../lib/ui.jsx'
 import VerificationBadge from './VerificationBadge.jsx'
@@ -6,7 +6,7 @@ import VerificationBadge from './VerificationBadge.jsx'
 /* ─── Constants ───────────────────────────────────────────────── */
 
 const TIMELINE = [
-  { id: 1, label: 'Dossier soumis',       sub: 'Documents reçus par PASMAL'          },
+  { id: 1, label: 'Dossier soumis',       sub: 'Documents reçus par SHOPCA'          },
   { id: 2, label: 'Réception confirmée',  sub: 'Prise en charge par l\'équipe Trust'  },
   { id: 3, label: 'Vérification légale',  sub: 'Contrôle Kbis, identité, registre'   },
   { id: 4, label: 'Validation finale',    sub: 'Comité de conformité'                 },
@@ -31,7 +31,7 @@ const ESTIMATED = {
 const SECURITY_ITEMS = [
   { Icon: I.Lock,      text: 'Documents chiffrés AES-256 en transit et au repos'   },
   { Icon: I.Shield,    text: 'Conformité RGPD · Données jamais revendues'           },
-  { Icon: I.FileText,  text: 'Traitement sécurisé par l\'équipe Trust PASMAL'      },
+  { Icon: I.FileText,  text: 'Traitement sécurisé par l\'équipe Trust SHOPCA'      },
 ]
 
 /* ─── VerificationStatusCard ──────────────────────────────────── */

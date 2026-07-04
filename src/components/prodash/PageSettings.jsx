@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { I } from '../../lib/ui.jsx'
 import { useAuth } from '../../features/auth/providers/AuthProvider.jsx'
@@ -194,7 +194,7 @@ export default function PageSettings({ dark }) {
                 live:  true,
               },
               {
-                label: 'Newsletter PASMAL',
+                label: 'Newsletter SHOPCA',
                 sub:   'Conseils, actualités marché et nouveautés — bientôt disponible',
                 value: false,
                 set:   null,

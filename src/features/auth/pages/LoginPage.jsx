@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BrandLogo, I } from '../../../lib/ui.jsx'
@@ -6,7 +6,7 @@ import { useAuthAction, svc } from '../hooks/useAuth.js'
 import { supabase } from '../../../lib/supabase.js'
 import { useAuth } from '../providers/AuthProvider.jsx'
 import { validateLoginForm } from '../validators/authValidators.js'
-import { PasmalInput } from '../../../components/ui/PasmalInput'
+import { ShopCAInput } from '../../../components/ui/ShopCAInput'
 
 const FEATURES = [
   { Icon: I.Home,       label: 'Annonces illimitées',      sub: 'Publiez sans restriction'          },
@@ -222,7 +222,7 @@ export default function LoginPage() {
             {/* Email + password form */}
             <form onSubmit={submit} className="space-y-4">
               {/* Email */}
-              <PasmalInput
+              <ShopCAInput
                 type="email"
                 label="E-mail"
                 placeholder="vous@exemple.fr"
@@ -240,7 +240,7 @@ export default function LoginPage() {
                     Oublié ?
                   </Link>
                 </div>
-                <PasmalInput
+                <ShopCAInput
                   type="password"
                   placeholder="••••••••"
                   value={password}
@@ -280,7 +280,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <div className="px-8 pb-5 flex items-center justify-between text-xs text-slate-400">
-          <span>© {new Date().getFullYear()} PASMAL</span>
+          <span>© {new Date().getFullYear()} SHOPCA</span>
           <div className="flex gap-4">
             <a href="#" className="hover:text-slate-600 transition">Aide</a>
             <a href="#" className="hover:text-slate-600 transition">Confidentialité</a>

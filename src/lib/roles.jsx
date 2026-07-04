@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+﻿import React, { useEffect, useState } from 'react'
 import { supabase } from './supabase.js'
 
 /* ============================================================
-   PASMAL — Role-Based Access Control
+   SHOPCA — Role-Based Access Control
    - Pure logic + React hook + UI gate component
    - Source of truth: public.profiles.role
    - Hierarchy: user < agency < moderator < admin < super_admin

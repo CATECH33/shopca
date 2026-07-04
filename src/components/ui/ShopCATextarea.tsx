@@ -1,6 +1,6 @@
-import React, { forwardRef, useId } from 'react'
+﻿import React, { forwardRef, useId } from 'react'
 
-export interface PasmalTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+export interface ShopCATextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?:    string
   error?:    string
   hint?:     string
@@ -8,8 +8,8 @@ export interface PasmalTextareaProps extends React.TextareaHTMLAttributes<HTMLTe
   containerClassName?: string
 }
 
-export const PasmalTextarea = forwardRef<HTMLTextAreaElement, PasmalTextareaProps>(
-  function PasmalTextarea(
+export const ShopCATextarea = forwardRef<HTMLTextAreaElement, ShopCATextareaProps>(
+  function ShopCATextarea(
     { label, error, hint, dark = false, containerClassName = '', disabled, id: idProp, className = '', ...rest },
     ref
   ) {
@@ -62,4 +62,4 @@ export const PasmalTextarea = forwardRef<HTMLTextAreaElement, PasmalTextareaProp
   }
 )
 
-PasmalTextarea.displayName = 'PasmalTextarea'
+ShopCATextarea.displayName = 'ShopCATextarea'

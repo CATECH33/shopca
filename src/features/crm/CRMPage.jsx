@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, BrandLogo } from '../../lib/ui'
-import { PasmalSelect } from '../../components/ui/PasmalSelect'
-import { PasmalInput } from '../../components/ui/PasmalInput'
-import { PasmalTextarea } from '../../components/ui/PasmalTextarea'
+import { ShopCASelect } from '../../components/ui/ShopCASelect'
+import { ShopCAInput } from '../../components/ui/ShopCAInput'
+import { ShopCATextarea } from '../../components/ui/ShopCATextarea'
 
 // ─── Data ──────────────────────────────────────────────────────────────────
 
@@ -640,19 +640,19 @@ export default function CRMPage() {
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-xs font-semibold mb-1.5" style={{ color:sub }}>Nom complet *</label>
-                      <PasmalInput value={newForm.nom} onChange={e => setNewForm(f => ({ ...f, nom:e.target.value }))} placeholder="Jean Dupont" dark={dark} size="sm" />
+                      <ShopCAInput value={newForm.nom} onChange={e => setNewForm(f => ({ ...f, nom:e.target.value }))} placeholder="Jean Dupont" dark={dark} size="sm" />
                     </div>
                     <div>
                       <label className="block text-xs font-semibold mb-1.5" style={{ color:sub }}>E-mail *</label>
-                      <PasmalInput type="email" value={newForm.email} onChange={e => setNewForm(f => ({ ...f, email:e.target.value }))} placeholder="jean@exemple.fr" icon={<I.Mail size={13}/>} dark={dark} size="sm" />
+                      <ShopCAInput type="email" value={newForm.email} onChange={e => setNewForm(f => ({ ...f, email:e.target.value }))} placeholder="jean@exemple.fr" icon={<I.Mail size={13}/>} dark={dark} size="sm" />
                     </div>
                     <div>
                       <label className="block text-xs font-semibold mb-1.5" style={{ color:sub }}>Téléphone</label>
-                      <PasmalInput type="tel" value={newForm.phone} onChange={e => setNewForm(f => ({ ...f, phone:e.target.value }))} placeholder="06 00 00 00 00" icon={<I.Phone size={13}/>} dark={dark} size="sm" />
+                      <ShopCAInput type="tel" value={newForm.phone} onChange={e => setNewForm(f => ({ ...f, phone:e.target.value }))} placeholder="06 00 00 00 00" icon={<I.Phone size={13}/>} dark={dark} size="sm" />
                     </div>
                     <div>
                       <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color:sub }}>Source</label>
-                      <PasmalSelect
+                      <ShopCASelect
                         value={newForm.src}
                         onChange={v => setNewForm(f => ({ ...f, src: v }))}
                         options={["SeLoger","Leboncoin","PAP","Bien'ici","Instagram","Recommandation","Autre"]}
@@ -663,11 +663,11 @@ export default function CRMPage() {
                     </div>
                     <div>
                       <label className="block text-xs font-semibold mb-1.5" style={{ color:sub }}>Bien recherché</label>
-                      <PasmalInput value={newForm.prop} onChange={e => setNewForm(f => ({ ...f, prop:e.target.value }))} placeholder="Appt 3P Paris 11" dark={dark} size="sm" />
+                      <ShopCAInput value={newForm.prop} onChange={e => setNewForm(f => ({ ...f, prop:e.target.value }))} placeholder="Appt 3P Paris 11" dark={dark} size="sm" />
                     </div>
                     <div>
                       <label className="block text-xs font-semibold mb-1.5" style={{ color:sub }}>Budget (€)</label>
-                      <PasmalInput type="number" value={newForm.budget} onChange={e => setNewForm(f => ({ ...f, budget:e.target.value }))} placeholder="420 000" dark={dark} size="sm" />
+                      <ShopCAInput type="number" value={newForm.budget} onChange={e => setNewForm(f => ({ ...f, budget:e.target.value }))} placeholder="420 000" dark={dark} size="sm" />
                     </div>
                   </div>
                   <div>
@@ -689,7 +689,7 @@ export default function CRMPage() {
                   </div>
                   <div>
                     <label className="block text-xs font-semibold mb-1.5" style={{ color:sub }}>Notes</label>
-                    <PasmalTextarea value={newForm.notes} onChange={e => setNewForm(f => ({ ...f, notes:e.target.value }))}
+                    <ShopCATextarea value={newForm.notes} onChange={e => setNewForm(f => ({ ...f, notes:e.target.value }))}
                       placeholder="Contexte, motivation, urgence…" rows={3} dark={dark} />
                   </div>
                   {newFormErr && (
@@ -775,7 +775,7 @@ export default function CRMPage() {
                     </button>
                   </div>
                   {editNotes
-                    ? <PasmalTextarea rows={2} value={notesVal} onChange={e => setNotesVal(e.target.value)} dark={dark} />
+                    ? <ShopCATextarea rows={2} value={notesVal} onChange={e => setNotesVal(e.target.value)} dark={dark} />
                     : <p className="text-sm" style={{ color:txt }}>{notesVal || selected.notes}</p>}
                 </div>
                 {selected.tags.length > 0 && (

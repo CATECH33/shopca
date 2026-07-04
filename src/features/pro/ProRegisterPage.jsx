@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react'
+﻿import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, BrandLogo, PasswordStrength } from '../../lib/ui.jsx'
 import { useAuthAction, svc } from '../auth/hooks/useAuth.js'
 import { isValidEmail } from '../auth/validators/authValidators.js'
-import { PasmalSelect } from '../../components/ui/PasmalSelect'
-import { PasmalInput } from '../../components/ui/PasmalInput'
-import { PasmalTextarea } from '../../components/ui/PasmalTextarea'
+import { ShopCASelect } from '../../components/ui/ShopCASelect'
+import { ShopCAInput } from '../../components/ui/ShopCAInput'
+import { ShopCATextarea } from '../../components/ui/ShopCATextarea'
 
-const DRAFT_KEY = 'pasmal_pro_wizard_v2'
+const DRAFT_KEY = 'shopca_pro_wizard_v2'
 const MAX_IMG = 5 * 1024 * 1024
 const MAX_DOC = 10 * 1024 * 1024
 
@@ -55,7 +55,7 @@ function Field({ label, optional, error, children }) {
 
 function TextInput({ value, onChange, placeholder, type = 'text', icon: Icon, error, maxLength }) {
   return (
-    <PasmalInput
+    <ShopCAInput
       type={type}
       value={value}
       onChange={e => onChange(e.target.value)}
@@ -69,7 +69,7 @@ function TextInput({ value, onChange, placeholder, type = 'text', icon: Icon, er
 
 function SelectInput({ value, onChange, options, placeholder, icon: Icon, error }) {
   return (
-    <PasmalSelect
+    <ShopCASelect
       value={value}
       onChange={onChange}
       options={options}
@@ -83,7 +83,7 @@ function SelectInput({ value, onChange, options, placeholder, icon: Icon, error 
 function PwdInput({ label, value, onChange, showStrength, error }) {
   return (
     <Field label={label} error={error}>
-      <PasmalInput
+      <ShopCAInput
         type="password"
         value={value}
         onChange={e => onChange(e.target.value)}
@@ -332,7 +332,7 @@ function Step4_Profile({ d, set, errors }) {
         maxSize={MAX_IMG}
       />
       <Field label="Description" optional>
-        <PasmalTextarea
+        <ShopCATextarea
           value={d.description}
           onChange={e => set.description(e.target.value)}
           rows={4}

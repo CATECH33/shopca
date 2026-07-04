@@ -1,4 +1,4 @@
-import React, { useState, useRef, forwardRef, useId } from 'react'
+﻿import React, { useState, useRef, forwardRef, useId } from 'react'
 
 /* ── CSS injection (once) ───────────────────────────────────── */
 const CSS = `
@@ -17,7 +17,7 @@ function injectCss() {
 }
 
 /* ── Types ──────────────────────────────────────────────────── */
-export interface PasmalInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
+export interface ShopCAInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?:        string
   error?:        string
   hint?:         string
@@ -30,8 +30,8 @@ export interface PasmalInputProps extends Omit<React.InputHTMLAttributes<HTMLInp
 }
 
 /* ── Component ──────────────────────────────────────────────── */
-export const PasmalInput = forwardRef<HTMLInputElement, PasmalInputProps>(
-  function PasmalInput(
+export const ShopCAInput = forwardRef<HTMLInputElement, ShopCAInputProps>(
+  function ShopCAInput(
     {
       label, error, hint, icon, iconRight, valid,
       size = 'default', dark = false,
@@ -168,4 +168,4 @@ export const PasmalInput = forwardRef<HTMLInputElement, PasmalInputProps>(
   }
 )
 
-PasmalInput.displayName = 'PasmalInput'
+ShopCAInput.displayName = 'ShopCAInput'

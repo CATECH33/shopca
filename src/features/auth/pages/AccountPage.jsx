@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BrandLogo, I, PasswordStrength } from '../../../lib/ui.jsx'
@@ -142,7 +142,7 @@ function ProfileTab({ user, profile, loadProfile }) {
     <form onSubmit={save} className="space-y-5">
       <div>
         <h3 className="text-lg font-bold text-[#0F172A] mb-1">Informations personnelles</h3>
-        <p className="text-slate-500 text-sm">Ces informations sont visibles sur votre profil PASMAL.</p>
+        <p className="text-slate-500 text-sm">Ces informations sont visibles sur votre profil SHOPCA.</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -287,14 +287,14 @@ function NotificationsTab({ user }) {
   const PREFS = [
     { key: 'alerts',     title: 'Alertes annonces',  body: 'Soyez notifié dès qu\'une annonce correspond à vos critères de recherche.'  },
     { key: 'messages',   title: 'Messages',           body: 'Recevez un e-mail lorsque vous avez un nouveau message dans votre boîte.'   },
-    { key: 'promotions', title: 'Promotions PASMAL',  body: 'Actualités, offres exclusives et conseils immobiliers de notre équipe.'     },
+    { key: 'promotions', title: 'Promotions SHOPCA',  body: 'Actualités, offres exclusives et conseils immobiliers de notre équipe.'     },
   ]
 
   return (
     <form onSubmit={save} className="space-y-5">
       <div>
         <h3 className="text-lg font-bold text-[#0F172A] mb-1">Préférences de notification</h3>
-        <p className="text-slate-500 text-sm">Choisissez les e-mails que vous souhaitez recevoir de PASMAL.</p>
+        <p className="text-slate-500 text-sm">Choisissez les e-mails que vous souhaitez recevoir de SHOPCA.</p>
       </div>
 
       <div className="space-y-3">
@@ -485,7 +485,7 @@ export default function AccountPage() {
 
         {/* Footer */}
         <div className="px-8 pb-5 flex items-center justify-between text-xs text-slate-400 border-t border-slate-100 pt-4">
-          <span>© {new Date().getFullYear()} PASMAL</span>
+          <span>© {new Date().getFullYear()} SHOPCA</span>
           <div className="flex gap-4">
             <a href="#" className="hover:text-slate-600 transition">Aide</a>
             <a href="#" className="hover:text-slate-600 transition">Confidentialité</a>

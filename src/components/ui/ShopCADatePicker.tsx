@@ -1,10 +1,10 @@
-import React, { forwardRef, useId } from 'react'
+﻿import React, { forwardRef, useId } from 'react'
 
 /* ── CSS (once) ─────────────────────────────────────────────── */
 const CSS = `
-input[data-pasmal-date]::-webkit-calendar-picker-indicator { opacity: 0; position: absolute; right: 0; width: 40px; height: 100%; cursor: pointer; }
-input[data-pasmal-date]::-webkit-inner-spin-button,
-input[data-pasmal-date]::-webkit-clear-button { display: none; }
+input[data-shopca-date]::-webkit-calendar-picker-indicator { opacity: 0; position: absolute; right: 0; width: 40px; height: 100%; cursor: pointer; }
+input[data-shopca-date]::-webkit-inner-spin-button,
+input[data-shopca-date]::-webkit-clear-button { display: none; }
 `
 let _pdt_injected = false
 function injectCss() {
@@ -16,7 +16,7 @@ function injectCss() {
 }
 
 /* ── Types ──────────────────────────────────────────────────── */
-export interface PasmalDatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
+export interface ShopCADatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?:    string
   error?:    string
   hint?:     string
@@ -26,8 +26,8 @@ export interface PasmalDatePickerProps extends Omit<React.InputHTMLAttributes<HT
 }
 
 /* ── Component ──────────────────────────────────────────────── */
-export const PasmalDatePicker = forwardRef<HTMLInputElement, PasmalDatePickerProps>(
-  function PasmalDatePicker(
+export const ShopCADatePicker = forwardRef<HTMLInputElement, ShopCADatePickerProps>(
+  function ShopCADatePicker(
     { label, error, hint, dark = false, size = 'default', containerClassName = '', disabled, id: idProp, className = '', ...rest },
     ref
   ) {
@@ -70,7 +70,7 @@ export const PasmalDatePicker = forwardRef<HTMLInputElement, PasmalDatePickerPro
             id={id}
             type="date"
             disabled={disabled}
-            data-pasmal-date
+            data-shopca-date
             className={`
               w-full h-full bg-transparent outline-none text-sm font-medium pl-10 pr-10
               ${textCol}
@@ -105,4 +105,4 @@ export const PasmalDatePicker = forwardRef<HTMLInputElement, PasmalDatePickerPro
   }
 )
 
-PasmalDatePicker.displayName = 'PasmalDatePicker'
+ShopCADatePicker.displayName = 'ShopCADatePicker'

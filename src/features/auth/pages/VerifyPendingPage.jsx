@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BrandLogo, I } from '../../../lib/ui.jsx'
@@ -66,7 +66,7 @@ function LeftPanel() {
             <span className="text-orange-400">avant de commencer !</span>
           </h1>
           <p className="text-white/55 text-sm leading-relaxed mb-8">
-            Cliquez sur le lien dans votre boîte mail pour activer votre compte et accéder à toutes les fonctionnalités PASMAL.
+            Cliquez sur le lien dans votre boîte mail pour activer votre compte et accéder à toutes les fonctionnalités SHOPCA.
           </p>
         </motion.div>
 
@@ -223,7 +223,7 @@ export default function VerifyPendingPage() {
 
         {/* Footer */}
         <div className="px-8 pb-5 flex items-center justify-between text-xs text-slate-400">
-          <span>© {new Date().getFullYear()} PASMAL</span>
+          <span>© {new Date().getFullYear()} SHOPCA</span>
           <div className="flex gap-4">
             <a href="#" className="hover:text-slate-600 transition">Aide</a>
             <a href="#" className="hover:text-slate-600 transition">Confidentialité</a>

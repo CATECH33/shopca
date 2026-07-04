@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Dev seed — creates three test accounts with profiles, agency, subscriptions and listings.
  * Requires SUPABASE_SERVICE_ROLE_KEY in .env (never commit this key).
@@ -48,15 +48,15 @@ const IDS = {
 const ACCOUNTS = [
   {
     id: IDS.superAdmin,
-    email:    'admin@pasmal.shop',
-    password: 'PasmalAdmin2026!*',
+    email:    'admin@shopca.fr',
+    password: 'ShopCAAdmin2026!*',
     role:     'super_admin',
     meta: { account_type: 'personal', first_name: 'Alexandre', last_name: 'Moreau', phone: '+33612000001', onboarded: true },
   },
   {
     id: IDS.pro,
-    email:    'admin-t2@pasmal.shop',
-    password: 'PasmalAdmin2026!!',
+    email:    'admin-t2@shopca.fr',
+    password: 'ShopCAAdmin2026!!',
     role:     'pro_user',
     meta: {
       account_type: 'professional', first_name: 'Isabelle', last_name: 'Fontaine',
@@ -68,8 +68,8 @@ const ACCOUNTS = [
   },
   {
     id: IDS.private,
-    email:    'admin-t1@pasmal.shop',
-    password: 'PasmalAdmin2026**',
+    email:    'admin-t1@shopca.fr',
+    password: 'ShopCAAdmin2026**',
     role:     'private_user',
     meta: { account_type: 'personal', first_name: 'Sophie', last_name: 'Legrand', phone: '+33655000003', preferences: ['achat','location'], onboarded: true },
   },
@@ -123,9 +123,9 @@ async function seedAgency() {
 
 async function seedPublicUsers() {
   await admin.from('users').upsert([
-    { id: IDS.superAdmin, email: 'admin@pasmal.shop',    phone: '+33612000001', type: 'professionnel', is_verified: true },
-    { id: IDS.pro,        email: 'admin-t2@pasmal.shop', phone: '+33698000002', type: 'professionnel', is_verified: true },
-    { id: IDS.private,    email: 'admin-t1@pasmal.shop', phone: '+33655000003', type: 'particulier',   is_verified: true },
+    { id: IDS.superAdmin, email: 'admin@shopca.fr',    phone: '+33612000001', type: 'professionnel', is_verified: true },
+    { id: IDS.pro,        email: 'admin-t2@shopca.fr', phone: '+33698000002', type: 'professionnel', is_verified: true },
+    { id: IDS.private,    email: 'admin-t1@shopca.fr', phone: '+33655000003', type: 'particulier',   is_verified: true },
   ], { onConflict: 'id' })
 }
 
@@ -187,9 +187,9 @@ async function main() {
   await seedListings()
 
   console.log('\n✅ Seed complete.\n')
-  console.log('  admin@pasmal.shop      → super_admin   / PasmalAdmin2026!*')
-  console.log('  admin-t2@pasmal.shop   → pro_user      / PasmalAdmin2026!!')
-  console.log('  admin-t1@pasmal.shop   → private_user  / PasmalAdmin2026**')
+  console.log('  admin@shopca.fr      → super_admin   / ShopCAAdmin2026!*')
+  console.log('  admin-t2@shopca.fr   → pro_user      / ShopCAAdmin2026!!')
+  console.log('  admin-t1@shopca.fr   → private_user  / ShopCAAdmin2026**')
 }
 
 main().catch(err => { console.error(err); process.exit(1) })

@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import { Link } from 'react-router-dom'
 
 function Breadcrumb({ items }) {
@@ -79,7 +79,7 @@ export default function SeoLayout({ breadcrumb, hero, children }) {
 
       {/* Footer mini */}
       <footer className="border-t border-slate-200 mt-16 py-8 text-center text-sm text-slate-400">
-        <Link to="/" className="text-orange-500 font-semibold">PASMAL</Link>
+        <Link to="/" className="text-orange-500 font-semibold">SHOPCA</Link>
         {' '}— Plateforme immobilière premium ·{' '}
         <Link to="/annonces" className="hover:text-slate-600">Annonces</Link>{' · '}
         <Link to="/agences"  className="hover:text-slate-600">Agences</Link>{' · '}

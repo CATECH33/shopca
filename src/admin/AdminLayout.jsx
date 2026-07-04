@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+﻿import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I, BrandLogo, Avatar } from '../lib/ui.jsx'
 
@@ -42,7 +42,7 @@ export default function AdminLayout({
   onActiveChange,
   defaultActive = 'dashboard',
   defaultTheme = 'light',
-  user = { name: 'Jean Kevin PEMOU', email: 'admin@pasmal.fr', role: 'Super Admin' },
+  user = { name: 'Jean Kevin PEMOU', email: 'admin@shopca.fr', role: 'Super Admin' },
 }) {
   /* Controlled or uncontrolled active item */
   const [internalActive, setInternalActive] = useState(defaultActive)
@@ -115,7 +115,7 @@ export default function AdminLayout({
             <BrandLogo compact dark={dark}/>
             <div className="text-left flex-1 min-w-0">
               <div className={`text-[10px] font-bold uppercase tracking-wider ${t.textMut}`}>Workspace</div>
-              <div className={`text-sm font-semibold truncate ${t.textPrim}`}>PASMAL · Production</div>
+              <div className={`text-sm font-semibold truncate ${t.textPrim}`}>SHOPCA · Production</div>
             </div>
             <I.ChevronDown size={14} className={t.textMut}/>
           </button>

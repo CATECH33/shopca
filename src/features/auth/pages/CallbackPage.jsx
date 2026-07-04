@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BrandLogo, I } from '../../../lib/ui.jsx'
@@ -59,7 +59,7 @@ function LeftPanel() {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
           <h1 className="text-[27px] font-extrabold text-white leading-snug mb-3">
             Bienvenue dans<br/>
-            <span className="text-orange-400">la communauté PASMAL.</span>
+            <span className="text-orange-400">la communauté SHOPCA.</span>
           </h1>
           <p className="text-white/55 text-sm leading-relaxed mb-8">
             Votre compte est activé. Accédez à des milliers d'annonces immobilières et gérez vos projets en toute sérénité.
@@ -190,7 +190,7 @@ export default function CallbackPage() {
 
                   <h2 className="text-2xl font-extrabold text-[#0F172A] mb-1">E-mail confirmé !</h2>
                   <p className="text-slate-500 text-sm leading-relaxed mb-6">
-                    Votre compte PASMAL est maintenant actif. Bienvenue !
+                    Votre compte SHOPCA est maintenant actif. Bienvenue !
                   </p>
 
                   {/* Countdown progress */}
@@ -213,7 +213,7 @@ export default function CallbackPage() {
                     navigate(isPro ? '/pro' : '/onboarding')
                   }}
                     className="w-full h-12 flex items-center justify-center gap-2 rounded-xl bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-sm transition-all shadow-lg shadow-orange-200/60 hover:shadow-orange-300/70 hover:-translate-y-0.5">
-                    <I.Home size={15} />Accéder à PASMAL
+                    <I.Home size={15} />Accéder à SHOPCA
                   </button>
                 </motion.div>
               )}
@@ -255,7 +255,7 @@ export default function CallbackPage() {
 
         {/* Footer */}
         <div className="px-8 pb-5 flex items-center justify-between text-xs text-slate-400">
-          <span>© {new Date().getFullYear()} PASMAL</span>
+          <span>© {new Date().getFullYear()} SHOPCA</span>
           <div className="flex gap-4">
             <a href="#" className="hover:text-slate-600 transition">Aide</a>
             <a href="#" className="hover:text-slate-600 transition">Confidentialité</a>

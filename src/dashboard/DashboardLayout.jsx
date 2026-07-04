@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+﻿import React, { useEffect, useState } from 'react'
 import { NavLink, Outlet, useNavigate, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { supabase } from '../lib/supabase.js'
@@ -37,7 +37,7 @@ export default function DashboardLayout() {
 
   // Demo: always allow access (no real auth gate in this prototype scope)
   const displayName = user?.user_metadata?.full_name || 'Jean Kevin PEMOU'
-  const email = user?.email || 'jean@pasmal.fr'
+  const email = user?.email || 'jean@shopca.fr'
 
   const SidebarContent = () => (
     <>

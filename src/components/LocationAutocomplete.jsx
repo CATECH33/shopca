@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
+﻿import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
 import franceCities from '../data/franceCities.json'
 
 /* ── localStorage keys ───────────────────────────────────── */
-const LS_RECENT = 'pasmal_recent_locations'
-const LS_FAVS   = 'pasmal_fav_locations'
+const LS_RECENT = 'shopca_recent_locations'
+const LS_FAVS   = 'shopca_fav_locations'
 const MAX_RECENT = 5
 const MAX_FAVS   = 5
 

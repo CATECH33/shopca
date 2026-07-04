@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { I, Counter, Button, Avatar, Badge } from '../lib/ui.jsx'
 
@@ -21,12 +21,12 @@ const KPIS = [
 ]
 
 const ACTIVITY = [
-  { id: 'a1', actor: 'PASMAL Trust',  action: 'a bloqué l\'annonce',     target: 'PSM-2418 (Lille)',      icon: I.Shield,     tone: 'rose',     time: 'Il y a 3 min' },
+  { id: 'a1', actor: 'SHOPCA Trust',  action: 'a bloqué l\'annonce',     target: 'PSM-2418 (Lille)',      icon: I.Shield,     tone: 'rose',     time: 'Il y a 3 min' },
   { id: 'a2', actor: 'Camille L.',     action: 'a contacté',              target: 'Studio Bastille',       icon: I.Mail,       tone: 'orange',   time: 'Il y a 8 min' },
   { id: 'a3', actor: 'BARNES Lyon',    action: 'a soumis son Kbis',       target: 'Dossier #PSM-AG-204',   icon: I.FileText,   tone: 'indigo',   time: 'Il y a 14 min' },
   { id: 'a4', actor: 'Stripe',         action: 'a encaissé',              target: 'Pack Visibilité — 9,90 €', icon: I.CreditCard, tone: 'emerald',  time: 'Il y a 22 min' },
   { id: 'a5', actor: 'Julien M.',      action: 'a publié',                target: 'T3 Lyon Foch (Premium)',icon: I.Plus,       tone: 'orange',   time: 'Il y a 41 min' },
-  { id: 'a6', actor: 'PASMAL IA',      action: 'a détecté un duplicate',  target: '94% avec PSM-2401',     icon: I.Sparkles,   tone: 'rose',     time: 'Il y a 1h' },
+  { id: 'a6', actor: 'SHOPCA IA',      action: 'a détecté un duplicate',  target: '94% avec PSM-2401',     icon: I.Sparkles,   tone: 'rose',     time: 'Il y a 1h' },
   { id: 'a7', actor: 'Sofia B.',       action: 'a activé Premium',        target: 'Villa Aix-en-Provence', icon: I.Star,       tone: 'orange',   time: 'Il y a 2h' },
   { id: 'a8', actor: 'Foncia Premium', action: 'a invité 3 agents',       target: 'Équipe Paris Centre',   icon: I.Users,      tone: 'indigo',   time: 'Hier' },
 ]

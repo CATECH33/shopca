@@ -1,5 +1,5 @@
-/* ============================================================
-   PASMAL Trust Engine — anti-fraud scoring (frontend only)
+﻿/* ============================================================
+   SHOPCA Trust Engine — anti-fraud scoring (frontend only)
    Pure functions, no side effects, no backend.
    ============================================================ */
 

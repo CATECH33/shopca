@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { I, BrandLogo } from '../../lib/ui.jsx'
@@ -306,7 +306,7 @@ export default function SimulateurPage() {
 
       {/* ── Footer minimal ── */}
       <footer className="border-t border-slate-100 mt-12 py-8 px-6 text-center text-xs text-slate-400">
-        © 2026 PASMAL — Simulation indicative, non contractuelle.
+        © 2026 SHOPCA — Simulation indicative, non contractuelle.
       </footer>
     </div>
   )

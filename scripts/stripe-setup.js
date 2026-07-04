@@ -1,6 +1,6 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
- * PASMAL — Stripe Products & Prices Setup (complet)
+ * SHOPCA — Stripe Products & Prices Setup (complet)
  * ──────────────────────────────────────────────────
  * Run once (idempotent) to create all products/prices.
  * Outputs Price IDs → updates .env automatically.
@@ -25,7 +25,7 @@ const stripe = new Stripe(secretKey, { apiVersion: '2023-10-16' })
 const isLive  = secretKey.startsWith('sk_live_')
 console.log(`\n🔑  Mode : ${isLive ? '🚀  LIVE' : '⚠️  TEST'}\n`)
 
-/* ── Catalogue complet PASMAL ──────────────────────────────────── */
+/* ── Catalogue complet SHOPCA ──────────────────────────────────── */
 const CATALOG = [
 
   // ── PARTICULIERS — Annonces (one-time) ─────────────────────────
@@ -67,7 +67,7 @@ const CATALOG = [
   // ── AGENCES Starter (subscription) ─────────────────────────────
   {
     key: 'agency_starter',
-    name: 'PASMAL Agence Starter',
+    name: 'SHOPCA Agence Starter',
     description: "Jusqu'à 20 annonces actives · CRM basique · Profil agence personnalisable",
     mode: 'subscription',
     prices: [
@@ -79,7 +79,7 @@ const CATALOG = [
   // ── AGENCES Pro (subscription) ─────────────────────────────────
   {
     key: 'agency_pro',
-    name: 'PASMAL Agence Pro',
+    name: 'SHOPCA Agence Pro',
     description: 'Annonces illimitées · CRM avancé Kanban · 5 agents · Analytics temps réel · Boost +200%',
     mode: 'subscription',
     prices: [
@@ -91,7 +91,7 @@ const CATALOG = [
   // ── AGENCES Enterprise (subscription) ──────────────────────────
   {
     key: 'agency_enterprise',
-    name: 'PASMAL Agence Enterprise',
+    name: 'SHOPCA Agence Enterprise',
     description: 'API REST + webhooks · Agents illimités · Account manager · SLA 99,9% · Onboarding personnalisé',
     mode: 'subscription',
     prices: [
@@ -104,7 +104,7 @@ const CATALOG = [
 /* ── Helpers ─────────────────────────────────────────────────────  */
 async function findOrCreateProduct(item) {
   const existing = await stripe.products.search({
-    query: `metadata['pasmal_key']:'${item.key}'`, limit: 1,
+    query: `metadata['shopca_key']:'${item.key}'`, limit: 1,
   }).catch(() => ({ data: [] }))
 
   if (existing.data.length) {
@@ -114,7 +114,7 @@ async function findOrCreateProduct(item) {
 
   const product = await stripe.products.create({
     name: item.name, description: item.description,
-    metadata: { pasmal_key: item.key, mode: item.mode },
+    metadata: { shopca_key: item.key, mode: item.mode },
   })
   console.log(`  ✅  Produit créé : ${product.name} (${product.id})`)
   return product
@@ -139,7 +139,7 @@ async function findOrCreatePrice(product, spec) {
     unit_amount: spec.unit_amount,
     currency: spec.currency,
     nickname: spec.nickname,
-    metadata: { pasmal_price_key: spec.key },
+    metadata: { shopca_price_key: spec.key },
   }
   if (spec.interval) priceData.recurring = { interval: spec.interval }
 
@@ -150,7 +150,7 @@ async function findOrCreatePrice(product, spec) {
 
 /* ── Main ─────────────────────────────────────────────────────── */
 async function main() {
-  console.log('🚀  Configuration Stripe PASMAL — catalogue complet\n')
+  console.log('🚀  Configuration Stripe SHOPCA — catalogue complet\n')
 
   const results = {}
 

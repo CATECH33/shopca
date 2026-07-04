@@ -1,10 +1,10 @@
-import React from 'react'
+﻿import React from 'react'
 import { I } from '../../../lib/ui.jsx'
-import { PasmalInput } from '../../../components/ui/PasmalInput'
+import { ShopCAInput } from '../../../components/ui/ShopCAInput'
 
 export function FormField({ label, type = 'text', value, onChange, placeholder, icon: Icon, error }) {
   return (
-    <PasmalInput
+    <ShopCAInput
       type={type}
       label={label}
       value={value}
@@ -18,7 +18,7 @@ export function FormField({ label, type = 'text', value, onChange, placeholder, 
 
 export function PasswordField({ label = 'Mot de passe', value, onChange, error }) {
   return (
-    <PasmalInput
+    <ShopCAInput
       type="password"
       label={label}
       value={value}

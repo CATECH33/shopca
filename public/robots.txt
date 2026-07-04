@@ -1,4 +1,4 @@
-User-agent: *
+﻿User-agent: *
 Allow: /
 
 # Pages privées — pas d'indexation
@@ -14,4 +14,4 @@ Disallow: /early-access
 Disallow: /subscription/
 
 # Sitemap
-Sitemap: https://pasmal.shop/sitemap.xml
+Sitemap: https://shopca.fr/sitemap.xml

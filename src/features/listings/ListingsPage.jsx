@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+﻿import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Link, useSearchParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BrandLogo, I } from '../../lib/ui.jsx'
-import { PasmalSelect } from '../../components/ui/PasmalSelect'
-import { PasmalInput } from '../../components/ui/PasmalInput'
+import { ShopCASelect } from '../../components/ui/ShopCASelect'
+import { ShopCAInput } from '../../components/ui/ShopCAInput'
 import { supabase } from '../../lib/supabase.js'
 
 // ── Data ──────────────────────────────────────────────────────────────────────
@@ -25,7 +25,7 @@ const FALLBACK = [
   { id:'f12',title:'Penthouse terrasse panorama', location:'Paris 16ᵉ · Trocadéro', price:2800000, rooms:5, surface:180, type:'acheter', property_type:'Appartement',is_prestige:true,   image_url:unsplash('photo-1512917774080-9991f1c4c750') },
 ]
 
-const AGENCIES = ['Foncia Premium','Century 21 Élite','PASMAL Verified','Sotheby\'s Realty','BARNES','Engel & Völkers']
+const AGENCIES = ['Foncia Premium','Century 21 Élite','SHOPCA Verified','Sotheby\'s Realty','BARNES','Engel & Völkers']
 const DPE_COLORS = { A:'#00A651',B:'#51B948',C:'#BECE00',D:'#FECB00',E:'#FB7A08',F:'#EE3424',G:'#C50D13' }
 const PROPERTY_TYPES = ['Appartement','Maison','Studio','T2','T3','Villa','Colocation','Commerce']
 
@@ -284,15 +284,15 @@ function FilterPanel({ params, set, resetAll, activeCount }) {
       <div>
         <div className="text-xs font-semibold text-slate-500 mb-2">Budget</div>
         <div className="grid grid-cols-2 gap-2">
-          <PasmalInput type="number" size="sm" value={priceMin} onChange={e => set('priceMin', e.target.value)} placeholder="Min €" />
-          <PasmalInput type="number" size="sm" value={priceMax} onChange={e => set('priceMax', e.target.value)} placeholder="Max €" />
+          <ShopCAInput type="number" size="sm" value={priceMin} onChange={e => set('priceMin', e.target.value)} placeholder="Min €" />
+          <ShopCAInput type="number" size="sm" value={priceMax} onChange={e => set('priceMax', e.target.value)} placeholder="Max €" />
         </div>
       </div>
 
       {/* Surface */}
       <div>
         <div className="text-xs font-semibold text-slate-500 mb-2">Surface min. (m²)</div>
-        <PasmalInput type="number" size="sm" value={surfaceMin} onChange={e => set('surfaceMin', e.target.value)} placeholder="ex. 40" />
+        <ShopCAInput type="number" size="sm" value={surfaceMin} onChange={e => set('surfaceMin', e.target.value)} placeholder="ex. 40" />
       </div>
 
       {/* Rooms */}
@@ -380,7 +380,7 @@ export default function ListingsPage() {
   const [listings,  setListings]  = useState([])
   const [loading,   setLoading]   = useState(true)
   const [savedIds,  setSavedIds]  = useState(() => {
-    try { return JSON.parse(localStorage.getItem('pasmal-saved') || '[]') } catch { return [] }
+    try { return JSON.parse(localStorage.getItem('shopca-saved') || '[]') } catch { return [] }
   })
   const [drawerOpen, setDrawerOpen] = useState(false)
 
@@ -466,7 +466,7 @@ export default function ListingsPage() {
   const toggleSave = id => {
     setSavedIds(prev => {
       const next = prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
-      localStorage.setItem('pasmal-saved', JSON.stringify(next))
+      localStorage.setItem('shopca-saved', JSON.stringify(next))
       return next
     })
   }
@@ -602,7 +602,7 @@ export default function ListingsPage() {
 
               {/* Sort */}
               <div className="flex items-center gap-2 mr-auto">
-                <PasmalSelect
+                <ShopCASelect
                   value={sort}
                   onChange={setSort}
                   options={[

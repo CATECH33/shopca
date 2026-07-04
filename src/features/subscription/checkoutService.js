@@ -1,8 +1,8 @@
-import { supabase } from '../../lib/supabase.js'
+﻿import { supabase } from '../../lib/supabase.js'
 import { getStripe } from '../../lib/stripe.js'
 
 /**
- * Start a Stripe Checkout for any PASMAL price type.
+ * Start a Stripe Checkout for any SHOPCA price type.
  *
  * priceType must match a key in the Edge Function CATALOG:
  *   'pack_visibilite' | 'listing_premium' | 'boost_top'
