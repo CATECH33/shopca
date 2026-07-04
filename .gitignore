@@ -11,3 +11,4 @@ dist-ssr
 *.png
 *.jpg
 *.jpeg
+.vercel
