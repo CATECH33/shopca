@@ -7,8 +7,12 @@ dist-ssr
 .env
 .env.local
 
-# Screenshots de tests
-*.png
-*.jpg
-*.jpeg
+# Screenshots de tests (racine uniquement)
+/*.png
+/*.jpg
+/*.jpeg
+# Assets publics trackés
+!public/*.png
+!public/*.jpg
+!public/*.svg
 .vercel

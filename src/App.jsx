@@ -112,7 +112,7 @@ function BrandLogo({ compact = false, dark = false }) {
       {!compact && (
         <div className="leading-tight">
           <div className={`text-[20px] font-extrabold tracking-tight ${dark ? 'text-white' : 'text-navy-900'}`}>
-            PAS<span className="text-orange-600">MAL</span>
+            SHOP<span className="text-orange-600">CA</span>
           </div>
           <div className={`text-[10px] tracking-[0.2em] uppercase ${dark ? 'text-white/70' : 'text-navy-600'}`}>
             Premium Estate
