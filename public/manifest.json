@@ -3,10 +3,13 @@
   "short_name": "SHOPCA",
   "description": "Le Marché Immobilier Premium — Achat, location, agences certifiées",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#0B1F3A",
   "theme_color": "#0B1F3A",
   "lang": "fr",
+  "dir": "ltr",
   "categories": ["lifestyle", "shopping"],
   "icons": [
     {

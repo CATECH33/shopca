@@ -125,12 +125,43 @@ export function schemaOrganization() {
   return {
     '@context': 'https://schema.org',
     '@type': 'RealEstateAgent',
+    '@id': `${BASE_URL}/#organization`,
+    name: 'SHOPCA',
+    alternateName: 'SHOPCA Immobilier',
+    url: BASE_URL,
+    logo: {
+      '@type': 'ImageObject',
+      '@id': `${BASE_URL}/#logo`,
+      url: `${BASE_URL}/logo.png`,
+      contentUrl: `${BASE_URL}/logo.png`,
+      width: 512,
+      height: 256,
+    },
+    description: 'Plateforme immobilière premium en France — achat, location, agences certifiées. +10 000 annonces vérifiées.',
+    slogan: 'Le marché immobilier pour les exigeants',
+    areaServed: { '@type': 'Country', name: 'France' },
+    address: { '@type': 'PostalAddress', addressCountry: 'FR' },
+    sameAs: [],
+  }
+}
+
+export function schemaWebSite() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${BASE_URL}/#website`,
     name: 'SHOPCA',
     url: BASE_URL,
-    logo: `${BASE_URL}/logo.png`,
-    description: 'Plateforme immobilière premium en France — achat, location, agences.',
-    areaServed: { '@type': 'Country', name: 'France' },
-    sameAs: [],
+    description: 'Plateforme immobilière premium en France — achat, location, agences certifiées.',
+    publisher: { '@id': `${BASE_URL}/#organization` },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${BASE_URL}/annonces?q={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
   }
 }
 
