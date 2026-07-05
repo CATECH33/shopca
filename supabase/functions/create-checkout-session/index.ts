@@ -192,6 +192,12 @@ Deno.serve(async (req) => {
     if (isSubscription) {
       sessionParams.subscription_data = {
         metadata: { supabase_user_id: user.id, type: priceType },
+        description: `SHOPCA — ${product.name}`,
+      }
+    } else {
+      sessionParams.payment_intent_data = {
+        statement_descriptor: 'SHOPCA',
+        metadata: { supabase_user_id: user.id, type: priceType },
       }
     }
 
