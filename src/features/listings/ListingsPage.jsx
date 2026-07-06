@@ -27,7 +27,7 @@ const FALLBACK = [
 
 const AGENCIES = ['Foncia Premium','Century 21 Élite','SHOPCA Verified','Sotheby\'s Realty','BARNES','Engel & Völkers']
 const DPE_COLORS = { A:'#00A651',B:'#51B948',C:'#BECE00',D:'#FECB00',E:'#FB7A08',F:'#EE3424',G:'#C50D13' }
-const PROPERTY_TYPES = ['Appartement','Maison','Studio','T2','T3','Villa','Colocation','Commerce']
+const PROPERTY_TYPES = ['Appartement','Maison','Studio','Villa','Loft']
 
 function enrich(l, idx = 0) {
   const seed = typeof l.id === 'string' ? (l.id.charCodeAt(1) || idx + 1) : idx + 1
