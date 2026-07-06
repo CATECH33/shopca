@@ -34,7 +34,8 @@ const FLOORS_FR  = ['RDC','1ᵉʳ','2ᵉ','3ᵉ','4ᵉ','5ᵉ','6ᵉ','7ᵉ','8�
 
 function extras(l) {
   const seed = typeof l.id === 'string' ? (l.id.charCodeAt(1) || 1) : 1
-  const isApt = ['Appartement','Studio','T2','T3','Colocation'].includes(l.property_type)
+  const pt = (l.property_type || '').toLowerCase()
+  const isApt = ['appartement','studio','t2','t3','colocation','loft'].includes(pt)
   return {
     year:     1920 + ((seed * 47 + 13) % 100),
     floor:    isApt ? FLOORS_FR[seed % 10] : null,
@@ -51,10 +52,11 @@ function descriptionFor(l) {
   const intro = isRent
     ? `À louer : ${l.title} de ${l.surface} m² idéalement situé${l.location ? ' à ' + l.location : ''}.`
     : `À vendre : ${l.title} de ${l.surface} m² ${l.location ? 'situé à ' + l.location : ''}.`
-  const body = l.property_type === 'Maison' || l.property_type === 'Villa'
+  const pt = (l.property_type || '').toLowerCase()
+  const body = pt === 'maison' || pt === 'villa'
     ? `La propriété dispose d'un beau jardin arboré, d'une terrasse ensoleillée et d'un garage double. Intérieur entièrement rénové avec des matériaux haut de gamme : parquet massif, cuisine équipée ouverte, salle de bains en marbre. Double vitrage, volets roulants motorisés.`
     : `L'espace de vie est lumineux et traversant, bénéficiant d'une belle hauteur sous plafond. La cuisine est entièrement équipée (plaque induction, four, réfrigérateur). Parquet stratifié dans les pièces de vie, carrelage dans les pièces humides. Placard intégré dans chaque chambre.`
-  const outro = `Quartier dynamique à proximité des commerces, transports en commun et écoles. ${l.property_type !== 'Studio' ? 'Gardien, digicode.' : ''} Disponible rapidement — Visites sur rendez-vous.`
+  const outro = `Quartier dynamique à proximité des commerces, transports en commun et écoles. ${pt !== 'studio' ? 'Gardien, digicode.' : ''} Disponible rapidement — Visites sur rendez-vous.`
   return [intro, body, outro]
 }
 
@@ -241,7 +243,14 @@ export default function ListingDetailPage() {
     const load = async () => {
       try {
         const { data } = await supabase.from('listings').select('*').eq('id', id).single()
-        if (data) { setListing(enrich(data)); setLoading(false); return }
+        if (data) {
+          const normalized = {
+            ...data,
+            location: data.location || [data.city, data.district].filter(Boolean).join(' · '),
+            type: data.type || data.transaction_type,
+          }
+          setListing(enrich(normalized)); setLoading(false); return
+        }
       } catch {}
       const fb = FALLBACK.find(l => l.id === id)
       setListing(fb ? enrich(fb) : null)
