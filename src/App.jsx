@@ -753,9 +753,8 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
                 className="searchbar-input w-full bg-transparent text-sm focus:outline-none min-w-0"
                 aria-label="Budget maximum en euros"
               />
-              {budgetDisplay && (
-                <span className="text-sm font-semibold shrink-0 select-none" style={{ color: '#94A3B8' }}>€</span>
-              )}
+              <span className="text-sm font-semibold shrink-0 select-none"
+                    style={{ color: '#94A3B8', visibility: budgetDisplay ? 'visible' : 'hidden' }}>€</span>
             </div>
           </SbField>
         </div>
@@ -778,9 +777,8 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
                 className="searchbar-input w-full bg-transparent text-sm focus:outline-none min-w-0"
                 aria-label="Surface minimale en m²"
               />
-              {surfaceDisplay && (
-                <span className="text-sm font-medium shrink-0 select-none" style={{ color: '#94A3B8' }}>m²</span>
-              )}
+              <span className="text-sm font-medium shrink-0 select-none"
+                    style={{ color: '#94A3B8', visibility: surfaceDisplay ? 'visible' : 'hidden' }}>m²</span>
             </div>
           </SbField>
         </div>
