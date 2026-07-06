@@ -37,6 +37,8 @@ const ProDashboardPage       = lazy(() => import('./features/pro/ProDashboardPag
 const DebugAuthPage          = lazy(() => import('./features/debug/DebugAuthPage.jsx'))
 
 // ── Back Office — ManagerIT (accès propriétaire uniquement) ──────────────────
+const ManagerRoot         = lazy(() => import('./managerIT/ManagerRoot.jsx'))
+const MgrLoginPage        = lazy(() => import('./managerIT/ManagerLoginPage.jsx'))
 const ManagerLayout       = lazy(() => import('./managerIT/ManagerLayout.jsx'))
 const MgrDashboardPage    = lazy(() => import('./managerIT/pages/DashboardPage.jsx'))
 const MgrUsersPage        = lazy(() => import('./managerIT/pages/UsersPage.jsx'))
@@ -49,6 +51,14 @@ const MgrSupportPage      = lazy(() => import('./managerIT/pages/SupportPage.jsx
 const MgrModerationPage   = lazy(() => import('./managerIT/pages/ModerationPage.jsx'))
 const MgrSettingsPage     = lazy(() => import('./managerIT/pages/SettingsPage.jsx'))
 const MgrLogsPage         = lazy(() => import('./managerIT/pages/LogsPage.jsx'))
+const MgrKYCPage          = lazy(() => import('./managerIT/pages/KYCPage.jsx'))
+const MgrCRMPage          = lazy(() => import('./managerIT/pages/CRMPage.jsx'))
+const MgrAnalyticsPage    = lazy(() => import('./managerIT/pages/AnalyticsPage.jsx'))
+const MgrIAManagerPage    = lazy(() => import('./managerIT/pages/IAManagerPage.jsx'))
+const MgrAutomationsPage  = lazy(() => import('./managerIT/pages/AutomationsPage.jsx'))
+const MgrMonitoringPage   = lazy(() => import('./managerIT/pages/MonitoringPage.jsx'))
+const MgrAuditPage        = lazy(() => import('./managerIT/pages/AuditPage.jsx'))
+const MgrBackupsPage      = lazy(() => import('./managerIT/pages/BackupsPage.jsx'))
 
 // ── Pages SEO ─────────────────────────────────────────────────────────────────
 const AcheterPage        = lazy(() => import('./features/seo/AcheterPage.jsx'))
@@ -172,19 +182,30 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 } />
 
                 {/* ── Back Office ManagerIT (propriétaire uniquement, non indexé) ── */}
-                <Route path="/managerIT" element={<ManagerLayout />}>
-                  <Route index element={<Navigate to="/managerIT/dashboard" replace />} />
-                  <Route path="dashboard"     element={<MgrDashboardPage />} />
-                  <Route path="users"         element={<MgrUsersPage />} />
-                  <Route path="professionals" element={<MgrProfessionalsPage />} />
-                  <Route path="listings"      element={<MgrListingsPage />} />
-                  <Route path="payments"      element={<MgrPaymentsPage />} />
-                  <Route path="emails"        element={<MgrEmailsPage />} />
-                  <Route path="notifications" element={<MgrNotificationsPage />} />
-                  <Route path="support"       element={<MgrSupportPage />} />
-                  <Route path="moderation"    element={<MgrModerationPage />} />
-                  <Route path="settings"      element={<MgrSettingsPage />} />
-                  <Route path="logs"          element={<MgrLogsPage />} />
+                <Route path="/managerIT" element={<ManagerRoot />}>
+                  <Route path="login" element={<MgrLoginPage />} />
+                  <Route element={<ManagerLayout />}>
+                    <Route index element={<Navigate to="/managerIT/dashboard" replace />} />
+                    <Route path="dashboard"     element={<MgrDashboardPage />} />
+                    <Route path="users"         element={<MgrUsersPage />} />
+                    <Route path="professionals" element={<MgrProfessionalsPage />} />
+                    <Route path="listings"      element={<MgrListingsPage />} />
+                    <Route path="payments"      element={<MgrPaymentsPage />} />
+                    <Route path="emails"        element={<MgrEmailsPage />} />
+                    <Route path="notifications" element={<MgrNotificationsPage />} />
+                    <Route path="support"       element={<MgrSupportPage />} />
+                    <Route path="moderation"    element={<MgrModerationPage />} />
+                    <Route path="settings"      element={<MgrSettingsPage />} />
+                    <Route path="logs"          element={<MgrLogsPage />} />
+                    <Route path="kyc"           element={<MgrKYCPage />} />
+                    <Route path="crm"           element={<MgrCRMPage />} />
+                    <Route path="analytics"     element={<MgrAnalyticsPage />} />
+                    <Route path="ia"            element={<MgrIAManagerPage />} />
+                    <Route path="automations"   element={<MgrAutomationsPage />} />
+                    <Route path="monitoring"    element={<MgrMonitoringPage />} />
+                    <Route path="audit"         element={<MgrAuditPage />} />
+                    <Route path="backups"       element={<MgrBackupsPage />} />
+                  </Route>
                 </Route>
               </Routes>
             </Suspense>
