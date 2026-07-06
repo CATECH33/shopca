@@ -581,10 +581,29 @@ function Header({ currentView, setCurrentView, user, role, onSignIn, onPublish, 
    Search Bar
    ============================================================================ */
 function SearchBar({ filters, setFilters, onSearch, floating = false }) {
+  const [budgetDisplay, setBudgetDisplay] = React.useState(
+    filters.priceMax ? Number(filters.priceMax).toLocaleString('fr-FR') : ''
+  )
+  const [surfaceDisplay, setSurfaceDisplay] = React.useState(
+    filters.surfaceMin ? String(filters.surfaceMin) : ''
+  )
+
   const tabs = [
     { id: 'acheter', label: 'Acheter' },
-    { id: 'louer', label: 'Louer' },
+    { id: 'louer',   label: 'Louer'   },
   ]
+
+  const handleBudgetChange = (e) => {
+    const raw = e.target.value.replace(/\D/g, '')
+    setBudgetDisplay(raw ? Number(raw).toLocaleString('fr-FR') : '')
+    setFilters(f => ({ ...f, priceMax: raw || '' }))
+  }
+
+  const handleSurfaceChange = (e) => {
+    const raw = e.target.value.replace(/\D/g, '')
+    setSurfaceDisplay(raw)
+    setFilters(f => ({ ...f, surfaceMin: raw || '' }))
+  }
 
   const wrapperStyle = floating
     ? {
@@ -594,23 +613,29 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
         boxShadow: '0 20px 60px rgba(0,0,0,.18)',
         border: '1px solid rgba(255,255,255,.35)',
         borderRadius: '28px',
+        position: 'relative',
+        zIndex: 20,
       }
     : {
         background: '#ffffff',
         boxShadow: '0 4px 24px rgba(0,0,0,.08)',
         border: '1px solid #E2E8F0',
         borderRadius: '24px',
+        position: 'relative',
+        zIndex: 20,
       }
 
-  const Field = ({ icon: Ic, label, children, divider = false }) => (
+  const Field = ({ icon: Ic, label, fieldId, children, divider = false }) => (
     <div className="relative flex items-stretch">
       {divider && (
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px" style={{ height: '50px', background: 'rgba(15,23,42,.08)' }} />
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px"
+             style={{ height: '50px', background: 'rgba(15,23,42,.08)' }} />
       )}
       <div className={`flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-slate-50/80 transition-all duration-200 focus-within:bg-orange-50/30 focus-within:shadow-[0_0_0_2px_rgba(251,146,60,0.18)] group w-full ${divider ? 'pl-5' : ''}`}>
         {Ic && <Ic size={20} className="text-orange-500 shrink-0 group-hover:text-orange-600 group-hover:scale-110 group-focus-within:scale-110 group-focus-within:text-orange-600 transition-all duration-200" />}
         <div className="flex-1 min-w-0">
-          <div className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: '#64748B' }}>{label}</div>
+          <label htmlFor={fieldId} className="text-[11px] font-semibold uppercase tracking-wider block cursor-default"
+                 style={{ color: '#64748B' }}>{label}</label>
           {children}
         </div>
       </div>
@@ -618,32 +643,46 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
   )
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-2 md:p-3" style={wrapperStyle}>
-      <div className="flex items-center gap-1 px-2 pt-1">
+    <div className="w-full max-w-6xl mx-auto p-2 md:p-3" style={wrapperStyle}
+         role="search" aria-label="Moteur de recherche immobilière">
+
+      {/* Tabs Acheter / Louer */}
+      <div className="flex items-center gap-1 px-2 pt-1" role="tablist">
         {tabs.map((t) => (
           <button
             key={t.id}
-            onClick={() => setFilters({ ...filters, type: t.id })}
-            className={`relative px-5 py-2.5 text-sm font-semibold rounded-full transition-all ${
-              filters.type === t.id ? 'text-white' : 'hover:bg-slate-100'
-            }`}
+            type="button"
+            role="tab"
+            aria-selected={filters.type === t.id}
+            onClick={() => setFilters(f => ({ ...f, type: t.id }))}
+            className="relative px-5 py-2.5 text-sm font-semibold rounded-full transition-all hover:bg-slate-100/70"
             style={{ color: filters.type === t.id ? '#fff' : '#0F172A' }}
           >
             {filters.type === t.id && (
-              <motion.span layoutId="tabPill" className="absolute inset-0 rounded-full" style={{ background: '#0B1F3A' }} transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }} />
+              <motion.span layoutId="tabPill" className="absolute inset-0 rounded-full"
+                           style={{ background: '#0B1F3A' }}
+                           transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }} />
             )}
             <span className="relative">{t.label}</span>
           </button>
         ))}
       </div>
 
-      <form onSubmit={(e) => { e.preventDefault(); onSearch() }} className="grid grid-cols-2 md:grid-cols-12 gap-2 mt-2">
-        {/* Localisation */}
-        <div className="col-span-2 md:col-span-4">
+      {/* Champs de recherche */}
+      <form
+        id="searchbar-form"
+        onSubmit={(e) => { e.preventDefault(); onSearch() }}
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-2 mt-2"
+        noValidate
+      >
+
+        {/* ── Localisation ── */}
+        <div className="col-span-1 sm:col-span-2 md:col-span-4">
           <div className="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 hover:bg-slate-50/80 focus-within:bg-orange-50/30 focus-within:shadow-[0_0_0_2px_rgba(251,146,60,0.18)] group">
-            <Icons.MapPin size={20} className="text-orange-500 shrink-0 group-hover:text-orange-600 group-hover:scale-110 group-focus-within:scale-110 group-focus-within:text-orange-600 transition-all duration-200" />
+            <Icons.MapPin size={20} className="text-orange-500 shrink-0 group-hover:text-orange-600 group-focus-within:text-orange-600 transition-all duration-200" />
             <div className="flex-1 min-w-0">
-              <div className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: '#64748B' }}>Localisation</div>
+              <label htmlFor="sb-location" className="text-[11px] font-semibold uppercase tracking-wider block cursor-default"
+                     style={{ color: '#64748B' }}>Localisation</label>
               <CitySearch
                 bare
                 value={filters.location}
@@ -657,28 +696,29 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
                   }
                 }}
                 placeholder="Paris, Lyon, Bordeaux…"
-                inputClassName="font-bold"
-                inputStyle={{ color: '#0F172A' }}
               />
             </div>
           </div>
         </div>
 
-        {/* Type */}
+        {/* ── Type de bien ── */}
         <div className="md:col-span-2">
-          <Field icon={Icons.Home} label="Type" divider>
+          <Field icon={Icons.Home} label="Type de bien" fieldId="sb-type" divider>
             <ShopCASelect
               value={filters.propertyType}
-              onChange={v => setFilters({ ...filters, propertyType: v })}
+              onChange={v => setFilters(f => ({ ...f, propertyType: v }))}
               options={[
-                { value: '', label: 'Tous' },
-                { value: 'Studio',     label: 'Studio' },
-                { value: 'T2',         label: 'T2' },
-                { value: 'T3',         label: 'T3' },
-                { value: 'Maison',     label: 'Maison' },
-                { value: 'Villa',      label: 'Villa' },
-                { value: 'Colocation', label: 'Colocation' },
-                { value: 'Parking',    label: 'Parking' },
+                { value: '',                 label: 'Tous'             },
+                { value: 'Appartement',      label: 'Appartement'      },
+                { value: 'Maison',           label: 'Maison'           },
+                { value: 'Villa',            label: 'Villa'            },
+                { value: 'Terrain',          label: 'Terrain'          },
+                { value: 'Local commercial', label: 'Local commercial' },
+                { value: 'Bureau',           label: 'Bureau'           },
+                { value: 'Immeuble',         label: 'Immeuble'         },
+                { value: 'Garage',           label: 'Garage'           },
+                { value: 'Parking',          label: 'Parking'          },
+                { value: 'Programme neuf',   label: 'Programme neuf'   },
               ]}
               ghost
               className="flex-1"
@@ -686,52 +726,87 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
           </Field>
         </div>
 
-        {/* Budget */}
+        {/* ── Budget ── */}
         <div className="md:col-span-2">
-          <Field icon={Icons.Tag} label="Budget" divider>
-            <input
-              type="number"
-              value={filters.priceMax}
-              onChange={(e) => setFilters({ ...filters, priceMax: e.target.value })}
-              placeholder="500 000 €"
-              className="searchbar-input w-full bg-transparent text-sm focus:outline-none"
-            />
+          <Field icon={Icons.Tag} label="Budget max" fieldId="sb-budget" divider>
+            <div className="flex items-center gap-1 w-full">
+              <input
+                id="sb-budget"
+                name="budget"
+                type="text"
+                inputMode="numeric"
+                autoComplete="off"
+                autoCorrect="off"
+                spellCheck={false}
+                value={budgetDisplay}
+                onChange={handleBudgetChange}
+                placeholder="500 000"
+                className="searchbar-input w-full bg-transparent text-sm focus:outline-none min-w-0"
+                aria-label="Budget maximum"
+              />
+              {budgetDisplay && (
+                <span className="text-sm font-semibold shrink-0 select-none" style={{ color: '#94A3B8' }}>€</span>
+              )}
+            </div>
           </Field>
         </div>
 
-        {/* Surface */}
+        {/* ── Surface ── */}
         <div className="md:col-span-1">
-          <Field icon={Icons.Maximize} label="Surface" divider>
-            <input
-              type="number"
-              value={filters.surfaceMin || ''}
-              onChange={(e) => setFilters({ ...filters, surfaceMin: e.target.value })}
-              placeholder="m²"
-              className="searchbar-input w-full bg-transparent text-sm focus:outline-none"
-            />
+          <Field icon={Icons.Maximize} label="Surface min" fieldId="sb-surface" divider>
+            <div className="flex items-center gap-0.5 w-full">
+              <input
+                id="sb-surface"
+                name="surface"
+                type="text"
+                inputMode="numeric"
+                autoComplete="off"
+                autoCorrect="off"
+                spellCheck={false}
+                value={surfaceDisplay}
+                onChange={handleSurfaceChange}
+                placeholder="50"
+                className="searchbar-input w-full bg-transparent text-sm focus:outline-none min-w-0"
+                aria-label="Surface minimale"
+              />
+              {surfaceDisplay && (
+                <span className="text-sm font-medium shrink-0 select-none" style={{ color: '#94A3B8' }}>m²</span>
+              )}
+            </div>
           </Field>
         </div>
 
-        {/* Pièces */}
+        {/* ── Pièces ── */}
         <div className="md:col-span-1">
-          <Field icon={Icons.Bed} label="Pièces" divider>
-            <input
-              type="number"
-              value={filters.roomsMin || ''}
-              onChange={(e) => setFilters({ ...filters, roomsMin: e.target.value })}
-              placeholder="3+"
-              className="searchbar-input w-full bg-transparent text-sm focus:outline-none"
+          <Field icon={Icons.Bed} label="Pièces" fieldId="sb-pieces" divider>
+            <ShopCASelect
+              value={filters.roomsMin ? String(filters.roomsMin) : ''}
+              onChange={v => setFilters(f => ({ ...f, roomsMin: v ? Number(v) : '' }))}
+              options={[
+                { value: '',  label: 'Toutes' },
+                { value: '1', label: '1+'     },
+                { value: '2', label: '2+'     },
+                { value: '3', label: '3+'     },
+                { value: '4', label: '4+'     },
+                { value: '5', label: '5+'     },
+                { value: '6', label: '6+'     },
+                { value: '7', label: '7+'     },
+                { value: '8', label: '8+'     },
+              ]}
+              ghost
+              className="flex-1"
             />
           </Field>
         </div>
 
-        {/* Bouton */}
+        {/* ── Bouton Rechercher ── */}
         <motion.button
           whileHover={{ y: -2, boxShadow: '0 18px 45px rgba(255,119,0,.40)' }}
           whileTap={{ scale: 0.97 }}
           type="submit"
-          className="col-span-2 md:col-span-2 flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-2xl py-3 px-4 transition-colors"
+          className="col-span-1 sm:col-span-2 md:col-span-2 flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-2xl py-3 px-4 transition-colors"
           style={{ boxShadow: '0 12px 35px rgba(255,119,0,.30)' }}
+          aria-label="Lancer la recherche immobilière"
         >
           <Icons.Search size={20} />
           <span>Rechercher</span>
@@ -760,7 +835,7 @@ function Hero({ filters, setFilters, onSearch }) {
       {/* Parallax background image */}
       <motion.div style={{ y: yImg }} className="absolute inset-0 will-change-transform">
         <img src={HERO_IMG} alt="Intérieur premium" className="w-full h-[120%] object-cover" />
-        <div className="absolute inset-0 hero-overlay" />
+        <div className="absolute inset-0 hero-overlay pointer-events-none" />
       </motion.div>
 
       {/* Floating gradient blobs */}
