@@ -157,10 +157,22 @@ function ContactCard({ l }) {
   const [phone,   setPhone]   = useState('')
   const [msg,     setMsg]     = useState(`Bonjour, je suis intéressé(e) par ce bien : « ${l.title} ». Pourriez-vous me recontacter pour organiser une visite ?`)
   const [sent,    setSent]    = useState(false)
+  const [sending, setSending] = useState(false)
+  const [error,   setError]   = useState('')
   const ppsqm = fmtPricePerSqm(l)
 
-  const submit = e => {
+  const submit = async e => {
     e.preventDefault()
+    setSending(true)
+    setError('')
+    const { error: err } = await supabase.from('contact_requests').insert({
+      listing_id: l.id?.startsWith('f') ? null : l.id,
+      name:       name.trim(),
+      phone:      phone.trim() || null,
+      message:    msg.trim(),
+    })
+    setSending(false)
+    if (err) { setError('Une erreur est survenue, veuillez réessayer.'); return }
     setSent(true)
   }
 
@@ -193,9 +205,10 @@ function ContactCard({ l }) {
           <ShopCAInput required size="sm" value={name} onChange={e => setName(e.target.value)} placeholder="Votre nom" icon={<I.User size={14}/>} />
           <ShopCAInput type="tel" size="sm" value={phone} onChange={e => setPhone(e.target.value)} placeholder="Votre téléphone" icon={<I.Phone size={14}/>} />
           <ShopCATextarea rows={4} value={msg} onChange={e => setMsg(e.target.value)} placeholder="Votre message…" />
-          <motion.button type="submit" whileHover={{ y: -1 }} whileTap={{ scale: 0.98 }}
-            className="w-full py-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm transition shadow-lg shadow-orange-200/60 flex items-center justify-center gap-2">
-            <I.Send size={15} /> Contacter l'agence
+          {error && <p className="text-xs text-rose-500 font-medium">{error}</p>}
+          <motion.button type="submit" disabled={sending} whileHover={{ y: -1 }} whileTap={{ scale: 0.98 }}
+            className="w-full py-3 rounded-xl bg-orange-500 hover:bg-orange-600 disabled:opacity-60 text-white font-bold text-sm transition shadow-lg shadow-orange-200/60 flex items-center justify-center gap-2">
+            {sending ? <><I.Loader size={15} className="animate-spin" /> Envoi…</> : <><I.Send size={15} /> Contacter l'agence</>}
           </motion.button>
           <button type="button"
             className="w-full py-3 rounded-xl border-2 border-slate-200 hover:border-orange-300 bg-white text-[#0F172A] font-semibold text-sm transition flex items-center justify-center gap-2">
