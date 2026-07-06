@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import { AuthProvider } from './features/auth/providers/AuthProvider.jsx'
 import ProtectedRoute from './lib/ProtectedRoute.jsx'
@@ -35,6 +35,20 @@ const SubscriptionSuccessPage = lazy(() => import('./features/subscription/Subsc
 const PersonalDashboardPage  = lazy(() => import('./features/dashboard/PersonalDashboardPage.jsx'))
 const ProDashboardPage       = lazy(() => import('./features/pro/ProDashboardPage.jsx'))
 const DebugAuthPage          = lazy(() => import('./features/debug/DebugAuthPage.jsx'))
+
+// ── Back Office — ManagerIT (accès propriétaire uniquement) ──────────────────
+const ManagerLayout       = lazy(() => import('./managerIT/ManagerLayout.jsx'))
+const MgrDashboardPage    = lazy(() => import('./managerIT/pages/DashboardPage.jsx'))
+const MgrUsersPage        = lazy(() => import('./managerIT/pages/UsersPage.jsx'))
+const MgrProfessionalsPage = lazy(() => import('./managerIT/pages/ProfessionalsPage.jsx'))
+const MgrListingsPage     = lazy(() => import('./managerIT/pages/ListingsPage.jsx'))
+const MgrPaymentsPage     = lazy(() => import('./managerIT/pages/PaymentsPage.jsx'))
+const MgrEmailsPage       = lazy(() => import('./managerIT/pages/EmailsPage.jsx'))
+const MgrNotificationsPage = lazy(() => import('./managerIT/pages/NotificationsPage.jsx'))
+const MgrSupportPage      = lazy(() => import('./managerIT/pages/SupportPage.jsx'))
+const MgrModerationPage   = lazy(() => import('./managerIT/pages/ModerationPage.jsx'))
+const MgrSettingsPage     = lazy(() => import('./managerIT/pages/SettingsPage.jsx'))
+const MgrLogsPage         = lazy(() => import('./managerIT/pages/LogsPage.jsx'))
 
 // ── Pages SEO ─────────────────────────────────────────────────────────────────
 const AcheterPage        = lazy(() => import('./features/seo/AcheterPage.jsx'))
@@ -156,6 +170,22 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 <Route path="/debug-auth" element={
                   <ProtectedRoute anyOf={['super_admin']}><DebugAuthPage /></ProtectedRoute>
                 } />
+
+                {/* ── Back Office ManagerIT (propriétaire uniquement, non indexé) ── */}
+                <Route path="/managerIT" element={<ManagerLayout />}>
+                  <Route index element={<Navigate to="/managerIT/dashboard" replace />} />
+                  <Route path="dashboard"     element={<MgrDashboardPage />} />
+                  <Route path="users"         element={<MgrUsersPage />} />
+                  <Route path="professionals" element={<MgrProfessionalsPage />} />
+                  <Route path="listings"      element={<MgrListingsPage />} />
+                  <Route path="payments"      element={<MgrPaymentsPage />} />
+                  <Route path="emails"        element={<MgrEmailsPage />} />
+                  <Route path="notifications" element={<MgrNotificationsPage />} />
+                  <Route path="support"       element={<MgrSupportPage />} />
+                  <Route path="moderation"    element={<MgrModerationPage />} />
+                  <Route path="settings"      element={<MgrSettingsPage />} />
+                  <Route path="logs"          element={<MgrLogsPage />} />
+                </Route>
               </Routes>
             </Suspense>
           </BrowserRouter>
