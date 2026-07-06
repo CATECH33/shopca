@@ -268,6 +268,7 @@ function FilterPanel({ params, set, resetAll, activeCount }) {
   const dpe          = params.get('dpe')          ? params.get('dpe').split(',') : []
   const parking      = params.get('parking')      === 'true'
   const elevator     = params.get('elevator')     === 'true'
+  const furnished    = params.get('furnished')    === 'true'
 
   return (
     <div className="space-y-6">
@@ -353,8 +354,9 @@ function FilterPanel({ params, set, resetAll, activeCount }) {
         <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Équipements</div>
         <div className="space-y-2">
           {[
-            { key:'parking',  label:'Parking / Garage', val:parking  },
-            { key:'elevator', label:'Ascenseur',         val:elevator },
+            { key:'parking',   label:'Parking / Garage', val:parking   },
+            { key:'elevator',  label:'Ascenseur',         val:elevator  },
+            { key:'furnished', label:'Meublé',            val:furnished },
           ].map(({ key, label, val }) => (
             <button key={key} onClick={() => set(key, val ? '' : 'true')}
               className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl border text-sm font-medium transition-all ${
@@ -396,6 +398,7 @@ export default function ListingsPage() {
   const dpe          = dpeRaw ? dpeRaw.split(',') : []
   const parking      = searchParams.get('parking')      === 'true'
   const elevator     = searchParams.get('elevator')     === 'true'
+  const furnished    = searchParams.get('furnished')    === 'true'
   const sort         = searchParams.get('sort')         || 'relevance'
   const view         = searchParams.get('view')         || 'grid'
   const page         = Number(searchParams.get('page')  || 1)
@@ -494,6 +497,7 @@ export default function ListingsPage() {
       if (dpe.length > 0 && !dpe.includes(el.dpe))           return false
       if (parking    && !el.parking)    return false
       if (elevator   && !el.elevator)   return false
+      if (furnished  && !l.furnished)   return false
       return true
     })
   }, [listings, type, location, priceMin, priceMax, surfaceMin, roomsMin, propertyType, dpe, parking, elevator])
@@ -510,7 +514,7 @@ export default function ListingsPage() {
   const paginated  = sorted.slice((page - 1) * PER_PAGE, page * PER_PAGE)
 
   // Active filter count (excludes type + location which live in the top bar)
-  const activeCount = [priceMin, priceMax, surfaceMin, roomsMin > 0 ? 'x' : '', propertyType, dpeRaw, parking ? 'x' : '', elevator ? 'x' : ''].filter(Boolean).length
+  const activeCount = [priceMin, priceMax, surfaceMin, roomsMin > 0 ? 'x' : '', propertyType, dpeRaw, parking ? 'x' : '', elevator ? 'x' : '', furnished ? 'x' : ''].filter(Boolean).length
 
   // ── Location search state (local, committed on Enter / button click) ───────
   const [locDraft, setLocDraft] = useState(location)
