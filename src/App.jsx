@@ -698,6 +698,7 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
                      style={{ color: '#64748B' }}>Localisation</label>
               <CitySearch
                 bare
+                id="sb-location"
                 value={filters.location}
                 onChange={name => setFilters(f => ({ ...f, location: name || '' }))}
                 onSelect={city => {
@@ -866,7 +867,7 @@ function Hero({ filters, setFilters, onSearch }) {
             className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-medium px-3.5 py-1.5 rounded-full mb-6"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
-            +12 480 biens premium disponibles
+            Marketplace immobilière premium
           </motion.div>
           <motion.h1
             variants={reveal} initial="hidden" animate="show" custom={1}
@@ -886,16 +887,6 @@ function Hero({ filters, setFilters, onSearch }) {
           <SearchBar filters={filters} setFilters={setFilters} onSearch={onSearch} floating />
         </motion.div>
 
-        <motion.div
-          variants={reveal} initial="hidden" animate="show" custom={4}
-          className="mt-10 flex flex-wrap items-center gap-x-10 gap-y-4 text-white/85 text-sm"
-        >
-          <div><span className="text-2xl font-bold text-white">2,4M</span> visiteurs / mois</div>
-          <div className="w-px h-8 bg-white/25 hidden md:block" />
-          <div><span className="text-2xl font-bold text-white">98%</span> de biens vérifiés</div>
-          <div className="w-px h-8 bg-white/25 hidden md:block" />
-          <div><span className="text-2xl font-bold text-white">4.9/5</span> avis clients</div>
-        </motion.div>
       </motion.div>
 
       {/* Scroll indicator */}

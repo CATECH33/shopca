@@ -15,6 +15,7 @@ function ensureCSS() {
     ._cs_list { scrollbar-width:none; -ms-overflow-style:none }
     @keyframes _cs_spin { to{transform:rotate(360deg)} }
     ._cs_spin { animation:_cs_spin .7s linear infinite }
+    @media (pointer: coarse) { ._cs_kbd { display:none } }
   `
   document.head.appendChild(s)
 }
@@ -67,6 +68,7 @@ interface Props {
   bare?:        boolean
   dark?:        boolean
   className?:   string
+  id?:          string
 }
 
 /* ── Composant ──────────────────────────────────────────────── */
@@ -78,6 +80,7 @@ export function CitySearch({
   bare        = false,
   dark        = false,
   className   = '',
+  id,
 }: Props) {
   const { results, total, loading, setQuery, clear } = useCitySearch()
 
@@ -183,6 +186,10 @@ export function CitySearch({
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Tab') {
+      if (open) { setOpen(false); setActiveIdx(-1) }
+      return
+    }
     if (!open) return
     if (e.key === 'ArrowDown') {
       e.preventDefault()
@@ -246,10 +253,11 @@ export function CitySearch({
           )}
           <input
             ref={inputRef}
+            id={id}
             type="text"
             value={inputVal}
             onChange={handleChange}
-            onFocus={() => { if (results.length > 0) { computePos(); setOpen(true) } }}
+            onFocus={() => { computePos(); if (inputVal.trim().length >= 1 || results.length > 0) setOpen(true) }}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
             autoComplete="off"
@@ -259,15 +267,18 @@ export function CitySearch({
           {!inputVal && (
             <button type="button" onMouseDown={e => { e.preventDefault(); handleGeo() }}
               title="Utiliser ma position"
-              style={{ flexShrink: 0, padding: 4, borderRadius: 99, color: geoLoading ? '#F97316' : '#94A3B8',
-                       background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex' }}>
+              style={{ flexShrink: 0, minWidth: 44, minHeight: 44, padding: '0 8px', borderRadius: 99,
+                       color: geoLoading ? '#F97316' : '#94A3B8',
+                       background: 'transparent', border: 'none', cursor: 'pointer',
+                       display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <IconLocate spinning={geoLoading} />
             </button>
           )}
           {inputVal && (
             <button type="button" onMouseDown={e => { e.preventDefault(); handleClear() }}
-              style={{ flexShrink: 0, padding: 3, borderRadius: 99, color: '#CBD5E1',
-                       background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex' }}>
+              style={{ flexShrink: 0, minWidth: 44, minHeight: 44, padding: '0 8px', borderRadius: 99,
+                       color: '#CBD5E1', background: 'transparent', border: 'none', cursor: 'pointer',
+                       display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <IconX />
             </button>
           )}
@@ -287,10 +298,11 @@ export function CitySearch({
           </span>
           <input
             ref={inputRef}
+            id={id}
             type="text"
             value={inputVal}
             onChange={handleChange}
-            onFocus={() => { if (results.length > 0) { computePos(); setOpen(true) } }}
+            onFocus={() => { computePos(); if (inputVal.trim().length >= 1 || results.length > 0) setOpen(true) }}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
             autoComplete="off"
@@ -301,16 +313,18 @@ export function CitySearch({
           {!inputVal && (
             <button type="button" onMouseDown={e => { e.preventDefault(); handleGeo() }}
               title="Utiliser ma position"
-              style={{ flexShrink: 0, padding: 4, borderRadius: 99,
+              style={{ flexShrink: 0, minWidth: 44, minHeight: 44, padding: '0 8px', borderRadius: 99,
                        color: geoLoading ? '#F97316' : '#94A3B8',
-                       background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex' }}>
+                       background: 'transparent', border: 'none', cursor: 'pointer',
+                       display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <IconLocate spinning={geoLoading} />
             </button>
           )}
           {inputVal && (
             <button type="button" onMouseDown={e => { e.preventDefault(); handleClear() }}
-              style={{ flexShrink: 0, padding: 3, borderRadius: 99, color: '#CBD5E1',
-                       background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex' }}>
+              style={{ flexShrink: 0, minWidth: 44, minHeight: 44, padding: '0 8px', borderRadius: 99,
+                       color: '#CBD5E1', background: 'transparent', border: 'none', cursor: 'pointer',
+                       display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <IconX />
             </button>
           )}
@@ -338,7 +352,7 @@ export function CitySearch({
               <span style={{ fontSize: 11, fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                 {total} commune{total > 1 ? 's' : ''} trouvée{total > 1 ? 's' : ''}
               </span>
-              <span style={{ fontSize: 10, color: '#CBD5E1' }}>↑↓ Entrée</span>
+              <span className="_cs_kbd" style={{ fontSize: 10, color: '#CBD5E1' }}>↑↓ Entrée</span>
             </div>
           )}
 
