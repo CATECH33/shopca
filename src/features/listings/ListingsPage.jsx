@@ -451,7 +451,16 @@ export default function ListingsPage() {
       try {
         const { data, error } = await supabase.from('listings').select('*').limit(100)
         if (!cancelled) {
-          setListings((error || !data?.length) ? FALLBACK : data)
+          if (error || !data?.length) {
+            setListings(FALLBACK)
+          } else {
+            const normalized = data.map(row => ({
+              ...row,
+              location: row.location || [row.city, row.district].filter(Boolean).join(' · '),
+              type: row.type || row.transaction_type,
+            }))
+            setListings(normalized)
+          }
           setLoading(false)
         }
       } catch {
