@@ -580,6 +580,42 @@ function Header({ currentView, setCurrentView, user, role, onSignIn, onPublish, 
 /* ============================================================================
    Search Bar
    ============================================================================ */
+/* ── SearchBar field wrapper — défini HORS de SearchBar pour éviter
+      le remontage React à chaque frappe (composant inline = nouveau type = focus perdu) ── */
+function SbField({ icon: Ic, label, fieldId, divider, children }) {
+  return (
+    <div className="relative flex items-stretch">
+      {divider && (
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px"
+             style={{ height: '50px', background: 'rgba(15,23,42,.08)' }} />
+      )}
+      <div className={`flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-slate-50/80 transition-all duration-200 focus-within:bg-orange-50/30 focus-within:shadow-[0_0_0_2px_rgba(251,146,60,0.18)] group w-full ${divider ? 'pl-5' : ''}`}>
+        {Ic && <Ic size={20} className="text-orange-500 shrink-0 group-hover:text-orange-600 group-focus-within:text-orange-600 transition-all duration-200" />}
+        <div className="flex-1 min-w-0">
+          <label htmlFor={fieldId} className="text-[11px] font-semibold uppercase tracking-wider block cursor-default"
+                 style={{ color: '#64748B' }}>{label}</label>
+          {children}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ── Style partagé pour les <select> natifs dans la SearchBar ── */
+const sbSelectStyle = {
+  width: '100%',
+  background: 'transparent',
+  border: 'none',
+  outline: 'none',
+  fontSize: 14,
+  fontWeight: 700,
+  color: '#0F172A',
+  cursor: 'pointer',
+  appearance: 'none',
+  WebkitAppearance: 'none',
+  padding: 0,
+}
+
 function SearchBar({ filters, setFilters, onSearch, floating = false }) {
   const [budgetDisplay, setBudgetDisplay] = React.useState(
     filters.priceMax ? Number(filters.priceMax).toLocaleString('fr-FR') : ''
@@ -587,11 +623,6 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
   const [surfaceDisplay, setSurfaceDisplay] = React.useState(
     filters.surfaceMin ? String(filters.surfaceMin) : ''
   )
-
-  const tabs = [
-    { id: 'acheter', label: 'Acheter' },
-    { id: 'louer',   label: 'Louer'   },
-  ]
 
   const handleBudgetChange = (e) => {
     const raw = e.target.value.replace(/\D/g, '')
@@ -625,30 +656,13 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
         zIndex: 20,
       }
 
-  const Field = ({ icon: Ic, label, fieldId, children, divider = false }) => (
-    <div className="relative flex items-stretch">
-      {divider && (
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px"
-             style={{ height: '50px', background: 'rgba(15,23,42,.08)' }} />
-      )}
-      <div className={`flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-slate-50/80 transition-all duration-200 focus-within:bg-orange-50/30 focus-within:shadow-[0_0_0_2px_rgba(251,146,60,0.18)] group w-full ${divider ? 'pl-5' : ''}`}>
-        {Ic && <Ic size={20} className="text-orange-500 shrink-0 group-hover:text-orange-600 group-hover:scale-110 group-focus-within:scale-110 group-focus-within:text-orange-600 transition-all duration-200" />}
-        <div className="flex-1 min-w-0">
-          <label htmlFor={fieldId} className="text-[11px] font-semibold uppercase tracking-wider block cursor-default"
-                 style={{ color: '#64748B' }}>{label}</label>
-          {children}
-        </div>
-      </div>
-    </div>
-  )
-
   return (
     <div className="w-full max-w-6xl mx-auto p-2 md:p-3" style={wrapperStyle}
          role="search" aria-label="Moteur de recherche immobilière">
 
       {/* Tabs Acheter / Louer */}
       <div className="flex items-center gap-1 px-2 pt-1" role="tablist">
-        {tabs.map((t) => (
+        {[{ id: 'acheter', label: 'Acheter' }, { id: 'louer', label: 'Louer' }].map((t) => (
           <button
             key={t.id}
             type="button"
@@ -668,9 +682,7 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
         ))}
       </div>
 
-      {/* Champs de recherche */}
       <form
-        id="searchbar-form"
         onSubmit={(e) => { e.preventDefault(); onSearch() }}
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-2 mt-2"
         noValidate
@@ -679,7 +691,7 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
         {/* ── Localisation ── */}
         <div className="col-span-1 sm:col-span-2 md:col-span-4">
           <div className="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 hover:bg-slate-50/80 focus-within:bg-orange-50/30 focus-within:shadow-[0_0_0_2px_rgba(251,146,60,0.18)] group">
-            <Icons.MapPin size={20} className="text-orange-500 shrink-0 group-hover:text-orange-600 group-focus-within:text-orange-600 transition-all duration-200" />
+            <Icons.MapPin size={20} className="text-orange-500 shrink-0 group-focus-within:text-orange-600 transition-all duration-200" />
             <div className="flex-1 min-w-0">
               <label htmlFor="sb-location" className="text-[11px] font-semibold uppercase tracking-wider block cursor-default"
                      style={{ color: '#64748B' }}>Localisation</label>
@@ -688,12 +700,8 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
                 value={filters.location}
                 onChange={name => setFilters(f => ({ ...f, location: name || '' }))}
                 onSelect={city => {
-                  if (city) {
-                    setFilters(f => ({ ...f, location: city.name }))
-                    onSearch({ location: city.name })
-                  } else {
-                    setFilters(f => ({ ...f, location: '' }))
-                  }
+                  if (city) { setFilters(f => ({ ...f, location: city.name })); onSearch({ location: city.name }) }
+                  else      { setFilters(f => ({ ...f, location: '' })) }
                 }}
                 placeholder="Paris, Lyon, Bordeaux…"
               />
@@ -701,34 +709,35 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
           </div>
         </div>
 
-        {/* ── Type de bien ── */}
+        {/* ── Type de bien — <select> natif ── */}
         <div className="md:col-span-2">
-          <Field icon={Icons.Home} label="Type de bien" fieldId="sb-type" divider>
-            <ShopCASelect
+          <SbField icon={Icons.Home} label="Type de bien" fieldId="sb-type" divider>
+            <select
+              id="sb-type"
+              name="type"
               value={filters.propertyType}
-              onChange={v => setFilters(f => ({ ...f, propertyType: v }))}
-              options={[
-                { value: '',                 label: 'Tous'             },
-                { value: 'Appartement',      label: 'Appartement'      },
-                { value: 'Maison',           label: 'Maison'           },
-                { value: 'Villa',            label: 'Villa'            },
-                { value: 'Terrain',          label: 'Terrain'          },
-                { value: 'Local commercial', label: 'Local commercial' },
-                { value: 'Bureau',           label: 'Bureau'           },
-                { value: 'Immeuble',         label: 'Immeuble'         },
-                { value: 'Garage',           label: 'Garage'           },
-                { value: 'Parking',          label: 'Parking'          },
-                { value: 'Programme neuf',   label: 'Programme neuf'   },
-              ]}
-              ghost
-              className="flex-1"
-            />
-          </Field>
+              onChange={e => setFilters(f => ({ ...f, propertyType: e.target.value }))}
+              style={sbSelectStyle}
+              aria-label="Type de bien"
+            >
+              <option value="">Tous</option>
+              <option value="Appartement">Appartement</option>
+              <option value="Maison">Maison</option>
+              <option value="Villa">Villa</option>
+              <option value="Terrain">Terrain</option>
+              <option value="Local commercial">Local commercial</option>
+              <option value="Bureau">Bureau</option>
+              <option value="Immeuble">Immeuble</option>
+              <option value="Garage">Garage</option>
+              <option value="Parking">Parking</option>
+              <option value="Programme neuf">Programme neuf</option>
+            </select>
+          </SbField>
         </div>
 
         {/* ── Budget ── */}
         <div className="md:col-span-2">
-          <Field icon={Icons.Tag} label="Budget max" fieldId="sb-budget" divider>
+          <SbField icon={Icons.Tag} label="Budget max" fieldId="sb-budget" divider>
             <div className="flex items-center gap-1 w-full">
               <input
                 id="sb-budget"
@@ -742,18 +751,18 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
                 onChange={handleBudgetChange}
                 placeholder="500 000"
                 className="searchbar-input w-full bg-transparent text-sm focus:outline-none min-w-0"
-                aria-label="Budget maximum"
+                aria-label="Budget maximum en euros"
               />
               {budgetDisplay && (
                 <span className="text-sm font-semibold shrink-0 select-none" style={{ color: '#94A3B8' }}>€</span>
               )}
             </div>
-          </Field>
+          </SbField>
         </div>
 
         {/* ── Surface ── */}
         <div className="md:col-span-1">
-          <Field icon={Icons.Maximize} label="Surface min" fieldId="sb-surface" divider>
+          <SbField icon={Icons.Maximize} label="Surface min" fieldId="sb-surface" divider>
             <div className="flex items-center gap-0.5 w-full">
               <input
                 id="sb-surface"
@@ -767,36 +776,37 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
                 onChange={handleSurfaceChange}
                 placeholder="50"
                 className="searchbar-input w-full bg-transparent text-sm focus:outline-none min-w-0"
-                aria-label="Surface minimale"
+                aria-label="Surface minimale en m²"
               />
               {surfaceDisplay && (
                 <span className="text-sm font-medium shrink-0 select-none" style={{ color: '#94A3B8' }}>m²</span>
               )}
             </div>
-          </Field>
+          </SbField>
         </div>
 
-        {/* ── Pièces ── */}
+        {/* ── Pièces — <select> natif ── */}
         <div className="md:col-span-1">
-          <Field icon={Icons.Bed} label="Pièces" fieldId="sb-pieces" divider>
-            <ShopCASelect
+          <SbField icon={Icons.Bed} label="Pièces" fieldId="sb-pieces" divider>
+            <select
+              id="sb-pieces"
+              name="pieces"
               value={filters.roomsMin ? String(filters.roomsMin) : ''}
-              onChange={v => setFilters(f => ({ ...f, roomsMin: v ? Number(v) : '' }))}
-              options={[
-                { value: '',  label: 'Toutes' },
-                { value: '1', label: '1+'     },
-                { value: '2', label: '2+'     },
-                { value: '3', label: '3+'     },
-                { value: '4', label: '4+'     },
-                { value: '5', label: '5+'     },
-                { value: '6', label: '6+'     },
-                { value: '7', label: '7+'     },
-                { value: '8', label: '8+'     },
-              ]}
-              ghost
-              className="flex-1"
-            />
-          </Field>
+              onChange={e => setFilters(f => ({ ...f, roomsMin: e.target.value ? Number(e.target.value) : '' }))}
+              style={sbSelectStyle}
+              aria-label="Nombre de pièces minimum"
+            >
+              <option value="">Toutes</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+              <option value="4">4+</option>
+              <option value="5">5+</option>
+              <option value="6">6+</option>
+              <option value="7">7+</option>
+              <option value="8">8+</option>
+            </select>
+          </SbField>
         </div>
 
         {/* ── Bouton Rechercher ── */}
@@ -806,7 +816,7 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
           type="submit"
           className="col-span-1 sm:col-span-2 md:col-span-2 flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-2xl py-3 px-4 transition-colors"
           style={{ boxShadow: '0 12px 35px rgba(255,119,0,.30)' }}
-          aria-label="Lancer la recherche immobilière"
+          aria-label="Lancer la recherche"
         >
           <Icons.Search size={20} />
           <span>Rechercher</span>
