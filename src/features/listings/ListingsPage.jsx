@@ -386,6 +386,26 @@ export default function ListingsPage() {
   })
   const [drawerOpen, setDrawerOpen] = useState(false)
 
+  // ── Normalisation params /recherche → format interne ──────────────────────
+  // /recherche?transaction=acheter&ville=lyon&type=maison&budget=350000&surface=120&pieces=4
+  useEffect(() => {
+    const hasNew = searchParams.has('transaction') || searchParams.has('ville') ||
+                   searchParams.has('budget')      || searchParams.has('pieces')
+    if (!hasNew) return
+    const next = new URLSearchParams()
+    for (const [k, v] of searchParams) {
+      if (!['transaction','ville','budget','pieces','type','surface'].includes(k)) next.set(k, v)
+    }
+    next.set('type', searchParams.get('transaction') || 'acheter')
+    if (searchParams.has('ville'))   next.set('location',    searchParams.get('ville'))
+    if (searchParams.has('budget'))  next.set('priceMax',    searchParams.get('budget'))
+    if (searchParams.has('surface')) next.set('surfaceMin',  searchParams.get('surface'))
+    if (searchParams.has('pieces'))  next.set('roomsMin',    searchParams.get('pieces'))
+    const propType = searchParams.get('type')
+    if (propType && !['acheter','louer','colocation'].includes(propType)) next.set('propertyType', propType)
+    setSearchParams(next, { replace: true })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   // ── Read params ────────────────────────────────────────────────────────────
   const type         = searchParams.get('type')         || 'acheter'
   const location     = searchParams.get('location')     || ''

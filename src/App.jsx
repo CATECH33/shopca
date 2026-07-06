@@ -684,6 +684,7 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
 
       <form
         onSubmit={(e) => { e.preventDefault(); onSearch() }}
+        onKeyDown={(e) => { if (e.key === 'Escape') e.target.blur() }}
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-2 mt-2"
         noValidate
       >
@@ -6181,19 +6182,14 @@ export default function App() {
   const handleSearch = (overrides = {}) => {
     if (typeof overrides === 'string') overrides = { location: overrides }
     const merged = { ...filters, ...overrides }
-    if (currentView === 'home') {
-      const params = new URLSearchParams()
-      if (merged.type)         params.set('type', merged.type)
-      if (merged.location)     params.set('location', merged.location)
-      if (merged.propertyType) params.set('propertyType', merged.propertyType)
-      if (merged.priceMax)     params.set('priceMax', String(merged.priceMax))
-      if (merged.surfaceMin)   params.set('surfaceMin', String(merged.surfaceMin))
-      if (merged.roomsMin)     params.set('roomsMin', String(merged.roomsMin))
-      navigate(`/annonces?${params.toString()}`)
-      return
-    }
-    fetchListings(merged)
-    setCurrentView('results')
+    const params = new URLSearchParams()
+    if (merged.type)         params.set('transaction', merged.type)
+    if (merged.location)     params.set('ville',       merged.location)
+    if (merged.propertyType) params.set('type',        merged.propertyType)
+    if (merged.priceMax)     params.set('budget',      String(merged.priceMax))
+    if (merged.surfaceMin)   params.set('surface',     String(merged.surfaceMin))
+    if (merged.roomsMin)     params.set('pieces',      String(merged.roomsMin))
+    navigate(`/recherche?${params.toString()}`)
   }
   const handleCategoryPick = (propertyType) => {
     const next = { ...filters, propertyType }

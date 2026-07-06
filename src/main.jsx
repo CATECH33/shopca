@@ -107,6 +107,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 {/* ── Annonces ── */}
                 <Route path="/annonces"     element={<ListingsPage />} />
                 <Route path="/annonces/:id" element={<ListingDetailPage />} />
+                <Route path="/recherche"    element={<ListingsPage />} />
 
                 {/* ── Pages SEO — Achat ── */}
                 <Route path="/acheter"                       element={<AcheterPage />} />
