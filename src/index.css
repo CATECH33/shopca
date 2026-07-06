@@ -14,6 +14,16 @@ body {
   background: #FFFFFF;
 }
 
+/* SearchBar — inputs premium */
+.searchbar-input::placeholder {
+  color: #94A3B8;
+  font-weight: 400;
+}
+.searchbar-input {
+  color: #0F172A;
+  font-weight: 700;
+}
+
 /* Glassmorphism */
 .glass {
   backdrop-filter: saturate(180%) blur(18px);
