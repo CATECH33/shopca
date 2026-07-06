@@ -232,6 +232,7 @@ export default function ListingDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const [listing,  setListing]  = useState(null)
+  const [similar,  setSimilar]  = useState([])
   const [loading,  setLoading]  = useState(true)
   const [saved,    setSaved]    = useState(false)
 
@@ -240,20 +241,44 @@ export default function ListingDetailPage() {
     const savedIds = JSON.parse(localStorage.getItem('shopca-saved') || '[]')
     setSaved(savedIds.includes(id))
 
+    const normalize = row => ({
+      ...row,
+      location: row.location || [row.city, row.district].filter(Boolean).join(' · '),
+      type: row.type || row.transaction_type,
+    })
+
     const load = async () => {
       try {
         const { data } = await supabase.from('listings').select('*').eq('id', id).single()
         if (data) {
-          const normalized = {
-            ...data,
-            location: data.location || [data.city, data.district].filter(Boolean).join(' · '),
-            type: data.type || data.transaction_type,
+          const norm = normalize(data)
+          setListing(enrich(norm))
+
+          // Annonces similaires : même ville en priorité, sinon même type
+          const { data: sameCity } = await supabase
+            .from('listings').select('*')
+            .eq('status', 'active').eq('city', data.city).neq('id', id).limit(3)
+          const cityResults = (sameCity || []).map(normalize)
+
+          if (cityResults.length >= 3) {
+            setSimilar(cityResults.slice(0, 3))
+          } else {
+            const needed = 3 - cityResults.length
+            const cityIds = cityResults.map(r => r.id)
+            const { data: sameType } = await supabase
+              .from('listings').select('*')
+              .eq('status', 'active').eq('type', norm.type).neq('id', id)
+              .not('id', 'in', `(${[id, ...cityIds].join(',')})`)
+              .limit(needed)
+            setSimilar([...cityResults, ...(sameType || []).map(normalize)])
           }
-          setListing(enrich(normalized)); setLoading(false); return
+
+          setLoading(false); return
         }
       } catch {}
       const fb = FALLBACK.find(l => l.id === id)
       setListing(fb ? enrich(fb) : null)
+      setSimilar(FALLBACK.filter(l => l.id !== id).slice(0, 3))
       setLoading(false)
     }
     load()
@@ -300,7 +325,6 @@ export default function ListingDetailPage() {
 
   const ext     = extras(listing)
   const paras   = descriptionFor(listing)
-  const similar = FALLBACK.filter(l => l.id !== listing.id && l.type === listing.type).slice(0, 3)
   const dpeColor = DPE_COLORS[listing.dpe] || '#ccc'
   const dpeDark  = ['C','D'].includes(listing.dpe)
 
