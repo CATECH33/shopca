@@ -99,30 +99,51 @@ export function CitySearch({
     if (!value) clear()
   }, [value]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  /* Position dropdown sous le wrapper */
+  /* Position dropdown — fixed viewport pour fiabilité mobile (clavier virtuel) */
   const computePos = useCallback(() => {
     if (!wrapRef.current) return
-    const r = wrapRef.current.getBoundingClientRect()
-    setDropPos({ top: r.bottom + window.scrollY + 6, left: r.left + window.scrollX, width: r.width })
+    const r   = wrapRef.current.getBoundingClientRect()
+    const vw  = window.innerWidth
+    const w   = Math.min(Math.max(r.width, 280), vw - 8)
+    const left = Math.max(4, Math.min(r.left, vw - w - 4))
+    setDropPos({ top: r.bottom + 6, left, width: w })
   }, [])
 
-  /* Clic hors → fermer */
+  /* Clic / tap hors → fermer */
   useEffect(() => {
     if (!open) return
-    const fn = (e: MouseEvent) => {
-      if (!wrapRef.current?.contains(e.target as Node)) { setOpen(false); setActiveIdx(-1) }
+    const fn = (e: MouseEvent | TouchEvent) => {
+      const target = (e as TouchEvent).touches
+        ? (e as TouchEvent).touches[0]?.target
+        : (e as MouseEvent).target
+      if (!wrapRef.current?.contains(target as Node)) { setOpen(false); setActiveIdx(-1) }
     }
     document.addEventListener('mousedown', fn)
-    return () => document.removeEventListener('mousedown', fn)
+    document.addEventListener('touchstart', fn, { passive: true })
+    return () => {
+      document.removeEventListener('mousedown', fn)
+      document.removeEventListener('touchstart', fn)
+    }
   }, [open])
 
-  /* Scroll page → fermer */
+  /* Scroll page → fermer (debounce 80ms pour ignorer le décalage du clavier virtuel) */
   useEffect(() => {
     if (!open) return
-    const fn = () => { setOpen(false); setActiveIdx(-1) }
+    let t: ReturnType<typeof setTimeout>
+    const fn = () => { clearTimeout(t); t = setTimeout(() => { setOpen(false); setActiveIdx(-1) }, 80) }
     window.addEventListener('scroll', fn, { passive: true })
-    return () => window.removeEventListener('scroll', fn)
+    return () => { clearTimeout(t); window.removeEventListener('scroll', fn) }
   }, [open])
+
+  /* Resize / clavier virtuel → recalculer la position */
+  useEffect(() => {
+    if (!open) return
+    const vv = (window as any).visualViewport
+    const fn = () => computePos()
+    if (vv) vv.addEventListener('resize', fn)
+    else window.addEventListener('resize', fn)
+    return () => { if (vv) vv.removeEventListener('resize', fn); else window.removeEventListener('resize', fn) }
+  }, [open, computePos])
 
   /* Scroll résultat actif dans la vue */
   useEffect(() => {
@@ -302,7 +323,7 @@ export function CitySearch({
           className="_cs_drop"
           onMouseDown={e => e.stopPropagation()}
           style={{
-            position: 'absolute', top: dropPos.top, left: dropPos.left, width: Math.max(dropPos.width, 280),
+            position: 'fixed', top: dropPos.top, left: dropPos.left, width: dropPos.width,
             zIndex: 9999, borderRadius: 16, border: '1px solid #E5E7EB',
             background: '#fff', boxShadow: '0 8px 32px rgba(15,23,42,0.13),0 2px 8px rgba(15,23,42,0.06)',
             overflow: 'hidden',
