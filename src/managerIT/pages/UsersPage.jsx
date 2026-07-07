@@ -40,7 +40,6 @@ const ROLES = [
   { value: 'pro_user',      label: 'Professionnel',  color: '#10B981' },
   { value: 'agency',        label: 'Agence',         color: '#3B82F6' },
   { value: 'agency_admin',  label: 'Admin Agence',   color: '#8B5CF6' },
-  { value: 'super_admin',   label: 'Super Admin',    color: '#F59E0B' },
   { value: 'premium_seller',label: 'Premium',        color: '#FF6B00' },
   { value: 'platform_owner',label: 'Propriétaire',   color: '#EF4444' },
 ]
@@ -681,7 +680,6 @@ export default function UsersPage() {
             <option value="pro_user">Professionnel</option>
             <option value="agency">Agence</option>
             <option value="agency_admin">Admin Agence</option>
-            <option value="super_admin">Super Admin</option>
             <option value="premium_seller">Premium</option>
             <option value="platform_owner">Propriétaire</option>
           </select>

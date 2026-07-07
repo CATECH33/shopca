@@ -12,15 +12,6 @@ import PageVerification from './prodash/PageVerification.jsx'
 import PageProfile from './prodash/PageProfile.jsx'
 import PageSettings from './prodash/PageSettings.jsx'
 import PageSecurity from './prodash/PageSecurity.jsx'
-import AdminOverview from './prodash/admin/AdminOverview.jsx'
-import AdminSavedSearches from './prodash/admin/AdminSavedSearches.jsx'
-import AdminNotifications from './prodash/admin/AdminNotifications.jsx'
-import AdminInsights from './prodash/admin/AdminInsights.jsx'
-import AdminSubscriptions from './prodash/admin/AdminSubscriptions.jsx'
-import AdminFavorites from './prodash/admin/AdminFavorites.jsx'
-import AdminProfile from './prodash/admin/AdminProfile.jsx'
-import AdminSeo from './prodash/admin/AdminSeo.jsx'
-
 const PRO_PAGES = {
   overview:     PageOverview,
   listings:     PageListings,
@@ -33,29 +24,17 @@ const PRO_PAGES = {
   security:     PageSecurity,
 }
 
-const ADMIN_PAGES = {
-  'admin-overview':       AdminOverview,
-  'admin-searches':       AdminSavedSearches,
-  'admin-notifications':  AdminNotifications,
-  'admin-insights':       AdminInsights,
-  'admin-subscriptions':  AdminSubscriptions,
-  'admin-favorites':      AdminFavorites,
-  'admin-profile':        AdminProfile,
-  'admin-seo':            AdminSeo,
-}
-
 export default function ProfessionalDashboard({ onExit }) {
   const { profile, loading: authLoading } = useAuth()
-  const isAdmin = profile?.role === 'super_admin'
 
   const [dark, setDark] = useState(false)
-  const [page, setPage] = useState(null) // null = en attente du profil
+  const [page, setPage] = useState(null)
 
   useEffect(() => {
     if (!authLoading && page === null) {
-      setPage(isAdmin ? 'admin-overview' : 'overview')
+      setPage('overview')
     }
-  }, [authLoading, isAdmin, page])
+  }, [authLoading, page])
 
   if (authLoading || page === null) {
     return (
@@ -70,18 +49,16 @@ export default function ProfessionalDashboard({ onExit }) {
     )
   }
 
-  const PAGES = isAdmin ? ADMIN_PAGES : PRO_PAGES
-  const fallback = isAdmin ? AdminOverview : PageOverview
-  const Page = PAGES[page] ?? fallback
+  const Page = PRO_PAGES[page] ?? PageOverview
 
   const bg = dark ? 'bg-[#111827]' : 'bg-slate-50'
 
   return (
     <div className="fixed inset-0 z-[120] flex" style={{ fontFamily: 'inherit' }}>
-      <DashSidebar page={page} setPage={setPage} dark={dark} setDark={setDark} onExit={onExit} isAdmin={isAdmin} />
+      <DashSidebar page={page} setPage={setPage} dark={dark} setDark={setDark} onExit={onExit} />
 
       <div className={`flex-1 flex flex-col overflow-hidden ${bg}`}>
-        <DashTopbar page={page} dark={dark} setPage={setPage} onExit={onExit} isAdmin={isAdmin} />
+        <DashTopbar page={page} dark={dark} setPage={setPage} onExit={onExit} />
 
         <main className="flex-1 overflow-y-auto">
           <AnimatePresence mode="wait">

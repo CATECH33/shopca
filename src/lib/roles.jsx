@@ -5,27 +5,26 @@ import { supabase } from './supabase.js'
    SHOPCA — Role-Based Access Control
    - Pure logic + React hook + UI gate component
    - Source of truth: public.profiles.role
-   - Hierarchy: user < agency < moderator < admin < super_admin
+   - Hierarchy: user < agency < moderator < platform_owner
    ============================================================ */
 
-export const ROLES = ['user', 'private_user', 'premium_seller', 'agency', 'agency_admin', 'pro_user', 'moderator', 'admin', 'super_admin']
+export const ROLES = ['user', 'private_user', 'premium_seller', 'agency', 'agency_admin', 'pro_user', 'moderator', 'platform_owner']
 
 export const ROLE_META = {
-  user:           { label: 'Utilisateur',   rank: 0, color: 'slate'   },
-  private_user:   { label: 'Particulier',   rank: 0, color: 'slate'   },
-  premium_seller: { label: 'Premium',       rank: 1, color: 'indigo'  },
-  agency:         { label: 'Agence',        rank: 1, color: 'indigo'  },
-  pro_user:       { label: 'Professionnel', rank: 1, color: 'indigo'  },
-  agency_admin:   { label: 'Admin Agence',  rank: 2, color: 'indigo'  },
-  moderator:      { label: 'Modérateur',    rank: 3, color: 'amber'   },
-  admin:          { label: 'Admin',         rank: 4, color: 'orange'  },
-  super_admin:    { label: 'Super Admin',   rank: 5, color: 'rose'    },
+  user:             { label: 'Utilisateur',      rank: 0, color: 'slate'   },
+  private_user:     { label: 'Particulier',      rank: 0, color: 'slate'   },
+  premium_seller:   { label: 'Premium',          rank: 1, color: 'indigo'  },
+  agency:           { label: 'Agence',           rank: 1, color: 'indigo'  },
+  pro_user:         { label: 'Professionnel',    rank: 1, color: 'indigo'  },
+  agency_admin:     { label: 'Admin Agence',     rank: 2, color: 'indigo'  },
+  moderator:        { label: 'Modérateur',       rank: 3, color: 'amber'   },
+  platform_owner:   { label: 'Propriétaire',     rank: 4, color: 'rose'    },
 }
 
 /* Redirect target by role — used by Login + ProtectedRoute */
 export function roleRedirect(role) {
-  if (['super_admin', 'admin', 'moderator'].includes(role)) return '/admin'
-  if (['agency_admin', 'agency'].includes(role))             return '/agency'
+  if (role === 'platform_owner') return '/managerIT'
+  if (['agency_admin', 'agency'].includes(role)) return '/agency'
   return '/app'
 }
 
@@ -99,11 +98,10 @@ export function useUserRole() {
     user,
     role,
     loading,
-    isAuthenticated: !!user,
-    isAgency:        hasAccess(role, 'agency'),
-    isModerator:     hasAccess(role, 'moderator'),
-    isAdmin:         hasAccess(role, 'admin'),
-    isSuperAdmin:    hasAccess(role, 'super_admin'),
+    isAuthenticated:   !!user,
+    isAgency:          hasAccess(role, 'agency'),
+    isModerator:       hasAccess(role, 'moderator'),
+    isPlatformOwner:   hasAccess(role, 'platform_owner'),
     can: (required) => hasAccess(role, required),
     is:  (allowed)  => hasRole(role, allowed),
     meta: role ? ROLE_META[role] : null,
@@ -118,7 +116,7 @@ export function useUserRole() {
        <DeleteListingButton />
      </RoleGate>
 
-     <RoleGate anyOf={['admin', 'super_admin']} fallback={<Locked/>}>
+     <RoleGate anyOf={['platform_owner']} fallback={<Locked/>}>
        <FraudCenter />
      </RoleGate>
    ============================================================ */

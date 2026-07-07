@@ -163,22 +163,22 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                   <ProtectedRoute><PersonalDashboardPage /></ProtectedRoute>
                 } />
                 <Route path="/pro" element={
-                  <ProtectedRoute anyOf={['pro_user', 'agency', 'agency_admin', 'super_admin']}>
+                  <ProtectedRoute anyOf={['pro_user', 'agency', 'agency_admin', 'platform_owner']}>
                     <ProDashboardPage />
                   </ProtectedRoute>
                 } />
                 <Route path="/crm" element={
-                  <ProtectedRoute anyOf={['pro_user', 'agency', 'agency_admin', 'super_admin']}>
+                  <ProtectedRoute anyOf={['pro_user', 'agency', 'agency_admin', 'platform_owner']}>
                     <CRMPage />
                   </ProtectedRoute>
                 } />
                 <Route path="/forms" element={
-                  <ProtectedRoute anyOf={['pro_user', 'agency', 'agency_admin', 'super_admin']}>
+                  <ProtectedRoute anyOf={['pro_user', 'agency', 'agency_admin', 'platform_owner']}>
                     <FormsPage />
                   </ProtectedRoute>
                 } />
                 <Route path="/debug-auth" element={
-                  <ProtectedRoute anyOf={['super_admin']}><DebugAuthPage /></ProtectedRoute>
+                  <ProtectedRoute anyOf={['platform_owner']}><DebugAuthPage /></ProtectedRoute>
                 } />
 
                 {/* ── Back Office ManagerIT (propriétaire uniquement, non indexé) ── */}

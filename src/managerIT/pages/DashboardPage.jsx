@@ -67,7 +67,7 @@ function fillMonths(data = [], months = 6) {
 const ROLE_LABELS = {
   user: 'Particulier', private_user: 'Particulier', personal: 'Particulier',
   pro_user: 'Professionnel', agency: 'Agence', agency_admin: 'Admin Agence',
-  super_admin: 'Super Admin', platform_owner: 'Propriétaire', premium_seller: 'Premium',
+  platform_owner: 'Propriétaire', premium_seller: 'Premium',
 }
 const PIE_COLORS = ['#6366F1','#10B981','#F59E0B','#FF6B00','#3B82F6','#EF4444','#8B5CF6','#64748B']
 

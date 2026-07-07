@@ -10,16 +10,16 @@ import { useUserRole, hasAccess, hasRole } from './roles.jsx'
 
    Examples:
 
-     // Hierarchical (admin OR super_admin)
-     <Route path="/admin" element={
-       <ProtectedRoute role="admin">
-         <AdminLayout />
+     // Hierarchical (platform_owner only)
+     <Route path="/managerIT" element={
+       <ProtectedRoute role="platform_owner">
+         <ManagerLayout />
        </ProtectedRoute>
      }/>
 
      // Exact role list — agency or moderator only
      <Route path="/agency" element={
-       <ProtectedRoute anyOf={['agency','admin','super_admin']}>
+       <ProtectedRoute anyOf={['agency','moderator']}>
          <AgencyDashboard />
        </ProtectedRoute>
      }/>
@@ -32,10 +32,10 @@ import { useUserRole, hasAccess, hasRole } from './roles.jsx'
      }/>
 
      // Custom redirects
-     <ProtectedRoute role="admin"
+     <ProtectedRoute role="platform_owner"
        redirectTo="/forbidden"
        redirectUnauthenticatedTo="/auth/login">
-       <AdminPage />
+       <ManagerPage />
      </ProtectedRoute>
    ============================================================ */
 export default function ProtectedRoute({

@@ -95,7 +95,7 @@ export default function LoggedInHome({
   const rawName  = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email || ''
   const firstName = rawName.split(/[\s@]+/)[0] || 'vous'
   const initials  = rawName.split(/[\s@]+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('') || 'U'
-  const isPro     = ['pro_user', 'agency', 'agency_admin', 'super_admin'].includes(role)
+  const isPro     = ['pro_user', 'agency', 'agency_admin', 'platform_owner'].includes(role)
 
   const QUICK = [
     { label: 'Mon espace',    Icon: I.LayoutDashboard, action: () => navigate('/mon-espace'), color: '#F97316' },

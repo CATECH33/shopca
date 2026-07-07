@@ -16,14 +16,6 @@ const PAGE_TITLES = {
   profile:      'Profil agence',
   settings:     'Paramètres',
   security:     'Sécurité',
-  'admin-overview':      'Vue d\'ensemble',
-  'admin-searches':      'Recherches sauvegardées',
-  'admin-notifications': 'Notifications',
-  'admin-insights':      'Insights IA',
-  'admin-subscriptions': 'Abonnements',
-  'admin-favorites':     'Favoris',
-  'admin-profile':       'Mon profil',
-  'admin-seo':           'SEO & Indexation',
 }
 
 function timeAgo(iso) {
@@ -36,7 +28,7 @@ function timeAgo(iso) {
   return `Il y a ${Math.floor(hrs / 24)} j`
 }
 
-export default function DashTopbar({ page, dark, setPage, onExit, isAdmin }) {
+export default function DashTopbar({ page, dark, setPage, onExit }) {
   const { user, profile } = useAuth()
   const navigate = useNavigate()
   const [notifOpen,   setNotifOpen]   = useState(false)
@@ -53,8 +45,7 @@ export default function DashTopbar({ page, dark, setPage, onExit, isAdmin }) {
   const lastName   = profile?.last_name  ?? ''
   const fullName   = [firstName, lastName].filter(Boolean).join(' ')
   const initials   = [firstName[0], lastName[0]].filter(Boolean).join('').toUpperCase() || 'U'
-  const verified   = profile?.kyc_status === 'approved'
-  const isAdminRole = profile?.role === 'super_admin'
+  const verified = profile?.kyc_status === 'approved'
 
   const loadEvents = useCallback(async () => {
     if (!user) return
@@ -89,7 +80,7 @@ export default function DashTopbar({ page, dark, setPage, onExit, isAdmin }) {
     } catch {}
   }, [user])
 
-  useEffect(() => { if (isAdminRole) loadEvents() }, [isAdminRole, loadEvents])
+  useEffect(() => { loadEvents() }, [loadEvents])
 
   const handleLogout = async () => {
     try { await signOut() } catch {}
@@ -108,22 +99,13 @@ export default function DashTopbar({ page, dark, setPage, onExit, isAdmin }) {
     <header className={`flex items-center justify-between px-6 h-14 border-b shrink-0 ${bg}`}>
       <div>
         <h1 className={`text-base font-extrabold leading-none ${text}`}>{PAGE_TITLES[page] ?? page}</h1>
-        <p className={`text-[11px] mt-0.5 ${sub}`}>
-          {isAdminRole ? 'SHOPCA Super Admin' : (profile?.agencies?.name ?? firstName)}
-        </p>
+        <p className={`text-[11px] mt-0.5 ${sub}`}>{profile?.agencies?.name ?? firstName}</p>
       </div>
 
       <div className="flex items-center gap-2">
-        {/* Badge vérifié (pro uniquement) */}
-        {!isAdminRole && verified && (
+        {verified && (
           <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">
             <I.BadgeCheck size={13} /> Agence vérifiée
-          </div>
-        )}
-        {/* Badge admin */}
-        {isAdminRole && (
-          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold">
-            <I.Shield size={13} /> Super Admin
           </div>
         )}
 
@@ -169,12 +151,6 @@ export default function DashTopbar({ page, dark, setPage, onExit, isAdmin }) {
                       </div>
                     )
                   })}
-                  {isAdminRole && setPage && (
-                    <button onClick={() => { setNotifOpen(false); setPage('admin-notifications') }}
-                      className={`w-full py-2.5 text-center text-[11px] font-semibold text-orange-500 border-t ${dark ? 'border-white/10' : 'border-slate-100'}`}>
-                      Voir toutes les notifications
-                    </button>
-                  )}
                 </motion.div>
               </>
             )}
@@ -204,10 +180,10 @@ export default function DashTopbar({ page, dark, setPage, onExit, isAdmin }) {
                     <p className={`text-xs ${sub} truncate`}>{user?.email}</p>
                   </div>
                   {[
-                    { icon: I.User,       label: 'Mon profil',  page: isAdmin ? 'admin-profile' : 'profile'  },
-                    { icon: I.Settings,   label: 'Paramètres',  page: isAdmin ? 'admin-profile' : 'settings' },
-                    ...(!isAdmin ? [{ icon: I.CreditCard, label: 'Facturation', page: 'billing' }] : []),
-                    { icon: I.Key,        label: 'Sécurité',    page: isAdmin ? 'admin-profile' : 'security' },
+                    { icon: I.User,       label: 'Mon profil',  page: 'profile'   },
+                    { icon: I.Settings,   label: 'Paramètres',  page: 'settings'  },
+                    { icon: I.CreditCard, label: 'Facturation',  page: 'billing'   },
+                    { icon: I.Key,        label: 'Sécurité',    page: 'security'  },
                   ].map(item => {
                     const Icon = item.icon
                     return (

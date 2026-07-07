@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../features/auth/providers/AuthProvider.jsx'
 import PersonalDashboard from '../../components/PersonalDashboard.jsx'
 
-const PRO_ROLES = ['pro_user', 'agency', 'agency_admin', 'super_admin']
+const PRO_ROLES = ['pro_user', 'agency', 'agency_admin', 'platform_owner']
 
 export default function PersonalDashboardPage() {
   const navigate = useNavigate()

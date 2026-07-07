@@ -151,7 +151,7 @@ export default function LoginPage() {
       // Fetch real role from profiles table (authoritative source)
       try {
         const { data } = await supabase.from('profiles').select('role').eq('id', result.user.id).single()
-        const PRO_ROLES = ['pro_user', 'agency', 'agency_admin', 'super_admin']
+        const PRO_ROLES = ['pro_user', 'agency', 'agency_admin', 'platform_owner']
         navigate(PRO_ROLES.includes(data?.role) ? '/pro' : '/')
       } catch {
         const isPro = result.user?.user_metadata?.account_type === 'professional'

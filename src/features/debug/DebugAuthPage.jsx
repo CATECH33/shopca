@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { supabase, SUPABASE_URL, SUPABASE_KEY_SET, SUPABASE_IS_PLACEHOLDER } from '../../lib/supabase.js'
 
 const DEMO_ACCOUNTS = [
-  { label: 'Admin',        email: 'admin@shopca.fr',   password: 'ShopCAAdmin2026!*',  role: 'super_admin'    },
+  { label: 'Propriétaire', email: 'admin@shopca.fr',   password: 'ShopCAAdmin2026!*',  role: 'platform_owner' },
   { label: 'Pro (T2)',     email: 'admin-t2@shopca.fr', password: 'ShopCAAdmin2026!!',  role: 'agency'         },
   { label: 'Particulier',  email: 'admin-t1@shopca.fr', password: 'ShopCAAdmin2026**',  role: 'private_user'   },
 ]

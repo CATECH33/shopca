@@ -15,9 +15,6 @@ const NAV = [
   { to: '/app/settings', label: 'Paramètres', icon: I.Settings },
 ]
 
-const ADMIN_NAV = [
-  { to: '/app/admin', label: 'Admin', icon: I.Shield },
-]
 
 export default function DashboardLayout() {
   const navigate = useNavigate()
@@ -69,24 +66,6 @@ export default function DashboardLayout() {
           })}
         </nav>
 
-        <div className="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-[0.18em] mt-6 mb-2">Admin</div>
-        <nav className="space-y-1">
-          {ADMIN_NAV.map((it) => {
-            const Icon = it.icon
-            return (
-              <NavLink
-                key={it.to}
-                to={it.to}
-                onClick={() => setMobileOpen(false)}
-                className={({ isActive }) => `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                  isActive ? 'bg-navy-900 text-white shadow-soft' : 'text-navy-700 hover:bg-slate-100'
-                }`}
-              >
-                <Icon size={18} /> {it.label}
-              </NavLink>
-            )
-          })}
-        </nav>
       </div>
 
       <div className="px-3 pb-4">

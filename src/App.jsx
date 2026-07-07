@@ -4,7 +4,6 @@ import LocationAutocomplete from './components/LocationAutocomplete.jsx'
 import { useNavigate, Link } from 'react-router-dom'
 import { motion, AnimatePresence, useInView, useScroll, useTransform, animate } from 'framer-motion'
 import { TrustGuarantees } from './lib/trustBadges.jsx'
-import AdminPreview from './admin/AdminPreview.jsx'
 import AlertsView          from './alerts/AlertsView.jsx'
 import AuthModal           from './features/auth/components/AuthModal.jsx'
 import NotificationCenter from './notifications/NotificationCenter.jsx'
@@ -331,7 +330,7 @@ const HOME_GUIDES = [
 /* ============================================================================
    User chip (logged in)
    ============================================================================ */
-function UserChip({ user, role, onSignOut, onGoAdmin, onNavigate }) {
+function UserChip({ user, role, onSignOut, onNavigate }) {
   const [open, setOpen] = useState(false)
   const rawName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email || ''
   const displayName = rawName.split('@')[0] || 'Utilisateur'
@@ -341,8 +340,6 @@ function UserChip({ user, role, onSignOut, onGoAdmin, onNavigate }) {
     .slice(0, 2)
     .map((w) => w[0].toUpperCase())
     .join('') || 'U'
-  const isAdmin = ['admin', 'super_admin', 'moderator'].includes(role)
-
   const go = (view) => { setOpen(false); onNavigate?.(view) }
 
   return (
@@ -408,17 +405,7 @@ function UserChip({ user, role, onSignOut, onGoAdmin, onNavigate }) {
               Smart Alerts
               <span className="ml-auto text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-orange-50 text-orange-600 ring-1 ring-orange-200">Nouveau</span>
             </button>
-            {isAdmin && (
-              <button
-                onClick={() => { setOpen(false); onGoAdmin?.() }}
-                className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-orange-600 hover:bg-orange-50 border-t border-slate-100"
-              >
-                <Icons.Sparkles size={16} className="text-orange-600" />
-                <span>Backoffice</span>
-                <span className="ml-auto text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 ring-1 ring-orange-200">Admin</span>
-              </button>
-            )}
-            <Link to="/auth/logout" onClick={() => setOpen(false)} className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 ${isAdmin ? '' : 'border-t border-slate-100'}`}>
+            <Link to="/auth/logout" onClick={() => setOpen(false)} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 border-t border-slate-100">
               <Icons.LogOut size={16} /> Déconnexion
             </Link>
           </div>
@@ -522,7 +509,7 @@ function Header({ currentView, setCurrentView, user, role, onSignIn, onPublish, 
               >
                 <Icons.FileText size={14} /> Formulaires
               </button>
-              <UserChip user={user} role={role} onSignOut={onSignOut} onGoAdmin={() => setCurrentView('admin')} onNavigate={setCurrentView} />
+              <UserChip user={user} role={role} onSignOut={onSignOut} onNavigate={setCurrentView} />
             </>
           ) : (
             <button
@@ -2957,70 +2944,6 @@ function VerificationBadge({ status, size = 'sm' }) {
   )
 }
 
-function AdminReviewPanel({ reviewState, setReviewState }) {
-  const cfg = REVIEW_STATE[reviewState]
-  const Icon = cfg.Icon
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
-      {/* header */}
-      <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 bg-slate-50">
-        <div className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
-          <Icons.Shield size={12} /> Revue admin
-        </div>
-        <div className="flex gap-1">
-          {Object.keys(REVIEW_STATE).map((k) => (
-            <button key={k} onClick={() => setReviewState(k)}
-              className={`px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all ${reviewState === k ? `${REVIEW_STATE[k].bg} ${REVIEW_STATE[k].text} ${REVIEW_STATE[k].border} border` : 'text-slate-400 hover:text-slate-600'}`}>
-              {REVIEW_STATE[k].label.split(' ')[0]}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* body */}
-      <div className={`px-5 py-4 border-l-4 ${reviewState === 'approved' ? 'border-emerald-400' : reviewState === 'rejected' ? 'border-rose-400' : 'border-amber-400'}`}>
-        <div className={`flex items-start gap-3 ${cfg.text}`}>
-          <Icon size={20} className="mt-0.5 shrink-0" />
-          <div>
-            <div className="font-bold text-sm mb-0.5">{cfg.label}</div>
-            {reviewState === 'reviewing' && (
-              <p className="text-xs text-amber-600 leading-relaxed">Votre dossier est en cours d'examen par notre équipe. Délai estimé : 48 h ouvrées.</p>
-            )}
-            {reviewState === 'approved' && (
-              <p className="text-xs text-emerald-600 leading-relaxed">Félicitations ! Votre agence a été vérifiée et votre badge est maintenant actif sur toutes vos annonces.</p>
-            )}
-            {reviewState === 'rejected' && (
-              <>
-                <p className="text-xs text-rose-600 leading-relaxed mb-2">Votre dossier n'a pas pu être validé. Motif : document illisible ou expiré.</p>
-                <button className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-700 hover:text-rose-900 underline underline-offset-2">
-                  Soumettre à nouveau <Icons.ArrowRight size={11} />
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* doc checklist */}
-      <div className="px-5 py-3 border-t border-slate-100">
-        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Documents reçus</div>
-        {[
-          { label: 'Extrait KBIS',         ok: true },
-          { label: 'Pièce d\'identité',     ok: reviewState !== 'rejected' },
-          { label: 'Justificatif d\'adresse', ok: false },
-        ].map(({ label, ok }) => (
-          <div key={label} className="flex items-center gap-2 text-xs py-0.5">
-            <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 ${ok ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
-              {ok ? <Icons.Check size={8} strokeWidth={3} /> : <Icons.AlertCircle size={8} />}
-            </span>
-            <span className={ok ? 'text-slate-700' : 'text-slate-400'}>{label}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
 /* ============================================================================
    SellerVerificationView — wizard 4 étapes pour vendeurs particuliers
    ============================================================================ */
@@ -5252,51 +5175,6 @@ function PublierView({ user, onSignIn }) {
 }
 
 /* ============================================================================
-   ADMIN VIEW — gateway landing page
-   ============================================================================ */
-const ADMIN_KPIS = [
-  { icon: Icons.CreditCard, label: 'Revenus 30j',    value: 142580, suffix: ' €', trend: +18, color: 'orange' },
-  { icon: Icons.Users,      label: 'Utilisateurs',   value: 8412,                      trend: +24, color: 'indigo' },
-  { icon: Icons.Building,   label: 'Annonces',       value: 1248,                      trend: +12, color: 'emerald' },
-  { icon: Icons.Sparkles,   label: 'Abonnements',    value: 384,                       trend: +9,  color: 'orange' },
-  { icon: Icons.Building2,  label: 'Agences',        value: 142,                       trend: +3,  color: 'indigo' },
-  { icon: Icons.Shield,     label: 'Alertes fraude', value: 7,                         trend: -2,  color: 'rose', alarm: true },
-]
-
-const ADMIN_MODULES = [
-  { id: 'dashboard', icon: Icons.Eye,        label: 'Dashboard',    desc: 'Vue generale de la plateforme', color: 'orange' },
-  { id: 'users',     icon: Icons.Users,      label: 'Utilisateurs', desc: '8 412 comptes actifs',          color: 'indigo' },
-  { id: 'listings',  icon: Icons.Building,   label: 'Annonces',     desc: '1 248 actives · 14 en attente', color: 'emerald' },
-  { id: 'agencies',  icon: Icons.Building2,  label: 'Agences',      desc: '142 certifiees · 2 en cours',   color: 'indigo' },
-  { id: 'payments',  icon: Icons.CreditCard, label: 'Paiements',    desc: '142 580 € encaisses',      color: 'emerald' },
-  { id: 'crm',       icon: Icons.Send,       label: 'CRM',          desc: 'Leads & contacts',              color: 'orange' },
-  { id: 'reports',   icon: Icons.TrendingUp, label: 'Rapports',     desc: 'Analytiques & statistiques',    color: 'indigo' },
-  { id: 'settings',  icon: Icons.Key,        label: 'Parametres',   desc: 'Configuration plateforme',      color: 'rose' },
-]
-
-const ADMIN_ACTIVITY = [
-  { actor: 'SHOPCA Trust', action: "a bloque l'annonce",  target: 'PSM-2418 (Lille)',    icon: Icons.Shield,     tone: 'rose',    time: 'Il y a 3 min' },
-  { actor: 'Camille L.',   action: 'a contacte',          target: 'Studio Bastille',     icon: Icons.Mail,       tone: 'orange',  time: 'Il y a 8 min' },
-  { actor: 'BARNES Lyon',  action: 'a soumis son Kbis',   target: 'Dossier #PSM-AG-204', icon: Icons.FileText,   tone: 'indigo',  time: 'Il y a 14 min' },
-  { actor: 'Stripe',       action: 'a encaisse',          target: '+4 870 € Visibilite', icon: Icons.CreditCard, tone: 'emerald', time: 'Il y a 22 min' },
-  { actor: 'SHOPCA IA',    action: 'a detecte un doublon',target: '94% avec PSM-2401',   icon: Icons.Sparkles,   tone: 'rose',    time: 'Il y a 1h' },
-]
-
-const ADMIN_PLATFORM_STATUS = [
-  { label: 'API SHOPCA',   uptime: '99.98%' },
-  { label: 'Supabase DB',  uptime: '100%'   },
-  { label: 'Stripe',       uptime: '99.95%' },
-  { label: 'CDN / Images', uptime: '100%'   },
-]
-
-const ADMIN_TONE = {
-  orange:  { bg: 'bg-orange-500/15',  text: 'text-orange-400',  ring: 'ring-orange-500/30'  },
-  indigo:  { bg: 'bg-indigo-500/15',  text: 'text-indigo-400',  ring: 'ring-indigo-500/30'  },
-  emerald: { bg: 'bg-emerald-500/15', text: 'text-emerald-400', ring: 'ring-emerald-500/30' },
-  rose:    { bg: 'bg-rose-500/15',    text: 'text-rose-400',    ring: 'ring-rose-500/30'    },
-}
-
-/* ============================================================================
    MessagesView — Système de messagerie
    ============================================================================ */
 const MOCK_CONVERSATIONS = [
@@ -5834,157 +5712,6 @@ function MessagesView({ user }) {
   )
 }
 
-function AdminView({ user }) {
-  const [showBackoffice, setShowBackoffice] = useState(false)
-  const [activeModule,   setActiveModule]   = useState('dashboard')
-
-  const openModule = (id) => { setActiveModule(id); setShowBackoffice(true) }
-
-  if (showBackoffice) return <AdminPreview initialModule={activeModule} />
-
-  const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Admin'
-  const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
-
-  return (
-    <div className="min-h-screen bg-[#060E1C]">
-
-      {/* â”€â”€ Hero â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="relative overflow-hidden px-6 pt-16 pb-14"
-        style={{ background: 'linear-gradient(135deg,#0a1628 0%,#0B1F3A 60%,#0d2040 100%)' }}>
-        <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-600/10 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-16 left-1/4 w-64 h-64 rounded-full bg-indigo-600/10 blur-3xl pointer-events-none" />
-
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
-
-            <div>
-              <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 text-white/80 text-xs font-semibold px-3 py-1.5 rounded-full mb-5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Plateforme operationnelle
-              </div>
-              <h1 className="text-3xl md:text-4xl font-extrabold text-white leading-tight mb-2">
-                Bonjour, {displayName.split(' ')[0]}&nbsp;
-                <span className="not-italic">ðŸ‘‹</span>
-              </h1>
-              <p className="text-white/50 text-sm capitalize mb-6">{today}</p>
-              <button onClick={() => openModule('dashboard')}
-                className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold px-6 py-3 rounded-2xl transition shadow-lg shadow-orange-900/30">
-                Ouvrir le backoffice <Icons.ArrowRight size={16} />
-              </button>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2.5">
-              {ADMIN_PLATFORM_STATUS.map((s) => (
-                <div key={s.label}
-                  className="flex items-center gap-2.5 bg-white/10 border border-white/10 rounded-2xl px-4 py-3">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
-                  <div>
-                    <div className="text-white text-xs font-semibold">{s.label}</div>
-                    <div className="text-white/40 text-[11px]">{s.uptime} uptime</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* â”€â”€ KPI strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="max-w-6xl mx-auto px-6 -mt-6 mb-10">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-          {ADMIN_KPIS.map((k, i) => {
-            const t = ADMIN_TONE[k.color] || ADMIN_TONE.orange
-            return (
-              <motion.div key={k.label}
-                initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.06, duration: 0.4 }}
-                className={`bg-[#0B1F3A] border border-white/10 rounded-2xl p-4 ring-1 ${t.ring}`}>
-                <div className={`w-8 h-8 rounded-xl ${t.bg} flex items-center justify-center mb-2.5`}>
-                  <k.icon size={16} className={t.text} />
-                </div>
-                <div className="text-white font-extrabold text-xl leading-none mb-1">
-                  <Counter to={k.value} suffix={k.suffix || ''} />
-                </div>
-                <div className="text-white/50 text-[11px] leading-tight mb-1.5">{k.label}</div>
-                <span className={`inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
-                  k.alarm
-                    ? 'bg-rose-500/15 text-rose-400'
-                    : k.trend >= 0
-                    ? 'bg-emerald-500/15 text-emerald-400'
-                    : 'bg-red-500/15 text-red-400'
-                }`}>
-                  {k.trend > 0 ? '+' : ''}{k.trend}%
-                </span>
-              </motion.div>
-            )
-          })}
-        </div>
-      </section>
-
-      {/* â”€â”€ Modules + Activity â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="max-w-6xl mx-auto px-6 pb-16">
-        <div className="grid lg:grid-cols-3 gap-8">
-
-          {/* Module grid — 2/3 */}
-          <div className="lg:col-span-2">
-            <h2 className="text-white font-bold text-lg mb-4">Modules</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {ADMIN_MODULES.map((m, i) => {
-                const t = ADMIN_TONE[m.color] || ADMIN_TONE.orange
-                return (
-                  <motion.button key={m.id}
-                    initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.1 + i * 0.04, duration: 0.35 }}
-                    onClick={() => openModule(m.id)}
-                    className="group bg-[#0B1F3A] hover:bg-[#0f2845] border border-white/10 hover:border-white/20 rounded-2xl p-4 text-left transition-all">
-                    <div className={`w-10 h-10 rounded-xl ${t.bg} flex items-center justify-center mb-3`}>
-                      <m.icon size={18} className={t.text} />
-                    </div>
-                    <div className="text-white text-sm font-bold mb-0.5">{m.label}</div>
-                    <div className="text-white/40 text-[11px] leading-snug">{m.desc}</div>
-                  </motion.button>
-                )
-              })}
-            </div>
-          </div>
-
-          {/* Activity feed — 1/3 */}
-          <div>
-            <h2 className="text-white font-bold text-lg mb-4">Activite recente</h2>
-            <div className="bg-[#0B1F3A] border border-white/10 rounded-2xl overflow-hidden">
-              {ADMIN_ACTIVITY.map((a, i) => {
-                const t = ADMIN_TONE[a.tone] || ADMIN_TONE.orange
-                return (
-                  <div key={i} className={`px-4 py-3.5 flex gap-3 ${i < ADMIN_ACTIVITY.length - 1 ? 'border-b border-white/5' : ''}`}>
-                    <div className={`shrink-0 w-8 h-8 rounded-xl ${t.bg} flex items-center justify-center mt-0.5`}>
-                      <a.icon size={14} className={t.text} />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-white/90 text-xs font-semibold truncate">
-                        <span className="text-white">{a.actor}</span> {a.action}
-                      </div>
-                      <div className="text-white/50 text-[11px] truncate">{a.target}</div>
-                      <div className="text-white/30 text-[10px] mt-0.5">{a.time}</div>
-                    </div>
-                  </div>
-                )
-              })}
-              <div className="px-4 py-3 border-t border-white/5">
-                <button onClick={() => openModule('dashboard')}
-                  className="text-orange-400 hover:text-orange-300 text-xs font-semibold flex items-center gap-1 transition">
-                  Voir tout le journal <Icons.ArrowRight size={12} />
-                </button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-    </div>
-  )
-}
-
 /* ============================================================================
    APP root
    ============================================================================ */
@@ -5996,7 +5723,7 @@ export default function App() {
 
   /* ---------- Auth ---------- */
   const [user, setUser] = useState(null)
-  const [role, setRole] = useState(null) // 'admin' | 'agent' | 'user' | null
+  const [role, setRole] = useState(null)
 
   // Fetch role from public.profiles table for the given user id
   const fetchRole = useCallback(async (uid) => {
@@ -6033,19 +5760,9 @@ export default function App() {
     return () => subscription?.unsubscribe?.()
   }, [fetchRole])
 
-  // Admin guard — redirect non-admin away from backoffice
-  useEffect(() => {
-    if (currentView !== 'admin') return
-    // Wait until we know the role (avoid flicker right after login)
-    if (user && role === null) return
-    if (!user || !['admin', 'super_admin', 'moderator'].includes(role)) {
-      setCurrentView('home')
-    }
-  }, [currentView, user, role])
-
   // Auth guard — redirect to home when session ends on a protected view
   useEffect(() => {
-    const authViews = ['profil', 'favoris', 'mes-annonces', 'verification', 'alerts', 'admin', 'messages']
+    const authViews = ['profil', 'favoris', 'mes-annonces', 'verification', 'alerts', 'messages']
     if (!user && authViews.includes(currentView)) {
       setCurrentView('home')
     }
@@ -6141,7 +5858,7 @@ export default function App() {
     } else if (currentView === 'home') {
       fetchListings(filters)
       window.scrollTo({ top: 0, behavior: 'smooth' })
-    } else if (currentView === 'publier' || currentView === 'admin') {
+    } else if (currentView === 'publier') {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -6297,10 +6014,6 @@ export default function App() {
 
         {currentView === 'publier' && (
           <PublierView user={user} onSignIn={openSignUp} />
-        )}
-
-{currentView === 'admin' && ['admin', 'super_admin', 'moderator'].includes(role) && (
-          <AdminView user={user} />
         )}
 
         {currentView === 'messages' && (

@@ -14,19 +14,8 @@ const NAV_PRO = [
   { id: 'security',      label: 'Sécurité',        Icon: I.Key        },
 ]
 
-const NAV_ADMIN = [
-  { id: 'admin-overview',       label: 'Vue d\'ensemble',       Icon: I.LayoutDashboard },
-  { id: 'admin-searches',       label: 'Recherches sauvegardées', Icon: I.Bookmark      },
-  { id: 'admin-notifications',  label: 'Notifications',          Icon: I.Bell           },
-  { id: 'admin-insights',       label: 'Insights IA',            Icon: I.Sparkles       },
-  { id: 'admin-subscriptions',  label: 'Abonnements',            Icon: I.CreditCard     },
-  { id: 'admin-favorites',      label: 'Favoris',                Icon: I.Heart          },
-  { id: 'admin-profile',        label: 'Mon profil',             Icon: I.User           },
-  { id: 'admin-seo',           label: 'SEO & Indexation',       Icon: I.TrendingUp     },
-]
-
-export default function DashSidebar({ page, setPage, dark, setDark, onExit, isAdmin }) {
-  const NAV = isAdmin ? NAV_ADMIN : NAV_PRO
+export default function DashSidebar({ page, setPage, dark, setDark, onExit }) {
+  const NAV = NAV_PRO
 
   return (
     <aside className="flex flex-col w-60 shrink-0 bg-[#0B1F3A] h-full">
@@ -37,7 +26,7 @@ export default function DashSidebar({ page, setPage, dark, setDark, onExit, isAd
         </div>
         <div>
           <p className="text-white font-extrabold text-sm leading-none">SHOPCA</p>
-          <p className="text-white/40 text-[10px] mt-0.5">{isAdmin ? 'Super Admin' : 'Espace Pro'}</p>
+          <p className="text-white/40 text-[10px] mt-0.5">Espace Pro</p>
         </div>
       </div>
 
