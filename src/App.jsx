@@ -917,9 +917,15 @@ function Categories({ onPick }) {
             <div className="text-orange-600 font-semibold text-sm tracking-wider uppercase mb-2">Explorer</div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-navy-900 tracking-tight">Trouvez par catégorie</h2>
           </div>
-          <a href="#" className="text-navy-700 hover:text-orange-600 font-medium text-sm flex items-center gap-1 transition-colors">
-            Voir toutes les catégories <Icons.ArrowRight size={16} />
-          </a>
+          <Link
+            to="/categories"
+            className="group text-navy-700 hover:text-orange-600 font-medium text-sm flex items-center gap-1.5 transition-colors cursor-pointer"
+          >
+            Voir toutes les catégories
+            <span className="inline-flex transition-transform duration-200 group-hover:translate-x-1">
+              <Icons.ArrowRight size={16} />
+            </span>
+          </Link>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
           {CATEGORIES.map((c) => {

@@ -31,6 +31,7 @@ const TarifsPage             = lazy(() => import('./features/tarifs/TarifsPage.j
 const SimulateurPage         = lazy(() => import('./features/simulateur/SimulateurPage.jsx'))
 const EstimationPage         = lazy(() => import('./features/estimation/EstimationPage.jsx'))
 const GuidesPage             = lazy(() => import('./features/guides/GuidesPage.jsx'))
+const CategoriesPage         = lazy(() => import('./features/categories/CategoriesPage.jsx'))
 const SubscriptionSuccessPage = lazy(() => import('./features/subscription/SubscriptionSuccessPage.jsx'))
 const PersonalDashboardPage  = lazy(() => import('./features/dashboard/PersonalDashboardPage.jsx'))
 const ProDashboardPage       = lazy(() => import('./features/pro/ProDashboardPage.jsx'))
@@ -153,6 +154,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 <Route path="/simulateur"   element={<SimulateurPage />} />
                 <Route path="/estimation"   element={<EstimationPage />} />
                 <Route path="/guides"       element={<GuidesPage />} />
+                <Route path="/categories"  element={<CategoriesPage />} />
                 <Route path="/early-access" element={<EarlyAccessPage />} />
 
                 {/* ── Abonnement ── */}
