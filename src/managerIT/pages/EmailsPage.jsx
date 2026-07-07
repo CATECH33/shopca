@@ -1,74 +1,155 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { supabase } from '../../lib/supabase.js'
 
-/* ── Inline SVG Icons ──────────────────────────────────────────────────────── */
+/* ── Icons ─────────────────────────────────────────────────────────────────── */
 const Ic = {
-  Send:      () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>,
-  Save:      () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>,
-  Plus:      () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
-  Eye:       () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>,
-  History:   () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.11"/></svg>,
-  Edit:      () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
-  Trash:     () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>,
-  X:         () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
-  Check:     () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-  Users:     () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
-  Mail:      () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>,
-  Image:     () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>,
-  Code:      () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>,
-  ChevronD:  () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>,
-  ChevronL:  () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>,
-  ChevronR:  () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>,
-  Activity:  () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>,
-  TrendUp:   () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
-  Refresh:   () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>,
-  Copy:      () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>,
-  Map:       () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>,
+  Send:     () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>,
+  Save:     () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>,
+  Plus:     () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
+  History:  () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.11"/></svg>,
+  Edit:     () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
+  Trash:    () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>,
+  X:        () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+  Check:    () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+  Users:    () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+  Code:     () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>,
+  ChevronD: () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>,
+  ChevronU: () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"/></svg>,
+  ChevronL: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>,
+  ChevronR: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>,
+  Refresh:  () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>,
+  Desktop:  () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>,
+  Phone:    () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>,
+  Sun:      () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>,
+  Moon:     () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>,
+  Activity: () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>,
 }
 
 /* ── Constants ─────────────────────────────────────────────────────────────── */
 const AUDIENCES = [
   { value: 'all',            label: 'Tous les utilisateurs', icon: '🌍', desc: 'Tous les comptes actifs avec email opt-in' },
   { value: 'particuliers',   label: 'Particuliers',          icon: '🏠', desc: 'Rôles: user, private_user' },
-  { value: 'professionnels', label: 'Professionnels',        icon: '💼', desc: 'Rôles: pro_user, agency, agency_admin, premium_seller' },
+  { value: 'professionnels', label: 'Professionnels',        icon: '💼', desc: 'Rôles: pro_user, agency, agency_admin' },
   { value: 'premium',        label: 'Abonnés Premium',       icon: '⭐', desc: 'Utilisateurs avec premium_alerts activé' },
   { value: 'city',           label: 'Par ville',             icon: '🏙️', desc: 'Filtrer par ville des annonces' },
   { value: 'department',     label: 'Par département',       icon: '📍', desc: 'Ex: 75 (Paris), 69 (Rhône)' },
   { value: 'region',         label: 'Par région',            icon: '🗺️', desc: 'Ex: Île-de-France, Auvergne-Rhône-Alpes' },
 ]
 const VARIABLES = [
-  { tag: '{{prenom}}',   label: 'Prénom',   example: 'Jean' },
-  { tag: '{{nom}}',      label: 'Nom',      example: 'Dupont' },
-  { tag: '{{email}}',    label: 'Email',    example: 'jean@exemple.fr' },
-  { tag: '{{ville}}',    label: 'Ville',    example: 'Lyon' },
-  { tag: '{{plan}}',     label: 'Plan',     example: 'Premium' },
+  { tag: '{{prenom}}', label: 'Prénom',  example: 'Jean'                },
+  { tag: '{{nom}}',    label: 'Nom',     example: 'Dupont'              },
+  { tag: '{{email}}',  label: 'Email',   example: 'jean@exemple.fr'     },
+  { tag: '{{ville}}',  label: 'Ville',   example: 'Lyon'                },
+  { tag: '{{plan}}',   label: 'Plan',    example: 'Premium'             },
 ]
-
 const STATUS_MAP = {
   draft:   { label: 'Brouillon', bg: '#F1F5F9', color: '#64748B' },
   sent:    { label: 'Envoyé',    bg: '#DCFCE7', color: '#16A34A' },
-  sending: { label: 'Envoi…',   bg: '#DBEAFE', color: '#2563EB' },
+  sending: { label: 'Envoi…',    bg: '#DBEAFE', color: '#2563EB' },
   failed:  { label: 'Échoué',   bg: '#FEE2E2', color: '#DC2626' },
 }
+const TIMEZONES = ['Europe/Paris','Europe/London','Europe/Berlin','Europe/Madrid','America/New_York','America/Los_Angeles','Asia/Tokyo','UTC']
+
+const BLOCK_TYPES = [
+  { type: 'banner',    label: 'Bannière',  icon: '▬', color: '#FF6B00' },
+  { type: 'title',     label: 'Titre',     icon: 'H1', color: '#6366F1' },
+  { type: 'text',      label: 'Texte',     icon: '¶',  color: '#64748B' },
+  { type: 'image',     label: 'Image',     icon: '🖼', color: '#0EA5E9' },
+  { type: 'logo',      label: 'Logo',      icon: '◈',  color: '#8B5CF6' },
+  { type: 'button',    label: 'Bouton',    icon: '▶',  color: '#FF6B00' },
+  { type: 'divider',   label: 'Sépar.',    icon: '—',  color: '#94A3B8' },
+  { type: 'columns',   label: 'Colonnes',  icon: '⊞',  color: '#10B981' },
+  { type: 'social',    label: 'Réseaux',   icon: '@',  color: '#0EA5E9' },
+  { type: 'signature', label: 'Signature', icon: '✍',  color: '#374151' },
+  { type: 'footer',    label: 'Footer',    icon: '⊟',  color: '#94A3B8' },
+]
 
 /* ── Helpers ───────────────────────────────────────────────────────────────── */
 const fmtDate = (s) => s ? new Date(s).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'
 const fmtTime = (s) => {
   if (!s) return '—'
-  const diff = (Date.now() - new Date(s)) / 1000
-  if (diff < 3600)    return `il y a ${Math.floor(diff / 60)} min`
-  if (diff < 86400)   return `il y a ${Math.floor(diff / 3600)}h`
-  if (diff < 86400*7) return `il y a ${Math.floor(diff / 86400)}j`
+  const d = (Date.now() - new Date(s)) / 1000
+  if (d < 3600)   return `il y a ${Math.floor(d / 60)} min`
+  if (d < 86400)  return `il y a ${Math.floor(d / 3600)}h`
+  if (d < 604800) return `il y a ${Math.floor(d / 86400)}j`
   return fmtDate(s)
 }
 const pct = (a, b) => b > 0 ? Math.round((a / b) * 100) : 0
+let _uid = 0
+const newId = () => `b${Date.now()}${++_uid}`
 
-function insertAtCursor(ta, text) {
-  const start = ta.selectionStart
-  const end   = ta.selectionEnd
-  const val   = ta.value
-  return val.slice(0, start) + text + val.slice(end)
+/* ── Block logic ───────────────────────────────────────────────────────────── */
+function defaultConfig(type) {
+  const map = {
+    banner:    { title: 'SHOPCA', subtitle: 'La plateforme immobilière de confiance', bg: '#FF6B00', textColor: '#ffffff', padding: '40px 24px' },
+    title:     { text: 'Titre de votre email', level: 'h1', align: 'center', color: '#0F172A', fontSize: 28 },
+    text:      { content: 'Bonjour {{prenom}},\n\nVotre message ici.', align: 'left', fontSize: 14, color: '#374151', padding: '0 24px 24px' },
+    image:     { url: '', alt: '', width: '100%', align: 'center', borderRadius: 0, padding: '16px 24px' },
+    logo:      { url: '', alt: 'SHOPCA', width: 120, align: 'center', padding: '20px 24px' },
+    button:    { text: 'Voir les annonces', url: 'https://shopca.fr', bg: '#FF6B00', textColor: '#ffffff', align: 'center', borderRadius: 8, fontSize: 14 },
+    divider:   { color: '#E2E8F0', margin: '8px 24px', thickness: 1 },
+    columns:   { left: 'Texte de la colonne gauche.', right: 'Texte de la colonne droite.' },
+    social:    { networks: ['facebook', 'twitter', 'linkedin'], align: 'center' },
+    signature: { name: "L'équipe SHOPCA", role: 'Service client', email: 'contact@shopca.fr', phone: '' },
+    footer:    { text: '© 2026 SHOPCA · Tous droits réservés', unsubUrl: 'https://shopca.fr/unsubscribe?email={{email}}', bg: '#F8FAFC', color: '#94A3B8' },
+  }
+  return { ...(map[type] || {}) }
 }
+
+function blockToHtml(block) {
+  const c = block.config
+  switch (block.type) {
+    case 'banner':
+      return `<div style="background:${c.bg};color:${c.textColor};padding:${c.padding};text-align:center"><h1 style="margin:0;font-size:28px;font-weight:800;letter-spacing:-0.02em;font-family:-apple-system,sans-serif">${c.title}</h1>${c.subtitle ? `<p style="margin:10px 0 0;opacity:.85;font-size:14px">${c.subtitle}</p>` : ''}</div>`
+    case 'title': {
+      const sizes = { h1: 28, h2: 22, h3: 18 }
+      const fs = c.fontSize || sizes[c.level] || 24
+      return `<div style="padding:24px 24px 8px;text-align:${c.align}"><${c.level} style="margin:0;font-size:${fs}px;color:${c.color};font-weight:800;font-family:-apple-system,sans-serif">${c.text}</${c.level}></div>`
+    }
+    case 'text':
+      return `<div style="padding:${c.padding};font-size:${c.fontSize}px;color:${c.color};line-height:1.7;text-align:${c.align};font-family:-apple-system,sans-serif">${c.content.split('\n').map(l => l.trim() ? `<p style="margin:0 0 12px">${l}</p>` : '<br>').join('')}</div>`
+    case 'image':
+      return c.url
+        ? `<div style="text-align:${c.align};padding:${c.padding}"><img src="${c.url}" alt="${c.alt}" style="width:${c.width};border-radius:${c.borderRadius}px;max-width:100%;height:auto;${c.align === 'center' ? 'display:block;margin:0 auto' : ''}"></div>`
+        : `<div style="background:#F1F5F9;padding:32px;text-align:center;color:#94A3B8;font-size:12px">📷 Image — définissez l'URL</div>`
+    case 'logo':
+      return `<div style="text-align:${c.align};padding:${c.padding}">${c.url ? `<img src="${c.url}" alt="${c.alt}" style="width:${c.width}px;height:auto;max-width:100%;${c.align === 'center' ? 'display:block;margin:0 auto' : ''}">` : `<div style="display:inline-block;background:#FF6B00;color:#fff;font-size:18px;font-weight:900;padding:8px 18px;border-radius:6px;font-family:sans-serif;letter-spacing:-0.02em">SHOPCA</div>`}</div>`
+    case 'button':
+      return `<div style="text-align:${c.align};padding:20px 24px"><a href="${c.url}" style="display:inline-block;background:${c.bg};color:${c.textColor}!important;text-decoration:none;padding:12px 28px;border-radius:${c.borderRadius}px;font-size:${c.fontSize}px;font-weight:700;font-family:-apple-system,sans-serif">${c.text}</a></div>`
+    case 'divider':
+      return `<div style="padding:${c.margin}"><hr style="border:none;border-top:${c.thickness}px solid ${c.color};margin:0"></div>`
+    case 'columns':
+      return `<table width="100%" cellpadding="0" cellspacing="0" style="padding:16px 24px"><tr><td width="50%" style="padding-right:12px;vertical-align:top;font-size:14px;color:#374151;line-height:1.7;font-family:sans-serif">${c.left}</td><td width="50%" style="padding-left:12px;vertical-align:top;font-size:14px;color:#374151;line-height:1.7;font-family:sans-serif">${c.right}</td></tr></table>`
+    case 'social': {
+      const SM = { facebook:{l:'f',u:'https://facebook.com',bg:'#1877F2'}, twitter:{l:'X',u:'https://twitter.com',bg:'#000'}, linkedin:{l:'in',u:'https://linkedin.com',bg:'#0A66C2'}, instagram:{l:'📷',u:'https://instagram.com',bg:'#E4405F'}, youtube:{l:'▶',u:'https://youtube.com',bg:'#FF0000'} }
+      const links = (c.networks||[]).map(n=>SM[n]?`<a href="${SM[n].u}" style="display:inline-block;margin:0 5px;background:${SM[n].bg};color:#fff;text-decoration:none;width:36px;height:36px;border-radius:50%;text-align:center;line-height:36px;font-size:14px;font-weight:700;font-family:sans-serif">${SM[n].l}</a>`:'').join('')
+      return `<div style="text-align:${c.align||'center'};padding:20px 24px">${links}</div>`
+    }
+    case 'signature':
+      return `<div style="padding:20px 24px;border-top:2px solid #FF6B00"><p style="margin:0 0 2px;font-size:14px;font-weight:700;color:#0F172A;font-family:sans-serif">${c.name}</p>${c.role?`<p style="margin:0 0 2px;font-size:12px;color:#64748B;font-family:sans-serif">${c.role}</p>`:''}${c.email?`<p style="margin:0;font-size:12px;font-family:sans-serif"><a href="mailto:${c.email}" style="color:#FF6B00">${c.email}</a></p>`:''}${c.phone?`<p style="margin:2px 0 0;font-size:12px;color:#64748B;font-family:sans-serif">${c.phone}</p>`:''}</div>`
+    case 'footer':
+      return `<div style="background:${c.bg};padding:20px 24px;text-align:center;border-top:1px solid #E2E8F0"><p style="margin:0 0 6px;font-size:12px;color:${c.color};font-family:sans-serif">${c.text}</p><a href="${c.unsubUrl}" style="font-size:11px;color:${c.color};text-decoration:underline;font-family:sans-serif">Se désabonner</a></div>`
+    default: return ''
+  }
+}
+const blocksToHtml = (blocks) => blocks.map(blockToHtml).join('\n')
+
+/* ── Preview HTML wrapper ──────────────────────────────────────────────────── */
+function buildPreviewHtml(subject, body, preHeader = '', theme = 'light') {
+  const pageBg = theme === 'dark' ? '#1E293B' : '#F4F4F5'
+  const cardBg = theme === 'dark' ? '#0F172A' : '#FFFFFF'
+  const txt    = theme === 'dark' ? '#E2E8F0' : '#0F172A'
+  return `<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${subject||'Aperçu'}</title><style>body{margin:0;padding:16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:${pageBg};color:${txt}}.wrap{max-width:600px;margin:0 auto;background:${cardBg};border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.12)}img{max-width:100%;height:auto}a{color:#FF6B00}p{margin:0 0 12px}</style></head><body>${preHeader?`<div style="display:none;max-height:0;overflow:hidden;opacity:0">${preHeader}</div>`:''}<div class="wrap">${body}</div></body></html>`
+}
+
+/* ── Default blocks ────────────────────────────────────────────────────────── */
+const DEFAULT_BLOCKS = [
+  { id: newId(), type: 'banner',  config: defaultConfig('banner') },
+  { id: newId(), type: 'text',    config: defaultConfig('text')   },
+  { id: newId(), type: 'button',  config: defaultConfig('button') },
+  { id: newId(), type: 'divider', config: defaultConfig('divider')},
+  { id: newId(), type: 'footer',  config: defaultConfig('footer') },
+]
 
 /* ── Small components ──────────────────────────────────────────────────────── */
 function StatusBadge({ status }) {
@@ -80,8 +161,8 @@ function Skel({ w = '100%', h = 13 }) {
 }
 function Overlay({ children, onClose }) {
   return (
-    <div onClick={e => { if (e.target === e.currentTarget) onClose() }}
-      style={{ position: 'fixed', inset: 0, zIndex: 500, background: 'rgba(15,23,42,.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, backdropFilter: 'blur(3px)' }}>
+    <div onClick={e => e.target === e.currentTarget && onClose()}
+      style={{ position: 'fixed', inset: 0, zIndex: 500, background: 'rgba(15,23,42,.55)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, backdropFilter: 'blur(3px)' }}>
       {children}
     </div>
   )
@@ -95,7 +176,7 @@ function Toast({ msg, type, onClose }) {
   )
 }
 
-/* ── Confirm Send Modal ─────────────────────────────────────────────────────── */
+/* ── Send Modal ─────────────────────────────────────────────────────────────── */
 function SendModal({ campaign, recipientCount, onClose, onConfirm, loading }) {
   return (
     <Overlay onClose={onClose}>
@@ -103,22 +184,20 @@ function SendModal({ campaign, recipientCount, onClose, onConfirm, loading }) {
         <div style={{ textAlign: 'center', marginBottom: 20 }}>
           <div style={{ fontSize: 40, marginBottom: 8 }}>📨</div>
           <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>Envoyer la campagne ?</h3>
-          <div style={{ fontSize: 13, color: '#64748B', marginTop: 8, fontWeight: 600 }}>
-            «{campaign.subject?.slice(0, 60)}»
-          </div>
+          <div style={{ fontSize: 13, color: '#64748B', marginTop: 8, fontWeight: 600 }}>«{campaign.subject?.slice(0, 60)}»</div>
         </div>
         <div style={{ background: '#F0FDF4', borderRadius: 12, padding: '12px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span style={{ fontSize: 13, color: '#64748B' }}>Destinataires estimés</span>
           <span style={{ fontSize: 22, fontWeight: 900, color: '#10B981' }}>{recipientCount.toLocaleString('fr-FR')}</span>
         </div>
         <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A', borderRadius: 10, padding: '10px 14px', marginBottom: 20, fontSize: 12, color: '#92400E' }}>
-          ⚠️ Cette action est <strong>irréversible</strong>. Les emails seront envoyés à tous les destinataires correspondant à l'audience sélectionnée.
+          ⚠️ Cette action est <strong>irréversible</strong>. Les emails seront envoyés à tous les destinataires.
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={onClose} style={{ flex: 1, padding: '10px', borderRadius: 10, border: '1px solid #E2E8F0', background: '#fff', fontSize: 13, fontWeight: 600, color: '#64748B', cursor: 'pointer' }}>Annuler</button>
           <button onClick={onConfirm} disabled={loading}
-            style={{ flex: 2, padding: '10px', borderRadius: 10, border: 'none', background: '#0EA5E9', color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', opacity: loading ? .7 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-            <Ic.Send /> {loading ? 'Envoi en cours…' : 'Confirmer l\'envoi'}
+            style={{ flex: 2, padding: '10px', borderRadius: 10, border: 'none', background: '#FF6B00', color: '#fff', fontSize: 13, fontWeight: 700, cursor: loading ? 'wait' : 'pointer', opacity: loading ? .7 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+            <Ic.Send /> {loading ? 'Envoi…' : 'Confirmer l\'envoi'}
           </button>
         </div>
       </div>
@@ -126,23 +205,18 @@ function SendModal({ campaign, recipientCount, onClose, onConfirm, loading }) {
   )
 }
 
-/* ── Campaign Stats Panel ───────────────────────────────────────────────────── */
+/* ── Stats Panel ────────────────────────────────────────────────────────────── */
 function StatsPanel({ campaign: c, onClose, onEdit }) {
   const openRate  = pct(c.open_count,  c.sent_count)
   const clickRate = pct(c.click_count, c.sent_count)
   const errorRate = pct(c.error_count, c.recipient_count)
-
   const aud = AUDIENCES.find(a => a.value === c.audience)
-
   return (
-    <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, zIndex: 400, width: '100%', maxWidth: 500, background: '#fff', boxShadow: '-8px 0 40px rgba(0,0,0,.12)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+    <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, zIndex: 400, width: '100%', maxWidth: 500, background: '#fff', boxShadow: '-8px 0 40px rgba(0,0,0,.12)', display: 'flex', flexDirection: 'column' }}>
       <div style={{ padding: '16px 20px', borderBottom: '1px solid #F1F5F9', display: 'flex', alignItems: 'center', gap: 12 }}>
         <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B', display: 'flex' }}><Ic.ChevronR /></button>
         <div style={{ flex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-            <StatusBadge status={c.status} />
-            <span style={{ fontSize: 11, color: '#94A3B8' }}>{aud?.icon} {aud?.label}</span>
-          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}><StatusBadge status={c.status} /><span style={{ fontSize: 11, color: '#94A3B8' }}>{aud?.icon} {aud?.label}</span></div>
           <div style={{ fontSize: 14, fontWeight: 800, color: '#0F172A', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.subject}</div>
         </div>
         {c.status === 'draft' && (
@@ -151,16 +225,14 @@ function StatsPanel({ campaign: c, onClose, onEdit }) {
           </button>
         )}
       </div>
-
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px 24px' }}>
-        {/* KPI Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
           {[
-            { label: 'Destinataires',     val: c.recipient_count ?? 0,  color: '#6366F1', icon: '👥' },
-            { label: 'Envoyés',           val: c.sent_count     ?? 0,  color: '#0EA5E9', icon: '📤' },
-            { label: `Ouverts (${openRate}%)`,  val: c.open_count  ?? 0,  color: '#10B981', icon: '👁️' },
-            { label: `Cliqués (${clickRate}%)`, val: c.click_count ?? 0,  color: '#F59E0B', icon: '🖱️' },
-            { label: `Erreurs (${errorRate}%)`, val: c.error_count ?? 0,  color: '#EF4444', icon: '❌' },
+            { label: 'Destinataires', val: c.recipient_count??0, color:'#6366F1', icon:'👥' },
+            { label: 'Envoyés',       val: c.sent_count??0,      color:'#0EA5E9', icon:'📤' },
+            { label: `Ouverts (${openRate}%)`,  val: c.open_count??0,  color:'#10B981', icon:'👁️' },
+            { label: `Cliqués (${clickRate}%)`, val: c.click_count??0, color:'#F59E0B', icon:'🖱️' },
+            { label: `Erreurs (${errorRate}%)`, val: c.error_count??0, color:'#EF4444', icon:'❌' },
           ].map(({ label, val, color, icon }) => (
             <div key={label} style={{ background: '#F8FAFC', borderRadius: 12, padding: '12px 14px' }}>
               <div style={{ fontSize: 18, marginBottom: 2 }}>{icon}</div>
@@ -168,42 +240,29 @@ function StatsPanel({ campaign: c, onClose, onEdit }) {
               <div style={{ fontSize: 11, color: '#94A3B8', fontWeight: 600 }}>{label}</div>
             </div>
           ))}
-          {/* Open rate bar */}
           {c.status === 'sent' && c.sent_count > 0 && (
             <div style={{ gridColumn: '1/-1', background: '#F8FAFC', borderRadius: 12, padding: '12px 14px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#64748B' }}>Taux d'ouverture</span>
-                <span style={{ fontSize: 11, fontWeight: 800, color: '#10B981' }}>{openRate}%</span>
-              </div>
-              <div style={{ height: 8, borderRadius: 99, background: '#E2E8F0', overflow: 'hidden' }}>
-                <div style={{ height: '100%', borderRadius: 99, background: '#10B981', width: `${openRate}%`, transition: 'width .6s' }} />
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#64748B' }}>Taux de clic</span>
-                <span style={{ fontSize: 11, fontWeight: 800, color: '#F59E0B' }}>{clickRate}%</span>
-              </div>
-              <div style={{ height: 8, borderRadius: 99, background: '#E2E8F0', overflow: 'hidden', marginTop: 4 }}>
-                <div style={{ height: '100%', borderRadius: 99, background: '#F59E0B', width: `${clickRate}%`, transition: 'width .6s' }} />
-              </div>
+              {[['Taux d\'ouverture', openRate, '#10B981'], ['Taux de clic', clickRate, '#F59E0B']].map(([lbl, val, col]) => (
+                <div key={lbl} style={{ marginBottom: 8 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: '#64748B' }}>{lbl}</span>
+                    <span style={{ fontSize: 11, fontWeight: 800, color: col }}>{val}%</span>
+                  </div>
+                  <div style={{ height: 6, borderRadius: 99, background: '#E2E8F0' }}>
+                    <div style={{ height: '100%', borderRadius: 99, background: col, width: `${val}%`, transition: 'width .6s' }} />
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
-
-        {/* Info */}
         <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94A3B8', marginBottom: 8 }}>Détails</div>
-        {[
-          ['Audience',    `${aud?.icon} ${aud?.label}${c.audience_value ? ` — ${c.audience_value}` : ''}`],
-          ['Créée le',    fmtDate(c.created_at)],
-          ['Envoyée le',  c.sent_at ? fmtDate(c.sent_at) : '—'],
-          ['Aperçu',      c.preview_text || '—'],
-        ].map(([label, val]) => (
-          <div key={label} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '8px 0', borderBottom: '1px solid #F8FAFC' }}>
-            <span style={{ fontSize: 12, color: '#64748B', minWidth: 110 }}>{label}</span>
+        {[['Audience', `${aud?.icon} ${aud?.label}${c.audience_value ? ` — ${c.audience_value}` : ''}`], ['Créée le', fmtDate(c.created_at)], ['Envoyée le', c.sent_at ? fmtDate(c.sent_at) : '—'], ['Aperçu', c.preview_text || '—']].map(([lbl, val]) => (
+          <div key={lbl} style={{ display: 'flex', gap: 8, padding: '8px 0', borderBottom: '1px solid #F8FAFC' }}>
+            <span style={{ fontSize: 12, color: '#64748B', minWidth: 110 }}>{lbl}</span>
             <span style={{ fontSize: 12, fontWeight: 600, color: '#0F172A', flex: 1 }}>{val}</span>
           </div>
         ))}
-
-        {/* HTML preview */}
         {c.html_body && (
           <>
             <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94A3B8', margin: '16px 0 8px' }}>Aperçu email</div>
@@ -217,522 +276,732 @@ function StatsPanel({ campaign: c, onClose, onEdit }) {
   )
 }
 
-/* ── HTML email wrapper ─────────────────────────────────────────────────────── */
-function buildPreviewHtml(subject, body) {
-  return `<!DOCTYPE html><html><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${subject || 'Aperçu email'}</title>
-<style>body{margin:0;padding:20px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f4f5;color:#0f172a}
-.email-wrap{max-width:600px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08)}
-img{max-width:100%;height:auto} a{color:#0ea5e9}
-.btn{display:inline-block;padding:12px 24px;background:#0ea5e9;color:#fff!important;text-decoration:none;border-radius:8px;font-weight:700;font-size:14px}
-</style></head><body><div class="email-wrap">${body}</div></body></html>`
+/* ── Block Edit Form ────────────────────────────────────────────────────────── */
+function BlockEditForm({ block, onChange }) {
+  const c   = block.config
+  const upd = (key, val) => onChange({ ...block, config: { ...c, [key]: val } })
+
+  const inp  = { width: '100%', padding: '7px 10px', borderRadius: 7, border: '1px solid #E2E8F0', fontSize: 12, color: '#0F172A', outline: 'none', boxSizing: 'border-box', background: '#fff' }
+  const grid = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }
+
+  /* helper functions — called as {lbl('…')} not as <Lbl> to avoid remounting */
+  const lbl = (t) => <div style={{ fontSize: 10, fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3, marginTop: 10 }}>{t}</div>
+  const colorRow = (label, key) => (
+    <div>
+      {lbl(label)}
+      <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+        <input type="color" value={c[key] || '#000000'} onChange={e => upd(key, e.target.value)} style={{ width: 28, height: 28, border: '1px solid #E2E8F0', borderRadius: 4, cursor: 'pointer', padding: 2, flexShrink: 0 }} />
+        <input style={{ ...inp, flex: 1 }} value={c[key] || ''} onChange={e => upd(key, e.target.value)} />
+      </div>
+    </div>
+  )
+  const alignSel = (key = 'align') => (
+    <div>
+      {lbl('Alignement')}
+      <select style={inp} value={c[key] || 'center'} onChange={e => upd(key, e.target.value)}>
+        <option value="left">Gauche</option><option value="center">Centre</option><option value="right">Droite</option>
+      </select>
+    </div>
+  )
+
+  switch (block.type) {
+    case 'banner': return (
+      <div>
+        {lbl('Titre')}<input style={inp} value={c.title} onChange={e => upd('title', e.target.value)} />
+        {lbl('Sous-titre')}<input style={inp} value={c.subtitle} onChange={e => upd('subtitle', e.target.value)} />
+        <div style={grid}>{colorRow('Fond', 'bg')}{colorRow('Texte', 'textColor')}</div>
+        {lbl('Padding CSS')}<input style={inp} value={c.padding} onChange={e => upd('padding', e.target.value)} placeholder="40px 24px" />
+      </div>
+    )
+    case 'title': return (
+      <div>
+        {lbl('Texte du titre')}<input style={inp} value={c.text} onChange={e => upd('text', e.target.value)} />
+        <div style={grid}>
+          <div>
+            {lbl('Niveau')}
+            <select style={inp} value={c.level} onChange={e => upd('level', e.target.value)}>
+              <option value="h1">H1 — Grand</option><option value="h2">H2 — Moyen</option><option value="h3">H3 — Petit</option>
+            </select>
+          </div>
+          <div>{lbl('Taille px')}<input type="number" style={inp} value={c.fontSize} min={12} max={60} onChange={e => upd('fontSize', +e.target.value)} /></div>
+        </div>
+        {alignSel()}
+        {colorRow('Couleur', 'color')}
+      </div>
+    )
+    case 'text': return (
+      <div>
+        {lbl('Contenu')}
+        <textarea style={{ ...inp, minHeight: 80, resize: 'vertical', lineHeight: 1.5 }} value={c.content} onChange={e => upd('content', e.target.value)} />
+        <div style={grid}>
+          <div>{lbl('Taille px')}<input type="number" style={inp} value={c.fontSize} min={10} max={32} onChange={e => upd('fontSize', +e.target.value)} /></div>
+          {alignSel()}
+        </div>
+        {colorRow('Couleur', 'color')}
+        {lbl('Padding CSS')}<input style={inp} value={c.padding} onChange={e => upd('padding', e.target.value)} placeholder="0 24px 24px" />
+      </div>
+    )
+    case 'image': return (
+      <div>
+        {lbl('URL de l\'image')}<input style={inp} value={c.url} onChange={e => upd('url', e.target.value)} placeholder="https://…" />
+        {lbl('Texte alt')}<input style={inp} value={c.alt} onChange={e => upd('alt', e.target.value)} />
+        <div style={grid}>
+          <div>{lbl('Largeur')}<input style={inp} value={c.width} onChange={e => upd('width', e.target.value)} placeholder="100%" /></div>
+          <div>{lbl('Arrondi px')}<input type="number" style={inp} value={c.borderRadius} min={0} max={50} onChange={e => upd('borderRadius', +e.target.value)} /></div>
+        </div>
+        {alignSel()}
+      </div>
+    )
+    case 'logo': return (
+      <div>
+        {lbl('URL du logo')}<input style={inp} value={c.url} onChange={e => upd('url', e.target.value)} placeholder="Laisser vide → logo SHOPCA" />
+        {lbl('Texte alt')}<input style={inp} value={c.alt} onChange={e => upd('alt', e.target.value)} />
+        <div style={grid}>
+          <div>{lbl('Largeur px')}<input type="number" style={inp} value={c.width} min={40} max={400} onChange={e => upd('width', +e.target.value)} /></div>
+          {alignSel()}
+        </div>
+      </div>
+    )
+    case 'button': return (
+      <div>
+        {lbl('Texte du bouton')}<input style={inp} value={c.text} onChange={e => upd('text', e.target.value)} />
+        {lbl('URL')}<input style={inp} value={c.url} onChange={e => upd('url', e.target.value)} placeholder="https://shopca.fr" />
+        <div style={grid}>{colorRow('Fond', 'bg')}{colorRow('Texte', 'textColor')}</div>
+        <div style={grid}>
+          <div>{lbl('Arrondi px')}<input type="number" style={inp} value={c.borderRadius} min={0} max={40} onChange={e => upd('borderRadius', +e.target.value)} /></div>
+          <div>{lbl('Taille px')}<input type="number" style={inp} value={c.fontSize} min={10} max={24} onChange={e => upd('fontSize', +e.target.value)} /></div>
+        </div>
+        {alignSel()}
+      </div>
+    )
+    case 'divider': return (
+      <div>
+        <div style={grid}>
+          <div>{lbl('Épaisseur px')}<input type="number" style={inp} value={c.thickness} min={1} max={10} onChange={e => upd('thickness', +e.target.value)} /></div>
+          {colorRow('Couleur', 'color')}
+        </div>
+        {lbl('Marges CSS')}<input style={inp} value={c.margin} onChange={e => upd('margin', e.target.value)} placeholder="8px 24px" />
+      </div>
+    )
+    case 'columns': return (
+      <div>
+        {lbl('Colonne gauche')}
+        <textarea style={{ ...inp, minHeight: 60, resize: 'vertical', lineHeight: 1.5 }} value={c.left} onChange={e => upd('left', e.target.value)} />
+        {lbl('Colonne droite')}
+        <textarea style={{ ...inp, minHeight: 60, resize: 'vertical', lineHeight: 1.5 }} value={c.right} onChange={e => upd('right', e.target.value)} />
+      </div>
+    )
+    case 'social': {
+      const ALL = ['facebook','twitter','linkedin','instagram','youtube']
+      return (
+        <div>
+          {lbl('Réseaux actifs')}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 4 }}>
+            {ALL.map(n => {
+              const active = (c.networks||[]).includes(n)
+              return (
+                <button key={n} onClick={() => upd('networks', active ? (c.networks||[]).filter(x=>x!==n) : [...(c.networks||[]), n])}
+                  style={{ padding: '4px 12px', borderRadius: 99, border: `1px solid ${active ? '#FF6B00' : '#E2E8F0'}`, background: active ? '#FFF7ED' : '#fff', color: active ? '#FF6B00' : '#64748B', fontSize: 11, fontWeight: 700, cursor: 'pointer', textTransform: 'capitalize' }}>
+                  {n}
+                </button>
+              )
+            })}
+          </div>
+          {alignSel()}
+        </div>
+      )
+    }
+    case 'signature': return (
+      <div>
+        {lbl('Nom')}<input style={inp} value={c.name} onChange={e => upd('name', e.target.value)} />
+        {lbl('Rôle')}<input style={inp} value={c.role} onChange={e => upd('role', e.target.value)} />
+        {lbl('Email')}<input style={inp} value={c.email} onChange={e => upd('email', e.target.value)} />
+        {lbl('Téléphone')}<input style={inp} value={c.phone} onChange={e => upd('phone', e.target.value)} placeholder="Optionnel" />
+      </div>
+    )
+    case 'footer': return (
+      <div>
+        {lbl('Texte')}<input style={inp} value={c.text} onChange={e => upd('text', e.target.value)} />
+        {lbl('URL désinscription')}<input style={inp} value={c.unsubUrl} onChange={e => upd('unsubUrl', e.target.value)} />
+        <div style={grid}>{colorRow('Fond', 'bg')}{colorRow('Texte', 'color')}</div>
+      </div>
+    )
+    default: return <div style={{ fontSize: 12, color: '#94A3B8', padding: '8px 0' }}>Aucune option disponible.</div>
+  }
+}
+
+/* ── Block Card ─────────────────────────────────────────────────────────────── */
+function BlockCard({ block, index, total, selected, onSelect, onUpdate, onDelete, onMove }) {
+  const bt = BLOCK_TYPES.find(b => b.type === block.type) || { label: block.type, icon: '?', color: '#94A3B8' }
+  const preview = { banner: block.config.title, title: block.config.text, text: block.config.content?.split('\n')[0], image: block.config.url||'Aucune URL', logo: block.config.url||'Logo SHOPCA', button: block.config.text, divider: '─────────', columns: '2 colonnes', social: (block.config.networks||[]).join(', ')||'aucun réseau', signature: block.config.name, footer: block.config.text }[block.type] || ''
+
+  return (
+    <div style={{ borderRadius: 10, border: `1.5px solid ${selected ? '#FF6B00' : '#E2E8F0'}`, background: selected ? '#FFF7ED' : '#FAFAFA', overflow: 'hidden', transition: 'border-color .15s' }}>
+      <div onClick={() => onSelect(selected ? null : block.id)} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 10px', cursor: 'pointer', userSelect: 'none' }}>
+        <span style={{ fontSize: selected ? 14 : 13, minWidth: 22, textAlign: 'center', fontWeight: 900, color: bt.color, flexShrink: 0 }}>{bt.icon}</span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: '#374151' }}>{bt.label}</div>
+          <div style={{ fontSize: 10, color: '#94A3B8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{preview}</div>
+        </div>
+        <div style={{ display: 'flex', gap: 2, flexShrink: 0 }}>
+          <button onClick={e => { e.stopPropagation(); onMove(index, -1) }} disabled={index === 0}
+            style={{ padding: 3, borderRadius: 5, border: '1px solid #E2E8F0', background: '#fff', color: index===0?'#CBD5E1':'#64748B', cursor: index===0?'default':'pointer', display:'flex', alignItems:'center' }}>
+            <Ic.ChevronU />
+          </button>
+          <button onClick={e => { e.stopPropagation(); onMove(index, 1) }} disabled={index === total - 1}
+            style={{ padding: 3, borderRadius: 5, border: '1px solid #E2E8F0', background: '#fff', color: index===total-1?'#CBD5E1':'#64748B', cursor: index===total-1?'default':'pointer', display:'flex', alignItems:'center' }}>
+            <Ic.ChevronD />
+          </button>
+          <button onClick={e => { e.stopPropagation(); onDelete(block.id) }}
+            style={{ padding: 3, borderRadius: 5, border: '1px solid #FECACA', background: '#FEF2F2', color: '#EF4444', cursor: 'pointer', display:'flex', alignItems:'center' }}>
+            <Ic.Trash />
+          </button>
+        </div>
+      </div>
+      {selected && (
+        <div style={{ padding: '0 12px 14px', borderTop: '1px solid #FFE4C9' }}>
+          <BlockEditForm block={block} onChange={onUpdate} />
+        </div>
+      )}
+    </div>
+  )
 }
 
 /* ── Main Page ─────────────────────────────────────────────────────────────── */
 export default function EmailsPage() {
-  const [view,          setView]         = useState('editor') // 'editor' | 'preview' | 'history'
-  const [campaigns,     setCampaigns]    = useState([])
-  const [stats,         setStats]        = useState(null)
-  const [total,         setTotal]        = useState(0)
-  const [loading,       setLoading]      = useState(false)
-  const [saving,        setSaving]       = useState(false)
-  const [sending,       setSending]      = useState(false)
-  const [toast,         setToast]        = useState(null)
-  const [page,          setPage]         = useState(1)
-  const [panelCampaign, setPanelCampaign]= useState(null)
-  const [sendModal,     setSendModal]    = useState(false)
+  /* view */
+  const [view,           setView]           = useState('composer')
 
-  // Editor state
-  const [editId,        setEditId]       = useState(null)
-  const [subject,       setSubject]      = useState('')
-  const [previewText,   setPreviewText]  = useState('')
-  const [audience,      setAudience]     = useState('all')
-  const [audienceValue, setAudienceValue]= useState('')
-  const [htmlBody,      setHtmlBody]     = useState(DEFAULT_HTML)
-  const [recipientCount,setRecipientCount] = useState(0)
+  /* campaigns list */
+  const [campaigns,      setCampaigns]      = useState([])
+  const [stats,          setStats]          = useState(null)
+  const [total,          setTotal]          = useState(0)
+  const [loading,        setLoading]        = useState(false)
+  const [page,           setPage]           = useState(1)
 
-  const taRef = useRef()
-  const PER_PAGE = 20
+  /* modals */
+  const [panelCampaign,  setPanelCampaign]  = useState(null)
+  const [sendModal,      setSendModal]      = useState(false)
+  const [toast,          setToast]          = useState(null)
+  const [saving,         setSaving]         = useState(false)
+  const [sending,        setSending]        = useState(false)
+
+  /* campaign params */
+  const [editId,         setEditId]         = useState(null)
+  const [campaignName,   setCampaignName]   = useState('')
+  const [subject,        setSubject]        = useState('')
+  const [preHeader,      setPreHeader]      = useState('')
+  const [senderName,     setSenderName]     = useState('SHOPCA')
+  const [senderEmail,    setSenderEmail]    = useState('noreply@shopca.fr')
+  const [replyTo,        setReplyTo]        = useState('')
+  const [audience,       setAudience]       = useState('all')
+  const [audienceValue,  setAudienceValue]  = useState('')
+  const [sendDate,       setSendDate]       = useState('')
+  const [sendTime,       setSendTime]       = useState('')
+  const [timezone,       setTimezone]       = useState('Europe/Paris')
+  const [recipientCount, setRecipientCount] = useState(0)
+
+  /* builder */
+  const [blocks,          setBlocks]         = useState(() => DEFAULT_BLOCKS.map(b => ({ ...b, id: newId() })))
+  const [editorTab,       setEditorTab]      = useState('design')
+  const [codeHtml,        setCodeHtml]       = useState('')
+  const [selectedBlockId, setSelectedBlockId]= useState(null)
+
+  /* preview */
+  const [previewDevice,  setPreviewDevice]  = useState('desktop')
+  const [previewTheme,   setPreviewTheme]   = useState('light')
 
   const showToast = (msg, type = 'success') => setToast({ msg, type })
+  const PER_PAGE  = 20
 
-  /* ── Fetch campaigns ──────────────────────────────────────────────────── */
+  /* fetch */
   const fetchCampaigns = useCallback(async (p = 1) => {
     setLoading(true)
-    const { data, error } = await supabase.rpc('get_manager_campaigns', {
-      p_limit: PER_PAGE, p_offset: (p - 1) * PER_PAGE
-    })
-    if (!error && data) {
-      setCampaigns(data.campaigns || [])
-      setTotal(data.total || 0)
-      setStats(data.stats)
-    }
+    const { data, error } = await supabase.rpc('get_manager_campaigns', { p_limit: PER_PAGE, p_offset: (p-1)*PER_PAGE })
+    if (!error && data) { setCampaigns(data.campaigns||[]); setTotal(data.total||0); setStats(data.stats) }
     setLoading(false)
   }, [])
 
   useEffect(() => { fetchCampaigns(page) }, [page, fetchCampaigns])
 
-  /* ── Compute recipient count on audience change ───────────────────────── */
-  useEffect(() => {
-    const aud = AUDIENCES.find(a => a.value === audience)
-    if (!aud) return
-    // Optimistic local estimate — real count comes from SQL on save
-    setRecipientCount(0)
-  }, [audience])
+  /* derived html */
+  const getHtmlBody = () => editorTab === 'code' ? codeHtml : blocksToHtml(blocks)
 
-  /* ── Save draft ───────────────────────────────────────────────────────── */
+  /* preview html — recomputes on any change */
+  const previewHtml = useMemo(() => {
+    const body = (editorTab === 'code' ? codeHtml : blocksToHtml(blocks))
+      .replace(/\{\{prenom\}\}/g, 'Jean').replace(/\{\{nom\}\}/g, 'Dupont')
+      .replace(/\{\{email\}\}/g, 'jean@exemple.fr').replace(/\{\{ville\}\}/g, 'Lyon').replace(/\{\{plan\}\}/g, 'Premium')
+    return buildPreviewHtml(subject, body, preHeader, previewTheme)
+  }, [blocks, editorTab, codeHtml, subject, preHeader, previewTheme])
+
+  /* save */
   const saveDraft = async () => {
-    if (!subject.trim()) { showToast('L\'objet est obligatoire', 'error'); return }
+    if (!subject.trim()) { showToast("L'objet est obligatoire", 'error'); return }
     setSaving(true)
     const { data, error } = await supabase.rpc('manager_save_campaign', {
-      p_campaign_id:   editId,
-      p_subject:       subject,
-      p_preview_text:  previewText,
-      p_html_body:     htmlBody,
-      p_audience:      audience,
-      p_audience_value: audienceValue || null,
-      p_status:        'draft',
+      p_campaign_id: editId, p_subject: subject, p_preview_text: preHeader,
+      p_html_body: getHtmlBody(), p_audience: audience, p_audience_value: audienceValue||null, p_status: 'draft',
     })
-    if (error) { showToast(error.message || 'Erreur', 'error') }
-    else {
-      if (!editId) setEditId(data.id)
-      setRecipientCount(data.recipient_count || 0)
-      showToast('Brouillon enregistré')
-      fetchCampaigns(page)
-    }
+    if (error) showToast(error.message||'Erreur', 'error')
+    else { if (!editId) setEditId(data.id); setRecipientCount(data.recipient_count||0); showToast('Brouillon enregistré'); fetchCampaigns(page) }
     setSaving(false)
   }
 
-  /* ── Send campaign ────────────────────────────────────────────────────── */
+  /* send */
   const sendCampaign = async () => {
     setSending(true)
     const { data, error } = await supabase.rpc('manager_save_campaign', {
-      p_campaign_id:   editId,
-      p_subject:       subject,
-      p_preview_text:  previewText,
-      p_html_body:     htmlBody,
-      p_audience:      audience,
-      p_audience_value: audienceValue || null,
-      p_status:        'sent',
+      p_campaign_id: editId, p_subject: subject, p_preview_text: preHeader,
+      p_html_body: getHtmlBody(), p_audience: audience, p_audience_value: audienceValue||null, p_status: 'sent',
     })
     setSendModal(false)
-    if (error) { showToast(error.message || 'Erreur', 'error') }
-    else {
-      showToast(`Campagne envoyée à ${(data.recipient_count || 0).toLocaleString('fr-FR')} destinataire(s)`)
-      resetEditor()
-      setView('history')
-      fetchCampaigns(1)
-    }
+    if (error) showToast(error.message||'Erreur', 'error')
+    else { showToast(`Envoyé à ${(data.recipient_count||0).toLocaleString('fr-FR')} destinataire(s)`); resetComposer(); setView('history'); fetchCampaigns(1) }
     setSending(false)
   }
 
-  /* ── Delete campaign ──────────────────────────────────────────────────── */
+  /* delete */
   const deleteCampaign = async (id) => {
     const { error } = await supabase.rpc('manager_delete_campaign', { p_campaign_id: id })
     if (error) showToast(error.message, 'error')
     else { showToast('Campagne supprimée'); setPanelCampaign(null); fetchCampaigns(page) }
   }
 
-  /* ── Editor helpers ───────────────────────────────────────────────────── */
-  const resetEditor = () => {
-    setEditId(null); setSubject(''); setPreviewText(''); setAudience('all')
-    setAudienceValue(''); setHtmlBody(DEFAULT_HTML); setRecipientCount(0)
+  /* reset */
+  const resetComposer = () => {
+    setEditId(null); setCampaignName(''); setSubject(''); setPreHeader(''); setSenderName('SHOPCA')
+    setSenderEmail('noreply@shopca.fr'); setReplyTo(''); setAudience('all'); setAudienceValue('')
+    setSendDate(''); setSendTime(''); setTimezone('Europe/Paris'); setRecipientCount(0)
+    setBlocks(DEFAULT_BLOCKS.map(b => ({ ...b, id: newId() }))); setEditorTab('design')
+    setCodeHtml(''); setSelectedBlockId(null)
   }
 
   const loadCampaignInEditor = (c) => {
-    setEditId(c.id); setSubject(c.subject || ''); setPreviewText(c.preview_text || '')
-    setAudience(c.audience || 'all'); setAudienceValue(c.audience_value || '')
-    setHtmlBody(c.html_body || DEFAULT_HTML); setRecipientCount(c.recipient_count || 0)
-    setPanelCampaign(null); setView('editor')
+    setEditId(c.id); setCampaignName(c.subject||''); setSubject(c.subject||''); setPreHeader(c.preview_text||'')
+    setAudience(c.audience||'all'); setAudienceValue(c.audience_value||''); setRecipientCount(c.recipient_count||0)
+    setCodeHtml(c.html_body||''); setEditorTab('code'); setSelectedBlockId(null)
+    setPanelCampaign(null); setView('composer')
   }
 
-  const insertVariable = (tag) => {
-    const ta = taRef.current
-    if (!ta) { setHtmlBody(h => h + tag); return }
-    setHtmlBody(insertAtCursor(ta, tag))
-    setTimeout(() => { ta.focus(); ta.selectionStart = ta.selectionEnd = ta.selectionStart + tag.length }, 0)
+  /* block actions */
+  const addBlock = (type) => {
+    const nb = { id: newId(), type, config: defaultConfig(type) }
+    setBlocks(prev => [...prev, nb]); setSelectedBlockId(nb.id)
+  }
+  const updateBlock = (updated) => setBlocks(prev => prev.map(b => b.id === updated.id ? updated : b))
+  const deleteBlock = (id) => { setBlocks(prev => prev.filter(b => b.id !== id)); if (selectedBlockId === id) setSelectedBlockId(null) }
+  const moveBlock = (idx, dir) => {
+    setBlocks(prev => {
+      const next = [...prev]; const target = idx + dir
+      if (target < 0 || target >= next.length) return prev
+      ;[next[idx], next[target]] = [next[target], next[idx]]
+      return next
+    })
   }
 
-  const insertSnippet = (type) => {
-    const snippets = {
-      image:  '\n<div style="text-align:center;padding:16px 0">\n  <img src="https://exemple.com/image.jpg" alt="" style="max-width:100%;border-radius:8px">\n</div>\n',
-      button: '\n<div style="text-align:center;padding:20px 0">\n  <a href="https://shopca.fr" class="btn">Voir les annonces</a>\n</div>\n',
-      divider:'\n<hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0">\n',
-      header: '\n<div style="background:#0ea5e9;color:#fff;padding:32px 24px;text-align:center">\n  <h1 style="margin:0;font-size:24px">Titre de votre email</h1>\n  <p style="margin:8px 0 0;opacity:.85">Sous-titre ou accroche</p>\n</div>\n',
-      footer: '\n<div style="background:#f8fafc;padding:20px 24px;text-align:center;border-top:1px solid #e2e8f0">\n  <p style="margin:0;font-size:12px;color:#94a3b8">© 2026 SHOPCA · <a href="https://shopca.fr/unsubscribe" style="color:#94a3b8">Se désabonner</a></p>\n</div>\n',
-    }
-    const ta = taRef.current
-    if (!ta || !snippets[type]) return
-    setHtmlBody(insertAtCursor(ta, snippets[type]))
+  /* tab switch */
+  const switchEditorTab = (tab) => {
+    if (tab === 'code' && editorTab === 'design') setCodeHtml(blocksToHtml(blocks))
+    setEditorTab(tab)
   }
 
-  const totalPages = Math.ceil(total / PER_PAGE)
+  const totalPages      = Math.ceil(total / PER_PAGE)
   const selectedAudience = AUDIENCES.find(a => a.value === audience)
-  const needsValue = ['city', 'department', 'region'].includes(audience)
+  const needsValue       = ['city','department','region'].includes(audience)
 
-  const inp  = { width: '100%', padding: '9px 12px', borderRadius: 8, border: '1px solid #E2E8F0', fontSize: 13, color: '#0F172A', outline: 'none', boxSizing: 'border-box' }
-  const selS = { ...inp, appearance: 'none', cursor: 'pointer' }
+  /* shared input style */
+  const inp = { width: '100%', padding: '8px 11px', borderRadius: 8, border: '1px solid #E2E8F0', fontSize: 12, color: '#0F172A', outline: 'none', boxSizing: 'border-box', background: '#fff' }
 
   return (
     <div>
       <style>{`
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-        .mgr-tr:hover td { background:#F8FAFC !important; cursor:pointer; }
-        .mgr-tr td { transition:background .1s; }
-        .tab-btn { transition: all .15s; }
+        .em-tr:hover td { background:#F8FAFC!important; cursor:pointer; }
+        .em-tr td { transition:background .1s; }
+        .blk-add:hover { background:#FFF7ED!important; border-color:#FF6B00!important; color:#FF6B00!important; }
+        .tab-active { background:#fff!important; color:#FF6B00!important; font-weight:700!important; box-shadow:0 1px 4px rgba(0,0,0,.08); }
         .var-chip:hover { background:#DBEAFE!important; color:#1D4ED8!important; }
-        .snip-btn:hover { background:#F1F5F9!important; }
       `}</style>
 
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20, gap: 12, flexWrap: 'wrap' }}>
+      {/* ── Header ─────────────────────────────────────────────────────────── */}
+      <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:16, gap:12, flexWrap:'wrap' }}>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 800, color: '#0F172A', margin: 0, letterSpacing: '-0.02em' }}>Emails</h1>
-          <p style={{ fontSize: 12, color: '#94A3B8', margin: '4px 0 0' }}>Centre de communication — campagnes marketing</p>
+          <h1 style={{ fontSize:24, fontWeight:800, color:'#0F172A', margin:0, letterSpacing:'-0.02em' }}>Emails</h1>
+          <p style={{ fontSize:12, color:'#94A3B8', margin:'4px 0 0' }}>Centre de création de campagnes email</p>
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          {view !== 'editor' && (
-            <button onClick={() => { resetEditor(); setView('editor') }}
-              style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: 'none', background: '#0EA5E9', color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+        <div style={{ display:'flex', gap:8 }}>
+          {view !== 'composer' && (
+            <button onClick={() => { resetComposer(); setView('composer') }}
+              style={{ display:'flex', alignItems:'center', gap:6, padding:'8px 16px', borderRadius:10, border:'none', background:'#FF6B00', color:'#fff', fontSize:13, fontWeight:700, cursor:'pointer' }}>
               <Ic.Plus /> Nouvelle campagne
             </button>
           )}
           <button onClick={() => fetchCampaigns(page)}
-            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 10, border: '1px solid #E2E8F0', background: '#fff', fontSize: 12, fontWeight: 600, color: '#64748B', cursor: 'pointer' }}>
+            style={{ display:'flex', alignItems:'center', gap:6, padding:'8px 12px', borderRadius:10, border:'1px solid #E2E8F0', background:'#fff', fontSize:12, fontWeight:600, color:'#64748B', cursor:'pointer' }}>
             <Ic.Refresh />
           </button>
         </div>
       </div>
 
-      {/* Stats row */}
+      {/* ── Stats row ──────────────────────────────────────────────────────── */}
       {stats && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(130px,1fr))', gap: 10, marginBottom: 20 }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(120px,1fr))', gap:10, marginBottom:16 }}>
           {[
-            { label: 'Campagnes',  val: stats.total_campaigns,  color: '#6366F1', icon: '📧' },
-            { label: 'Envoyées',   val: stats.sent,             color: '#10B981', icon: '✅' },
-            { label: 'Brouillons', val: stats.drafts,           color: '#F59E0B', icon: '📝' },
-            { label: 'Emails envoyés', val: (stats.total_sent||0).toLocaleString('fr-FR'), color: '#0EA5E9', icon: '📤' },
-            { label: 'Ouvertures', val: (stats.total_opens||0).toLocaleString('fr-FR'),  color: '#10B981', icon: '👁️' },
-            { label: 'Clics',      val: (stats.total_clicks||0).toLocaleString('fr-FR'), color: '#F59E0B', icon: '🖱️' },
+            { label:'Campagnes',  val:stats.total_campaigns,                         color:'#6366F1', icon:'📧' },
+            { label:'Envoyées',   val:stats.sent,                                    color:'#10B981', icon:'✅' },
+            { label:'Brouillons', val:stats.drafts,                                  color:'#F59E0B', icon:'📝' },
+            { label:'Emails',     val:(stats.total_sent||0).toLocaleString('fr-FR'), color:'#0EA5E9', icon:'📤' },
+            { label:'Ouvertures', val:(stats.total_opens||0).toLocaleString('fr-FR'),color:'#10B981', icon:'👁️' },
+            { label:'Clics',      val:(stats.total_clicks||0).toLocaleString('fr-FR'),color:'#F59E0B',icon:'🖱️' },
           ].map(({ label, val, color, icon }) => (
-            <div key={label} style={{ background: '#fff', borderRadius: 12, border: '1px solid #E2E8F0', padding: '12px 14px', boxShadow: '0 1px 4px rgba(0,0,0,.04)' }}>
-              <div style={{ fontSize: 14, marginBottom: 4 }}>{icon}</div>
-              <div style={{ fontSize: 18, fontWeight: 800, color, letterSpacing: '-0.02em' }}>{val}</div>
-              <div style={{ fontSize: 10, color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</div>
+            <div key={label} style={{ background:'#fff', borderRadius:12, border:'1px solid #E2E8F0', padding:'11px 14px', boxShadow:'0 1px 4px rgba(0,0,0,.04)' }}>
+              <div style={{ fontSize:14, marginBottom:3 }}>{icon}</div>
+              <div style={{ fontSize:18, fontWeight:800, color, letterSpacing:'-0.02em' }}>{val}</div>
+              <div style={{ fontSize:10, color:'#94A3B8', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em' }}>{label}</div>
             </div>
           ))}
         </div>
       )}
 
-      {/* Tabs */}
-      <div style={{ display: 'flex', gap: 4, marginBottom: 20, background: '#F8FAFC', borderRadius: 12, padding: 4, width: 'fit-content' }}>
-        {[
-          ['editor',  <Ic.Edit />,   'Éditeur'],
-          ['preview', <Ic.Eye />,    'Prévisualisation'],
-          ['history', <Ic.History />, 'Historique'],
-        ].map(([key, icon, label]) => (
-          <button key={key} onClick={() => setView(key)}
-            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 9, border: 'none', background: view === key ? '#fff' : 'transparent', color: view === key ? '#0EA5E9' : '#64748B', fontSize: 13, fontWeight: view === key ? 700 : 500, cursor: 'pointer', boxShadow: view === key ? '0 1px 4px rgba(0,0,0,.08)' : 'none' }}>
+      {/* ── View tabs ──────────────────────────────────────────────────────── */}
+      <div style={{ display:'flex', gap:4, marginBottom:16, background:'#F8FAFC', borderRadius:12, padding:4, width:'fit-content' }}>
+        {[['composer', <Ic.Edit />, 'Composer'], ['history', <Ic.History />, 'Historique']].map(([key, icon, label]) => (
+          <button key={key} onClick={() => setView(key)} className={view===key ? 'tab-active' : ''}
+            style={{ display:'flex', alignItems:'center', gap:6, padding:'8px 16px', borderRadius:9, border:'none', background:'transparent', color:'#64748B', fontSize:13, fontWeight:500, cursor:'pointer' }}>
             {icon} {label}
           </button>
         ))}
       </div>
 
-      {/* ── EDITOR VIEW ────────────────────────────────────────────────────────── */}
-      {view === 'editor' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 20, alignItems: 'start' }}>
-          {/* Left: settings */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #E2E8F0', padding: 18, boxShadow: '0 1px 4px rgba(0,0,0,.04)' }}>
-              <div style={{ fontSize: 12, fontWeight: 800, color: '#64748B', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Paramètres</div>
+      {/* ══════════════════════════════════════════════════════════════════════
+          COMPOSER — 3-column layout
+         ══════════════════════════════════════════════════════════════════════ */}
+      {view === 'composer' && (
+        <div style={{ display:'grid', gridTemplateColumns:'280px minmax(0,1fr) 340px', gap:14, alignItems:'start' }}>
 
-              <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#64748B', marginBottom: 4 }}>Objet *</label>
-              <input value={subject} onChange={e => setSubject(e.target.value)} placeholder="Votre objet d'email…"
-                style={{ ...inp, marginBottom: 12, fontWeight: 600 }} />
+          {/* ── COLUMN 1 · Paramètres ─────────────────────────────────────── */}
+          <div style={{ display:'flex', flexDirection:'column', gap:10, maxHeight:'calc(100vh - 220px)', overflowY:'auto', paddingRight:2 }}>
 
-              <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#64748B', marginBottom: 4 }}>Aperçu (preheader)</label>
-              <input value={previewText} onChange={e => setPreviewText(e.target.value)} placeholder="Texte affiché après l'objet dans la boîte mail…"
-                style={{ ...inp, marginBottom: 12, fontSize: 12 }} />
-
-              <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#64748B', marginBottom: 4 }}>Audience</label>
-              <div style={{ position: 'relative', marginBottom: needsValue ? 8 : 0 }}>
-                <select value={audience} onChange={e => { setAudience(e.target.value); setAudienceValue('') }}
-                  style={{ ...selS, fontWeight: 600 }}>
-                  {AUDIENCES.map(a => <option key={a.value} value={a.value}>{a.icon} {a.label}</option>)}
-                </select>
-                <span style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#94A3B8', display: 'flex' }}><Ic.ChevronD /></span>
-              </div>
-              {selectedAudience && (
-                <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 4, marginBottom: 8 }}>{selectedAudience.desc}</div>
-              )}
-              {needsValue && (
-                <input value={audienceValue} onChange={e => setAudienceValue(e.target.value)}
-                  placeholder={audience === 'city' ? 'ex: Lyon, Paris…' : audience === 'department' ? 'ex: 69, 75, 13…' : 'ex: Île-de-France…'}
-                  style={{ ...inp }} />
-              )}
-
-              {recipientCount > 0 && (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 10, padding: '8px 10px', background: '#F0FDF4', borderRadius: 8, fontSize: 12 }}>
-                  <span style={{ color: '#64748B' }}>Destinataires estimés</span>
-                  <span style={{ fontWeight: 800, color: '#10B981', fontSize: 15 }}>{recipientCount.toLocaleString('fr-FR')}</span>
-                </div>
-              )}
+            {/* Section campagne */}
+            <div style={{ background:'#fff', borderRadius:14, border:'1px solid #E2E8F0', padding:'14px 16px', boxShadow:'0 1px 4px rgba(0,0,0,.04)' }}>
+              <div style={{ fontSize:10, fontWeight:800, color:'#FF6B00', marginBottom:12, textTransform:'uppercase', letterSpacing:'0.1em' }}>Campagne</div>
+              <label style={{ display:'block', fontSize:11, fontWeight:700, color:'#64748B', marginBottom:3 }}>Nom de la campagne</label>
+              <input value={campaignName} onChange={e => setCampaignName(e.target.value)} placeholder="Ex: Newsletter Juillet 2026" style={{ ...inp, marginBottom:10 }} />
+              <label style={{ display:'block', fontSize:11, fontWeight:700, color:'#64748B', marginBottom:3 }}>Objet de l'email *</label>
+              <input value={subject} onChange={e => setSubject(e.target.value)} placeholder="Votre objet ici…" style={{ ...inp, marginBottom:4, fontWeight:600, border:`1px solid ${!subject.trim() ? '#FCA5A5' : '#E2E8F0'}` }} />
+              {!subject.trim() && <div style={{ fontSize:10, color:'#EF4444', marginBottom:8 }}>Champ obligatoire</div>}
+              <label style={{ display:'block', fontSize:11, fontWeight:700, color:'#64748B', marginBottom:3, marginTop:10 }}>Pré-header</label>
+              <input value={preHeader} onChange={e => setPreHeader(e.target.value)} placeholder="Texte visible dans la boîte mail…" style={{ ...inp, fontSize:12 }} />
+              <div style={{ fontSize:10, color:'#94A3B8', marginTop:4 }}>Complète l'objet dans l'aperçu mobile</div>
             </div>
 
-            {/* Variables */}
-            <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #E2E8F0', padding: 18, boxShadow: '0 1px 4px rgba(0,0,0,.04)' }}>
-              <div style={{ fontSize: 12, fontWeight: 800, color: '#64748B', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Variables</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {VARIABLES.map(v => (
-                  <button key={v.tag} onClick={() => insertVariable(v.tag)} className="var-chip"
-                    title={`Exemple: ${v.example}`}
-                    style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 99, border: '1px solid #BFDBFE', background: '#EFF6FF', color: '#3B82F6', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'monospace' }}>
-                    {v.tag}
-                  </button>
-                ))}
+            {/* Section expéditeur */}
+            <div style={{ background:'#fff', borderRadius:14, border:'1px solid #E2E8F0', padding:'14px 16px', boxShadow:'0 1px 4px rgba(0,0,0,.04)' }}>
+              <div style={{ fontSize:10, fontWeight:800, color:'#6366F1', marginBottom:12, textTransform:'uppercase', letterSpacing:'0.1em' }}>Expéditeur</div>
+              <label style={{ display:'block', fontSize:11, fontWeight:700, color:'#64748B', marginBottom:3 }}>Nom d'affichage</label>
+              <input value={senderName} onChange={e => setSenderName(e.target.value)} style={{ ...inp, marginBottom:10 }} />
+              <label style={{ display:'block', fontSize:11, fontWeight:700, color:'#64748B', marginBottom:3 }}>Email d'envoi</label>
+              <input type="email" value={senderEmail} onChange={e => setSenderEmail(e.target.value)} style={{ ...inp, marginBottom:10 }} />
+              <label style={{ display:'block', fontSize:11, fontWeight:700, color:'#64748B', marginBottom:3 }}>Adresse de réponse</label>
+              <input type="email" value={replyTo} onChange={e => setReplyTo(e.target.value)} placeholder="Optionnel — ex: support@shopca.fr" style={{ ...inp }} />
+            </div>
+
+            {/* Section audience */}
+            <div style={{ background:'#fff', borderRadius:14, border:'1px solid #E2E8F0', padding:'14px 16px', boxShadow:'0 1px 4px rgba(0,0,0,.04)' }}>
+              <div style={{ fontSize:10, fontWeight:800, color:'#10B981', marginBottom:12, textTransform:'uppercase', letterSpacing:'0.1em' }}>Audience</div>
+              <label style={{ display:'block', fontSize:11, fontWeight:700, color:'#64748B', marginBottom:3 }}>Segment cible</label>
+              <div style={{ position:'relative', marginBottom:4 }}>
+                <select value={audience} onChange={e => { setAudience(e.target.value); setAudienceValue('') }}
+                  style={{ ...inp, appearance:'none', cursor:'pointer', fontWeight:600, paddingRight:28 }}>
+                  {AUDIENCES.map(a => <option key={a.value} value={a.value}>{a.icon} {a.label}</option>)}
+                </select>
+                <span style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', pointerEvents:'none', color:'#94A3B8', display:'flex' }}><Ic.ChevronD /></span>
               </div>
-              <div style={{ fontSize: 10, color: '#94A3B8', marginTop: 8 }}>Cliquez pour insérer à la position du curseur dans l'éditeur.</div>
+              {selectedAudience && <div style={{ fontSize:11, color:'#94A3B8', marginBottom:8 }}>{selectedAudience.desc}</div>}
+              {needsValue && (
+                <input value={audienceValue} onChange={e => setAudienceValue(e.target.value)}
+                  placeholder={audience==='city'?'ex: Lyon, Paris…':audience==='department'?'ex: 69, 75…':'ex: Île-de-France…'}
+                  style={inp} />
+              )}
+              {recipientCount > 0 && (
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginTop:10, padding:'8px 10px', background:'#F0FDF4', borderRadius:8, fontSize:12 }}>
+                  <span style={{ color:'#64748B' }}>Destinataires estimés</span>
+                  <span style={{ fontWeight:800, color:'#10B981', fontSize:15 }}>{recipientCount.toLocaleString('fr-FR')}</span>
+                </div>
+              )}
+
+              {/* Variables */}
+              <div style={{ marginTop:14 }}>
+                <div style={{ fontSize:10, fontWeight:800, color:'#64748B', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:8 }}>Variables personnalisation</div>
+                <div style={{ display:'flex', flexWrap:'wrap', gap:5 }}>
+                  {VARIABLES.map(v => (
+                    <span key={v.tag} className="var-chip" title={`Exemple: ${v.example}`}
+                      style={{ padding:'3px 9px', borderRadius:99, border:'1px solid #BFDBFE', background:'#EFF6FF', color:'#3B82F6', fontSize:11, fontWeight:700, cursor:'default', fontFamily:'monospace' }}>
+                      {v.tag}
+                    </span>
+                  ))}
+                </div>
+                <div style={{ fontSize:10, color:'#94A3B8', marginTop:6 }}>Cliquez dans l'éditeur pour insérer.</div>
+              </div>
+            </div>
+
+            {/* Section programmation */}
+            <div style={{ background:'#fff', borderRadius:14, border:'1px solid #E2E8F0', padding:'14px 16px', boxShadow:'0 1px 4px rgba(0,0,0,.04)' }}>
+              <div style={{ fontSize:10, fontWeight:800, color:'#F59E0B', marginBottom:12, textTransform:'uppercase', letterSpacing:'0.1em' }}>Programmation</div>
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginBottom:10 }}>
+                <div>
+                  <label style={{ display:'block', fontSize:11, fontWeight:700, color:'#64748B', marginBottom:3 }}>Date d'envoi</label>
+                  <input type="date" value={sendDate} onChange={e => setSendDate(e.target.value)} style={inp} />
+                </div>
+                <div>
+                  <label style={{ display:'block', fontSize:11, fontWeight:700, color:'#64748B', marginBottom:3 }}>Heure</label>
+                  <input type="time" value={sendTime} onChange={e => setSendTime(e.target.value)} style={inp} />
+                </div>
+              </div>
+              <label style={{ display:'block', fontSize:11, fontWeight:700, color:'#64748B', marginBottom:3 }}>Fuseau horaire</label>
+              <div style={{ position:'relative' }}>
+                <select value={timezone} onChange={e => setTimezone(e.target.value)}
+                  style={{ ...inp, appearance:'none', cursor:'pointer', paddingRight:28, fontSize:11 }}>
+                  {TIMEZONES.map(tz => <option key={tz} value={tz}>{tz}</option>)}
+                </select>
+                <span style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', pointerEvents:'none', color:'#94A3B8', display:'flex' }}><Ic.ChevronD /></span>
+              </div>
+              {!sendDate && <div style={{ fontSize:10, color:'#94A3B8', marginTop:6 }}>Sans date → envoi immédiat</div>}
             </div>
 
             {/* Actions */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
               <button onClick={saveDraft} disabled={saving || !subject.trim()}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '10px', borderRadius: 10, border: '1px solid #E2E8F0', background: '#fff', fontSize: 13, fontWeight: 700, color: '#64748B', cursor: 'pointer', opacity: (saving || !subject.trim()) ? .6 : 1 }}>
+                style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:6, padding:'10px', borderRadius:10, border:'1px solid #E2E8F0', background:'#fff', fontSize:13, fontWeight:700, color:'#64748B', cursor:'pointer', opacity:(saving||!subject.trim())?.6:1 }}>
                 <Ic.Save /> {saving ? 'Enregistrement…' : 'Enregistrer le brouillon'}
               </button>
-              <button onClick={() => { if (!subject.trim() || !htmlBody.trim()) { showToast('Objet et contenu requis', 'error'); return } saveDraft().then(() => setSendModal(true)) }}
-                disabled={!subject.trim() || !htmlBody.trim()}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '10px', borderRadius: 10, border: 'none', background: '#0EA5E9', color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', opacity: (!subject.trim() || !htmlBody.trim()) ? .5 : 1 }}>
+              <button
+                onClick={() => { if (!subject.trim()) { showToast("L'objet est obligatoire", 'error'); return } saveDraft().then(() => setSendModal(true)) }}
+                disabled={!subject.trim()}
+                style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:6, padding:'10px', borderRadius:10, border:'none', background:'#FF6B00', color:'#fff', fontSize:13, fontWeight:700, cursor:'pointer', opacity:!subject.trim()?.5:1 }}>
                 <Ic.Send /> Envoyer la campagne
               </button>
+              {editId && (
+                <button onClick={resetComposer}
+                  style={{ padding:'7px', borderRadius:10, border:'1px solid #FECACA', background:'#FEF2F2', fontSize:12, fontWeight:600, color:'#EF4444', cursor:'pointer' }}>
+                  ✕ Nouvelle campagne vierge
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* ── COLUMN 2 · Constructeur ───────────────────────────────────── */}
+          <div style={{ background:'#fff', borderRadius:14, border:'1px solid #E2E8F0', overflow:'hidden', boxShadow:'0 1px 4px rgba(0,0,0,.04)', display:'flex', flexDirection:'column', maxHeight:'calc(100vh - 220px)' }}>
+            {/* Editor tabs */}
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'10px 14px', borderBottom:'1px solid #F1F5F9', background:'#FAFAFA', flexShrink:0 }}>
+              <div style={{ display:'flex', gap:3, background:'#F1F5F9', borderRadius:8, padding:3 }}>
+                {[['design','🎨 Design'],['code','</> Code']].map(([k,l]) => (
+                  <button key={k} onClick={() => switchEditorTab(k)}
+                    style={{ padding:'5px 14px', borderRadius:6, border:'none', background:editorTab===k?'#fff':'transparent', color:editorTab===k?'#FF6B00':'#64748B', fontSize:12, fontWeight:editorTab===k?700:500, cursor:'pointer', transition:'all .15s' }}>
+                    {l}
+                  </button>
+                ))}
+              </div>
+              <div style={{ fontSize:11, color:'#94A3B8' }}>
+                {editorTab === 'design' ? `${blocks.length} bloc${blocks.length>1?'s':''}` : `${codeHtml.length} car.`}
+              </div>
             </div>
 
-            {editId && (
-              <button onClick={() => { resetEditor() }}
-                style={{ padding: '7px', borderRadius: 10, border: '1px solid #FECACA', background: '#FEF2F2', fontSize: 12, fontWeight: 600, color: '#EF4444', cursor: 'pointer' }}>
-                ✕ Nouvelle campagne vierge
-              </button>
+            {editorTab === 'design' ? (
+              <>
+                {/* Add block toolbar */}
+                <div style={{ padding:'10px 12px', borderBottom:'1px solid #F1F5F9', flexShrink:0 }}>
+                  <div style={{ fontSize:9, fontWeight:800, color:'#94A3B8', textTransform:'uppercase', letterSpacing:'0.1em', marginBottom:8 }}>Ajouter un bloc</div>
+                  <div style={{ display:'flex', flexWrap:'wrap', gap:5 }}>
+                    {BLOCK_TYPES.map(bt => (
+                      <button key={bt.type} onClick={() => addBlock(bt.type)} className="blk-add"
+                        style={{ display:'flex', alignItems:'center', gap:4, padding:'5px 10px', borderRadius:8, border:'1px solid #E2E8F0', background:'#FAFAFA', cursor:'pointer', fontSize:11, fontWeight:600, color:'#374151', transition:'all .15s' }}>
+                        <span style={{ color:bt.color, fontWeight:900 }}>{bt.icon}</span> {bt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Block list */}
+                <div style={{ flex:1, overflowY:'auto', padding:'12px' }}>
+                  {blocks.length === 0 ? (
+                    <div style={{ textAlign:'center', padding:'40px 20px', color:'#94A3B8', fontSize:13 }}>
+                      <div style={{ fontSize:32, marginBottom:8 }}>📭</div>
+                      <div>Cliquez sur un bloc ci-dessus pour commencer</div>
+                    </div>
+                  ) : (
+                    <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+                      {blocks.map((block, idx) => (
+                        <BlockCard
+                          key={block.id} block={block} index={idx} total={blocks.length}
+                          selected={selectedBlockId === block.id}
+                          onSelect={setSelectedBlockId} onUpdate={updateBlock}
+                          onDelete={deleteBlock} onMove={moveBlock}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              /* Code tab */
+              <div style={{ flex:1, display:'flex', flexDirection:'column', overflow:'hidden' }}>
+                <div style={{ padding:'8px 14px', background:'#F8FAFC', borderBottom:'1px solid #F1F5F9', flexShrink:0 }}>
+                  <div style={{ fontSize:11, color:'#64748B', fontWeight:600 }}>HTML — éditez directement le code source</div>
+                  <div style={{ fontSize:10, color:'#94A3B8', marginTop:2 }}>Repasser en Design écrasera les modifications manuelles</div>
+                </div>
+                <textarea value={codeHtml} onChange={e => setCodeHtml(e.target.value)} spellCheck={false}
+                  style={{ flex:1, padding:16, border:'none', outline:'none', resize:'none', fontFamily:"'Monaco','Menlo','Consolas',monospace", fontSize:12, lineHeight:1.6, color:'#0F172A', background:'#fff', overflowY:'auto' }} />
+              </div>
             )}
           </div>
 
-          {/* Right: HTML editor */}
-          <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #E2E8F0', overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,.04)' }}>
-            {/* Toolbar */}
-            <div style={{ padding: '10px 14px', borderBottom: '1px solid #F1F5F9', display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: '#94A3B8', marginRight: 6 }}>INSÉRER</span>
-              {[
-                ['header',  '🎨 En-tête'],
-                ['image',   '🖼️ Image'],
-                ['button',  '🔵 Bouton'],
-                ['divider', '— Séparateur'],
-                ['footer',  '📄 Pied de page'],
-              ].map(([type, label]) => (
-                <button key={type} onClick={() => insertSnippet(type)} className="snip-btn"
-                  style={{ padding: '4px 10px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#FAFAFA', fontSize: 11, fontWeight: 600, color: '#374151', cursor: 'pointer' }}>
-                  {label}
-                </button>
-              ))}
-              <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#94A3B8' }}>{htmlBody.length} car.</span>
-                <button onClick={() => setHtmlBody(DEFAULT_HTML)}
-                  style={{ padding: '4px 8px', borderRadius: 6, border: '1px solid #FECACA', background: '#FEF2F2', fontSize: 11, color: '#EF4444', cursor: 'pointer' }}>
-                  Reset
-                </button>
+          {/* ── COLUMN 3 · Prévisualisation ───────────────────────────────── */}
+          <div style={{ position:'sticky', top:0, display:'flex', flexDirection:'column', gap:10 }}>
+            {/* Controls */}
+            <div style={{ background:'#fff', borderRadius:12, border:'1px solid #E2E8F0', padding:'10px 12px', boxShadow:'0 1px 4px rgba(0,0,0,.04)' }}>
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:8 }}>
+                <span style={{ fontSize:10, fontWeight:800, color:'#64748B', textTransform:'uppercase', letterSpacing:'0.08em' }}>Aperçu temps réel</span>
               </div>
-            </div>
-
-            {/* Header bar */}
-            <div style={{ padding: '8px 14px', borderBottom: '1px solid #F1F5F9', display: 'flex', alignItems: 'center', gap: 8, background: '#FAFAFA' }}>
-              <Ic.Code />
-              <span style={{ fontSize: 12, fontWeight: 700, color: '#64748B' }}>HTML</span>
-              <span style={{ fontSize: 11, color: '#94A3B8' }}>— Les variables s'insèrent dans le corps</span>
-            </div>
-
-            <textarea
-              ref={taRef}
-              value={htmlBody}
-              onChange={e => setHtmlBody(e.target.value)}
-              spellCheck={false}
-              style={{
-                width: '100%', minHeight: 500, padding: 16, border: 'none', outline: 'none', resize: 'vertical',
-                fontFamily: "'Monaco','Menlo','Consolas',monospace", fontSize: 12, lineHeight: 1.6,
-                color: '#0F172A', background: '#fff', boxSizing: 'border-box', display: 'block'
-              }}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* ── PREVIEW VIEW ───────────────────────────────────────────────────────── */}
-      {view === 'preview' && (
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-            <div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#0F172A' }}>
-                {subject || <span style={{ color: '#94A3B8', fontStyle: 'italic' }}>Aucun objet défini</span>}
-              </div>
-              {previewText && <div style={{ fontSize: 12, color: '#94A3B8', marginTop: 2 }}>{previewText}</div>}
-            </div>
-            <div style={{ display: 'flex', gap: 6, fontSize: 11, color: '#94A3B8' }}>
-              <span>{selectedAudience?.icon} {selectedAudience?.label}</span>
-              {audienceValue && <span>— {audienceValue}</span>}
-            </div>
-          </div>
-
-          {/* Variable replacement preview */}
-          {VARIABLES.some(v => htmlBody.includes(v.tag)) && (
-            <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 10, padding: '8px 14px', marginBottom: 14, fontSize: 12, color: '#166534', display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Ic.Users /> Les variables sont remplacées avec des exemples dans cet aperçu.
-            </div>
-          )}
-
-          <div style={{ border: '1px solid #E2E8F0', borderRadius: 14, overflow: 'hidden', background: '#f4f4f5', height: 600 }}>
-            <iframe
-              srcDoc={buildPreviewHtml(subject, htmlBody
-                .replace(/\{\{prenom\}\}/g, 'Jean')
-                .replace(/\{\{nom\}\}/g, 'Dupont')
-                .replace(/\{\{email\}\}/g, 'jean.dupont@exemple.fr')
-                .replace(/\{\{ville\}\}/g, 'Lyon')
-                .replace(/\{\{plan\}\}/g, 'Premium')
-              )}
-              style={{ width: '100%', height: '100%', border: 'none' }}
-              title="Email preview"
-            />
-          </div>
-        </div>
-      )}
-
-      {/* ── HISTORY VIEW ───────────────────────────────────────────────────────── */}
-      {view === 'history' && (
-        <div>
-          <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #E2E8F0', overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,.04)' }}>
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr>
-                    {['Campagne','Audience','Statut','Dest.','Ouverts','Cliqués','Erreurs','Date',''].map((h, i) => (
-                      <th key={i} style={{ padding: '9px 14px', textAlign: i === 8 ? 'right' : 'left', fontSize: 10, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', background: '#FAFAFA', borderBottom: '1px solid #F1F5F9', whiteSpace: 'nowrap' }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
-                    Array.from({ length: 5 }).map((_, i) => (
-                      <tr key={i}>{Array.from({ length: 9 }).map((_, j) => <td key={j} style={{ padding: '12px 14px' }}><Skel w={j === 0 ? 180 : 60} /></td>)}</tr>
-                    ))
-                  ) : campaigns.length === 0 ? (
-                    <tr><td colSpan={9} style={{ padding: '48px', textAlign: 'center', color: '#94A3B8', fontSize: 13 }}>
-                      Aucune campagne — <button onClick={() => setView('editor')} style={{ color: '#0EA5E9', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: 13 }}>créer la première</button>
-                    </td></tr>
-                  ) : campaigns.map(c => {
-                    const aud = AUDIENCES.find(a => a.value === c.audience)
-                    return (
-                      <tr key={c.id} className="mgr-tr" onClick={() => setPanelCampaign(c)}>
-                        <td style={{ padding: '11px 14px', borderBottom: '1px solid #F8FAFC', fontSize: 12, color: '#0F172A', verticalAlign: 'middle' }}>
-                          <div style={{ fontWeight: 700, maxWidth: 260, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.subject}</div>
-                          {c.preview_text && <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 1 }}>{c.preview_text.slice(0, 60)}</div>}
-                        </td>
-                        <td style={{ padding: '11px 14px', borderBottom: '1px solid #F8FAFC', fontSize: 12, color: '#64748B', whiteSpace: 'nowrap' }}>
-                          {aud?.icon} {aud?.label}{c.audience_value ? ` · ${c.audience_value}` : ''}
-                        </td>
-                        <td style={{ padding: '11px 14px', borderBottom: '1px solid #F8FAFC', verticalAlign: 'middle' }}><StatusBadge status={c.status} /></td>
-                        <td style={{ padding: '11px 14px', borderBottom: '1px solid #F8FAFC', fontSize: 12, fontWeight: 700, color: '#0F172A' }}>{c.recipient_count?.toLocaleString('fr-FR') ?? '—'}</td>
-                        <td style={{ padding: '11px 14px', borderBottom: '1px solid #F8FAFC', fontSize: 12, color: '#10B981', fontWeight: 600 }}>
-                          {c.open_count ?? 0} <span style={{ color: '#94A3B8', fontWeight: 400 }}>({pct(c.open_count, c.sent_count)}%)</span>
-                        </td>
-                        <td style={{ padding: '11px 14px', borderBottom: '1px solid #F8FAFC', fontSize: 12, color: '#F59E0B', fontWeight: 600 }}>
-                          {c.click_count ?? 0} <span style={{ color: '#94A3B8', fontWeight: 400 }}>({pct(c.click_count, c.sent_count)}%)</span>
-                        </td>
-                        <td style={{ padding: '11px 14px', borderBottom: '1px solid #F8FAFC', fontSize: 12, color: c.error_count > 0 ? '#EF4444' : '#94A3B8', fontWeight: 600 }}>
-                          {c.error_count ?? 0}
-                        </td>
-                        <td style={{ padding: '11px 14px', borderBottom: '1px solid #F8FAFC', fontSize: 11, color: '#94A3B8', whiteSpace: 'nowrap' }}>{fmtTime(c.created_at)}</td>
-                        <td style={{ padding: '11px 14px', borderBottom: '1px solid #F8FAFC', textAlign: 'right' }} onClick={e => e.stopPropagation()}>
-                          <div style={{ display: 'flex', gap: 4, justifyContent: 'flex-end' }}>
-                            {c.status === 'draft' && (
-                              <button onClick={() => loadCampaignInEditor(c)}
-                                style={{ padding: '5px 8px', borderRadius: 7, border: '1px solid #E2E8F0', background: '#fff', color: '#64748B', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                                <Ic.Edit />
-                              </button>
-                            )}
-                            <button onClick={() => deleteCampaign(c.id)}
-                              style={{ padding: '5px 8px', borderRadius: 7, border: '1px solid #FECACA', background: '#FEF2F2', color: '#EF4444', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                              <Ic.Trash />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
-
-            {totalPages > 1 && (
-              <div style={{ padding: '14px 20px', borderTop: '1px solid #F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: 12, color: '#94A3B8' }}>Page {page}/{totalPages} — {total} campagnes</span>
-                <div style={{ display: 'flex', gap: 6 }}>
-                  <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-                    style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '6px 10px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', fontSize: 12, fontWeight: 600, color: page === 1 ? '#CBD5E1' : '#374151', cursor: page === 1 ? 'default' : 'pointer' }}>
-                    <Ic.ChevronL /> Préc.
-                  </button>
-                  <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
-                    style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '6px 10px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', fontSize: 12, fontWeight: 600, color: page === totalPages ? '#CBD5E1' : '#374151', cursor: page === totalPages ? 'default' : 'pointer' }}>
-                    Suiv. <Ic.ChevronR />
-                  </button>
+              <div style={{ display:'flex', gap:6 }}>
+                {/* Device toggle */}
+                <div style={{ display:'flex', gap:3, background:'#F1F5F9', borderRadius:8, padding:3, flex:1 }}>
+                  {[['desktop',<Ic.Desktop />,'Bureau'],['mobile',<Ic.Phone />,'Mobile']].map(([k,icon,l]) => (
+                    <button key={k} onClick={() => setPreviewDevice(k)}
+                      style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', gap:4, padding:'5px 8px', borderRadius:6, border:'none', background:previewDevice===k?'#fff':'transparent', color:previewDevice===k?'#FF6B00':'#64748B', fontSize:11, fontWeight:previewDevice===k?700:500, cursor:'pointer' }}>
+                      {icon} {l}
+                    </button>
+                  ))}
+                </div>
+                {/* Theme toggle */}
+                <div style={{ display:'flex', gap:3, background:'#F1F5F9', borderRadius:8, padding:3 }}>
+                  {[['light',<Ic.Sun />],['dark',<Ic.Moon />]].map(([k,icon]) => (
+                    <button key={k} onClick={() => setPreviewTheme(k)}
+                      style={{ display:'flex', alignItems:'center', justifyContent:'center', padding:'5px 10px', borderRadius:6, border:'none', background:previewTheme===k?'#fff':'transparent', color:previewTheme===k?'#FF6B00':'#64748B', cursor:'pointer' }}>
+                      {icon}
+                    </button>
+                  ))}
                 </div>
               </div>
-            )}
+            </div>
+
+            {/* Inbox preview strip */}
+            <div style={{ background:'#fff', borderRadius:12, border:'1px solid #E2E8F0', padding:'10px 14px', boxShadow:'0 1px 4px rgba(0,0,0,.04)' }}>
+              <div style={{ fontSize:9, fontWeight:700, color:'#94A3B8', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:6 }}>Aperçu boîte mail</div>
+              <div style={{ display:'flex', gap:8, alignItems:'flex-start' }}>
+                <div style={{ width:32, height:32, borderRadius:'50%', background:'linear-gradient(135deg,#FF6B00,#F59E0B)', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:13, fontWeight:800, flexShrink:0 }}>S</div>
+                <div style={{ flex:1, minWidth:0 }}>
+                  <div style={{ display:'flex', justifyContent:'space-between', marginBottom:2 }}>
+                    <span style={{ fontSize:12, fontWeight:700, color:'#0F172A' }}>{senderName || 'SHOPCA'}</span>
+                    <span style={{ fontSize:10, color:'#94A3B8' }}>maintenant</span>
+                  </div>
+                  <div style={{ fontSize:12, fontWeight:600, color:'#0F172A', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{subject || <span style={{ color:'#94A3B8', fontStyle:'italic' }}>Aucun objet</span>}</div>
+                  <div style={{ fontSize:11, color:'#94A3B8', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{preHeader || 'Aperçu du message…'}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Preview iframe */}
+            <div style={{ background:'#fff', borderRadius:12, border:'1px solid #E2E8F0', overflow:'hidden', boxShadow:'0 1px 4px rgba(0,0,0,.04)' }}>
+              <div style={{ background: previewTheme === 'dark' ? '#1E293B' : '#F4F4F5', padding: previewDevice === 'mobile' ? '12px' : '8px', display:'flex', justifyContent:'center' }}>
+                <div style={{
+                  width: previewDevice === 'mobile' ? 320 : '100%',
+                  borderRadius: previewDevice === 'mobile' ? 16 : 8,
+                  overflow: 'hidden',
+                  boxShadow: previewDevice === 'mobile' ? '0 8px 24px rgba(0,0,0,.2), 0 0 0 3px #1E293B' : 'none',
+                  border: previewDevice === 'mobile' ? '4px solid #374151' : 'none',
+                }}>
+                  <iframe
+                    srcDoc={previewHtml}
+                    style={{ width: '100%', height: previewDevice === 'mobile' ? 560 : 500, border: 'none', display: 'block' }}
+                    title="email-preview"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          HISTORY VIEW
+         ══════════════════════════════════════════════════════════════════════ */}
+      {view === 'history' && (
+        <div style={{ background:'#fff', borderRadius:16, border:'1px solid #E2E8F0', overflow:'hidden', boxShadow:'0 1px 4px rgba(0,0,0,.04)' }}>
+          <div style={{ overflowX:'auto' }}>
+            <table style={{ width:'100%', borderCollapse:'collapse' }}>
+              <thead>
+                <tr>{['Campagne','Audience','Statut','Dest.','Ouverts','Cliqués','Erreurs','Date',''].map((h,i) => (
+                  <th key={i} style={{ padding:'9px 14px', textAlign:i===8?'right':'left', fontSize:10, fontWeight:700, color:'#94A3B8', textTransform:'uppercase', letterSpacing:'0.08em', background:'#FAFAFA', borderBottom:'1px solid #F1F5F9', whiteSpace:'nowrap' }}>{h}</th>
+                ))}</tr>
+              </thead>
+              <tbody>
+                {loading ? Array.from({length:5}).map((_,i) => (
+                  <tr key={i}>{Array.from({length:9}).map((_,j) => <td key={j} style={{padding:'12px 14px'}}><Skel w={j===0?180:60} /></td>)}</tr>
+                )) : campaigns.length === 0 ? (
+                  <tr><td colSpan={9} style={{padding:'48px',textAlign:'center',color:'#94A3B8',fontSize:13}}>
+                    Aucune campagne — <button onClick={() => setView('composer')} style={{color:'#FF6B00',background:'none',border:'none',cursor:'pointer',fontWeight:700,fontSize:13}}>créer la première</button>
+                  </td></tr>
+                ) : campaigns.map(c => {
+                  const aud = AUDIENCES.find(a => a.value === c.audience)
+                  return (
+                    <tr key={c.id} className="em-tr" onClick={() => setPanelCampaign(c)}>
+                      <td style={{padding:'11px 14px',borderBottom:'1px solid #F8FAFC',fontSize:12,verticalAlign:'middle'}}>
+                        <div style={{fontWeight:700,maxWidth:260,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{c.subject}</div>
+                        {c.preview_text && <div style={{fontSize:11,color:'#94A3B8',marginTop:1}}>{c.preview_text.slice(0,60)}</div>}
+                      </td>
+                      <td style={{padding:'11px 14px',borderBottom:'1px solid #F8FAFC',fontSize:12,color:'#64748B',whiteSpace:'nowrap'}}>{aud?.icon} {aud?.label}{c.audience_value?` · ${c.audience_value}`:''}</td>
+                      <td style={{padding:'11px 14px',borderBottom:'1px solid #F8FAFC'}}><StatusBadge status={c.status} /></td>
+                      <td style={{padding:'11px 14px',borderBottom:'1px solid #F8FAFC',fontSize:12,fontWeight:700}}>{c.recipient_count?.toLocaleString('fr-FR')??'—'}</td>
+                      <td style={{padding:'11px 14px',borderBottom:'1px solid #F8FAFC',fontSize:12,color:'#10B981',fontWeight:600}}>{c.open_count??0} <span style={{color:'#94A3B8',fontWeight:400}}>({pct(c.open_count,c.sent_count)}%)</span></td>
+                      <td style={{padding:'11px 14px',borderBottom:'1px solid #F8FAFC',fontSize:12,color:'#F59E0B',fontWeight:600}}>{c.click_count??0} <span style={{color:'#94A3B8',fontWeight:400}}>({pct(c.click_count,c.sent_count)}%)</span></td>
+                      <td style={{padding:'11px 14px',borderBottom:'1px solid #F8FAFC',fontSize:12,color:c.error_count>0?'#EF4444':'#94A3B8',fontWeight:600}}>{c.error_count??0}</td>
+                      <td style={{padding:'11px 14px',borderBottom:'1px solid #F8FAFC',fontSize:11,color:'#94A3B8',whiteSpace:'nowrap'}}>{fmtTime(c.created_at)}</td>
+                      <td style={{padding:'11px 14px',borderBottom:'1px solid #F8FAFC',textAlign:'right'}} onClick={e => e.stopPropagation()}>
+                        <div style={{display:'flex',gap:4,justifyContent:'flex-end'}}>
+                          {c.status==='draft' && <button onClick={() => loadCampaignInEditor(c)} style={{padding:'5px 8px',borderRadius:7,border:'1px solid #E2E8F0',background:'#fff',color:'#64748B',cursor:'pointer',display:'flex',alignItems:'center'}}><Ic.Edit /></button>}
+                          <button onClick={() => deleteCampaign(c.id)} style={{padding:'5px 8px',borderRadius:7,border:'1px solid #FECACA',background:'#FEF2F2',color:'#EF4444',cursor:'pointer',display:'flex',alignItems:'center'}}><Ic.Trash /></button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+          {totalPages > 1 && (
+            <div style={{padding:'14px 20px',borderTop:'1px solid #F1F5F9',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+              <span style={{fontSize:12,color:'#94A3B8'}}>Page {page}/{totalPages} — {total} campagnes</span>
+              <div style={{display:'flex',gap:6}}>
+                <button onClick={() => setPage(p => Math.max(1,p-1))} disabled={page===1}
+                  style={{display:'flex',alignItems:'center',gap:4,padding:'6px 10px',borderRadius:8,border:'1px solid #E2E8F0',background:'#fff',fontSize:12,fontWeight:600,color:page===1?'#CBD5E1':'#374151',cursor:page===1?'default':'pointer'}}>
+                  <Ic.ChevronL /> Préc.
+                </button>
+                <button onClick={() => setPage(p => Math.min(totalPages,p+1))} disabled={page===totalPages}
+                  style={{display:'flex',alignItems:'center',gap:4,padding:'6px 10px',borderRadius:8,border:'1px solid #E2E8F0',background:'#fff',fontSize:12,fontWeight:600,color:page===totalPages?'#CBD5E1':'#374151',cursor:page===totalPages?'default':'pointer'}}>
+                  Suiv. <Ic.ChevronR />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
       {/* Stats panel */}
       {panelCampaign && (
         <>
-          <div onClick={() => setPanelCampaign(null)} style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(15,23,42,.2)' }} />
+          <div onClick={() => setPanelCampaign(null)} style={{position:'fixed',inset:0,zIndex:300,background:'rgba(15,23,42,.2)'}} />
           <StatsPanel campaign={panelCampaign} onClose={() => setPanelCampaign(null)} onEdit={loadCampaignInEditor} />
         </>
       )}
 
-      {/* Send confirm modal */}
       {sendModal && (
-        <SendModal
-          campaign={{ subject, audience, audienceValue }}
-          recipientCount={recipientCount}
-          onClose={() => setSendModal(false)}
-          onConfirm={sendCampaign}
-          loading={sending}
-        />
+        <SendModal campaign={{subject,audience,audienceValue}} recipientCount={recipientCount}
+          onClose={() => setSendModal(false)} onConfirm={sendCampaign} loading={sending} />
       )}
 
       {toast && <Toast msg={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
     </div>
   )
 }
-
-/* ── Default HTML template ─────────────────────────────────────────────────── */
-const DEFAULT_HTML = `<div style="background:#0ea5e9;color:#fff;padding:32px 24px;text-align:center">
-  <h1 style="margin:0;font-size:26px;font-weight:800;letter-spacing:-0.02em">SHOPCA</h1>
-  <p style="margin:8px 0 0;opacity:.85;font-size:14px">La plateforme immobilière de confiance</p>
-</div>
-
-<div style="padding:32px 24px">
-  <p style="font-size:16px;margin:0 0 16px">Bonjour {{prenom}},</p>
-
-  <p style="font-size:14px;line-height:1.7;color:#374151;margin:0 0 20px">
-    Votre message ici…
-  </p>
-
-  <div style="text-align:center;padding:20px 0">
-    <a href="https://shopca.fr" class="btn">Voir les annonces</a>
-  </div>
-</div>
-
-<div style="background:#f8fafc;padding:20px 24px;text-align:center;border-top:1px solid #e2e8f0">
-  <p style="margin:0;font-size:12px;color:#94a3b8">
-    © 2026 SHOPCA · Vous recevez cet email car vous êtes inscrit sur shopca.fr<br>
-    <a href="https://shopca.fr/unsubscribe?email={{email}}" style="color:#94a3b8">Se désabonner</a>
-  </p>
-</div>`
