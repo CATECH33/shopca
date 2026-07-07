@@ -573,14 +573,14 @@ function SbField({ icon: Ic, label, fieldId, divider, children }) {
   return (
     <div className="relative flex items-stretch">
       {divider && (
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px"
-             style={{ height: '50px', background: 'rgba(15,23,42,.08)' }} />
+        <div className="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 w-px"
+             style={{ height: '50px', background: 'rgba(15,23,42,.16)' }} />
       )}
-      <div className={`flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-slate-50/80 transition-all duration-200 focus-within:bg-orange-50/30 focus-within:shadow-[0_0_0_2px_rgba(251,146,60,0.18)] group w-full ${divider ? 'pl-5' : ''}`}>
+      <div className={`flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-slate-100/80 transition-all duration-200 focus-within:bg-orange-50/70 focus-within:shadow-[0_0_0_2px_rgba(251,146,60,0.32)] group w-full ${divider ? 'pl-5' : ''}`}>
         {Ic && <Ic size={20} className="text-orange-500 shrink-0 group-hover:text-orange-600 group-focus-within:text-orange-600 transition-all duration-200" />}
         <div className="flex-1 min-w-0">
           <label htmlFor={fieldId} className="text-[11px] font-semibold uppercase tracking-wider block cursor-default"
-                 style={{ color: '#64748B' }}>{label}</label>
+                 style={{ color: '#475569' }}>{label}</label>
           {children}
         </div>
       </div>
@@ -625,11 +625,11 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
 
   const wrapperStyle = floating
     ? {
-        background: 'rgba(255,255,255,0.94)',
-        backdropFilter: 'blur(18px)',
-        WebkitBackdropFilter: 'blur(18px)',
-        boxShadow: '0 20px 60px rgba(0,0,0,.18)',
-        border: '1px solid rgba(255,255,255,.35)',
+        background: 'rgba(255,255,255,0.97)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        boxShadow: '0 24px 64px rgba(0,0,0,.24), 0 4px 16px rgba(0,0,0,.10)',
+        border: '1px solid rgba(203,213,225,0.75)',
         borderRadius: '28px',
         position: 'relative',
         zIndex: 20,
@@ -672,17 +672,17 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
       <form
         onSubmit={(e) => { e.preventDefault(); onSearch() }}
         onKeyDown={(e) => { if (e.key === 'Escape') e.target.blur() }}
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-2 mt-2"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-row lg:items-stretch gap-2 mt-2"
         noValidate
       >
 
         {/* ── Localisation ── */}
-        <div className="col-span-1 sm:col-span-2 md:col-span-4">
-          <div className="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 hover:bg-slate-50/80 focus-within:bg-orange-50/30 focus-within:shadow-[0_0_0_2px_rgba(251,146,60,0.18)] group">
+        <div className="col-span-1 sm:col-span-2 lg:flex-[2] lg:min-w-0">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 hover:bg-slate-100/80 focus-within:bg-orange-50/70 focus-within:shadow-[0_0_0_2px_rgba(251,146,60,0.32)] group">
             <Icons.MapPin size={20} className="text-orange-500 shrink-0 group-focus-within:text-orange-600 transition-all duration-200" />
             <div className="flex-1 min-w-0">
               <label htmlFor="sb-location" className="text-[11px] font-semibold uppercase tracking-wider block cursor-default"
-                     style={{ color: '#64748B' }}>Localisation</label>
+                     style={{ color: '#475569' }}>Localisation</label>
               <CitySearch
                 bare
                 id="sb-location"
@@ -699,7 +699,7 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
         </div>
 
         {/* ── Type de bien — <select> natif ── */}
-        <div className="md:col-span-2">
+        <div className="lg:flex-[1.4] lg:min-w-0">
           <SbField icon={Icons.Home} label="Type de bien" fieldId="sb-type" divider>
             <select
               id="sb-type"
@@ -725,7 +725,7 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
         </div>
 
         {/* ── Budget ── */}
-        <div className="md:col-span-2">
+        <div className="lg:flex-[1.4] lg:min-w-0">
           <SbField icon={Icons.Tag} label="Budget max" fieldId="sb-budget" divider>
             <div className="flex items-center gap-1 w-full">
               <input
@@ -749,7 +749,7 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
         </div>
 
         {/* ── Surface ── */}
-        <div className="md:col-span-1">
+        <div className="lg:flex-[1.1] lg:min-w-0">
           <SbField icon={Icons.Maximize} label="Surface min" fieldId="sb-surface" divider>
             <div className="flex items-center gap-0.5 w-full">
               <input
@@ -773,7 +773,7 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
         </div>
 
         {/* ── Pièces — <select> natif ── */}
-        <div className="md:col-span-1">
+        <div className="lg:flex-[0.9] lg:min-w-0">
           <SbField icon={Icons.Bed} label="Pièces" fieldId="sb-pieces" divider>
             <select
               id="sb-pieces"
@@ -801,7 +801,7 @@ function SearchBar({ filters, setFilters, onSearch, floating = false }) {
           whileHover={{ y: -2, boxShadow: '0 18px 45px rgba(255,119,0,.40)' }}
           whileTap={{ scale: 0.97 }}
           type="submit"
-          className="col-span-1 sm:col-span-2 md:col-span-2 flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-2xl py-3 px-4 transition-colors"
+          className="col-span-1 sm:col-span-2 lg:flex-none lg:w-44 flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-2xl py-3 px-4 transition-colors"
           style={{ boxShadow: '0 12px 35px rgba(255,119,0,.30)' }}
           aria-label="Lancer la recherche"
         >
@@ -847,8 +847,8 @@ function Hero({ filters, setFilters, onSearch }) {
         transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
       />
 
-      <motion.div style={{ y: yText, opacity }} className="relative z-10 max-w-7xl mx-auto w-full px-6 lg:px-10 py-32">
-        <div className="max-w-4xl">
+      <motion.div style={{ y: yText }} className="relative z-10 max-w-7xl mx-auto w-full px-6 lg:px-10 py-32">
+        <motion.div style={{ opacity }} className="max-w-4xl">
           <motion.div
             variants={reveal} initial="hidden" animate="show" custom={0}
             className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-medium px-3.5 py-1.5 rounded-full mb-6"
@@ -868,7 +868,7 @@ function Hero({ filters, setFilters, onSearch }) {
           >
             Marketplace immobilière premium pour acheter, louer et investir intelligemment.
           </motion.p>
-        </div>
+        </motion.div>
 
         <motion.div variants={reveal} initial="hidden" animate="show" custom={3} className="mt-12 md:mt-14">
           <SearchBar filters={filters} setFilters={setFilters} onSearch={onSearch} floating />
