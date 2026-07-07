@@ -29,8 +29,19 @@ const AGENCIES = ['Foncia Premium','Century 21 Élite','SHOPCA Verified','Sotheb
 const DPE_COLORS = { A:'#00A651',B:'#51B948',C:'#BECE00',D:'#FECB00',E:'#FB7A08',F:'#EE3424',G:'#C50D13' }
 const PROPERTY_TYPES = ['Appartement','Maison','Studio','Villa','Loft']
 
+function timeAgo(iso) {
+  if (!iso) return null
+  const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000)
+  if (days === 0) return "Aujourd'hui"
+  if (days === 1) return 'Hier'
+  if (days < 7)  return `Il y a ${days} j`
+  if (days < 30) return `Il y a ${Math.floor(days / 7)} sem.`
+  return `Il y a ${Math.floor(days / 30)} mois`
+}
+
 function enrich(l, idx = 0) {
   const seed = typeof l.id === 'string' ? (l.id.charCodeAt(1) || idx + 1) : idx + 1
+  const daysAgo = (seed * 3 + idx * 7) % 30
   return {
     ...l,
     agency:        l.agency        ?? AGENCIES[seed % AGENCIES.length],
@@ -42,6 +53,8 @@ function enrich(l, idx = 0) {
     dpe:           l.dpe           ?? ['A','B','C','D','E'][seed % 5],
     parking:       l.parking       ?? ((seed + idx) % 3 === 0),
     elevator:      l.elevator      ?? ((seed * 2 + idx) % 4 === 0),
+    bedrooms:      l.bedrooms      ?? Math.max(0, (l.rooms || 1) - 1),
+    published_at:  l.published_at  ?? new Date(Date.now() - daysAgo * 86400000).toISOString(),
   }
 }
 
@@ -75,9 +88,23 @@ function CardSkeleton() {
 function PropertyCard({ raw, idx, onSave, saved }) {
   const l = useMemo(() => enrich(raw, idx), [raw, idx])
   const [imgErr, setImgErr] = useState(false)
+  const [copied, setCopied] = useState(false)
   const navigate = useNavigate()
   const fallbackImg = unsplash('photo-1560448204-e02f11c3d0e2')
   const ppsqm = fmtPricePerSqm(l)
+
+  const handleShare = e => {
+    e.stopPropagation()
+    const url = `${window.location.origin}/annonces/${l.id}`
+    if (navigator.share) {
+      navigator.share({ title: l.title, url }).catch(() => {})
+    } else {
+      navigator.clipboard.writeText(url).then(() => {
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+      }).catch(() => {})
+    }
+  }
 
   return (
     <motion.article
@@ -121,13 +148,26 @@ function PropertyCard({ raw, idx, onSave, saved }) {
           )}
         </div>
 
-        {/* Save button */}
-        <button
-          onClick={e => { e.stopPropagation(); onSave?.(l.id) }}
-          className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow transition-all hover:scale-110 active:scale-95"
-        >
-          <I.Heart size={15} fill={saved ? '#f43f5e' : 'none'} className={saved ? 'text-rose-500' : 'text-slate-400 hover:text-rose-400'} />
-        </button>
+        {/* Action buttons */}
+        <div className="absolute top-3 right-3 flex flex-col gap-1.5">
+          <button
+            onClick={e => { e.stopPropagation(); onSave?.(l.id) }}
+            className="w-9 h-9 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow transition-all hover:scale-110 active:scale-95"
+            title="Ajouter aux favoris"
+          >
+            <I.Heart size={15} fill={saved ? '#f43f5e' : 'none'} className={saved ? 'text-rose-500' : 'text-slate-400'} />
+          </button>
+          <button
+            onClick={handleShare}
+            className="w-9 h-9 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow transition-all hover:scale-110 active:scale-95"
+            title="Partager"
+          >
+            {copied
+              ? <I.Check size={13} className="text-emerald-500" />
+              : <I.Send size={13} className="text-slate-400" />
+            }
+          </button>
+        </div>
 
         {/* Trust score */}
         <div className="absolute bottom-3 left-3 flex items-center gap-1.5 bg-white/90 backdrop-blur text-[#0F172A] text-[11px] font-bold px-2.5 py-1 rounded-full shadow">
@@ -145,23 +185,39 @@ function PropertyCard({ raw, idx, onSave, saved }) {
 
       {/* Body */}
       <div className="p-5 flex flex-col flex-1">
-        <div className="flex items-start justify-between gap-2 mb-1.5">
+        <div className="flex items-start justify-between gap-2 mb-1">
           <h3 className="font-bold text-[#0F172A] text-[15px] leading-snug line-clamp-2 flex-1">{l.title}</h3>
         </div>
+
+        {/* Property type + date */}
+        <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+          {l.property_type && (
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-100 text-[10px] font-semibold text-slate-600">
+              {l.property_type}
+            </span>
+          )}
+          {timeAgo(l.published_at) && (
+            <span className="flex items-center gap-1 text-[10px] text-slate-400">
+              <I.Calendar size={10} /> {timeAgo(l.published_at)}
+            </span>
+          )}
+        </div>
+
         <div className="flex items-center gap-1.5 text-slate-500 text-sm mb-3">
           <I.MapPin size={13} className="text-orange-500 shrink-0" />
           <span className="truncate">{l.location}</span>
         </div>
 
         {/* Stats row */}
-        <div className="flex items-center gap-3 text-xs text-slate-500 mb-4">
-          {l.rooms   && <span className="flex items-center gap-1"><I.Home size={12} className="text-slate-400" />{l.rooms} p.</span>}
-          {l.surface && <span className="flex items-center gap-1"><I.Maximize size={12} className="text-slate-400" />{l.surface} m²</span>}
-          {l.parking && <span className="flex items-center gap-1"><I.Key size={12} className="text-slate-400" />Parking</span>}
+        <div className="flex items-center gap-3 text-xs text-slate-500 mb-4 flex-wrap">
+          {l.rooms    && <span className="flex items-center gap-1"><I.Home size={12} className="text-slate-400" />{l.rooms} p.</span>}
+          {l.bedrooms > 0 && <span className="flex items-center gap-1"><I.Bed size={12} className="text-slate-400" />{l.bedrooms} ch.</span>}
+          {l.surface  && <span className="flex items-center gap-1"><I.Maximize size={12} className="text-slate-400" />{l.surface} m²</span>}
+          {l.parking  && <span className="flex items-center gap-1"><I.Key size={12} className="text-slate-400" />Parking</span>}
         </div>
 
         <div className="mt-auto">
-          <div className="flex items-end justify-between">
+          <div className="flex items-end justify-between mb-3">
             <div>
               <div className="text-lg font-extrabold text-[#0F172A]">{fmtPrice(l)}</div>
               {ppsqm && <div className="text-[11px] text-slate-400">{ppsqm}</div>}
@@ -175,6 +231,13 @@ function PropertyCard({ raw, idx, onSave, saved }) {
               )}
             </div>
           </div>
+          <button
+            onClick={e => { e.stopPropagation(); navigate(`/annonces/${l.id}`) }}
+            className="w-full py-2.5 rounded-2xl bg-[#0B1F3A] hover:bg-orange-500 text-white text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2 group/btn"
+          >
+            Voir le bien
+            <I.ArrowRight size={13} className="transition-transform duration-200 group-hover/btn:translate-x-1" />
+          </button>
         </div>
       </div>
     </motion.article>
@@ -263,8 +326,10 @@ function FilterPanel({ params, set, resetAll, activeCount }) {
   const priceMin     = params.get('priceMin')     || ''
   const priceMax     = params.get('priceMax')     || ''
   const surfaceMin   = params.get('surfaceMin')   || ''
-  const roomsMin     = Number(params.get('roomsMin') || 0)
+  const roomsMin     = Number(params.get('roomsMin')    || 0)
+  const chambresMin  = Number(params.get('chambresMin') || 0)
   const propertyType = params.get('propertyType') || ''
+  const condition    = params.get('condition')    || ''
   const dpe          = params.get('dpe')          ? params.get('dpe').split(',') : []
   const parking      = params.get('parking')      === 'true'
   const elevator     = params.get('elevator')     === 'true'
@@ -306,6 +371,21 @@ function FilterPanel({ params, set, resetAll, activeCount }) {
                 roomsMin === n ? 'bg-orange-500 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}>
               {n === 0 ? 'Tt' : n === 5 ? '5+' : n}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Chambres */}
+      <div>
+        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Chambres minimum</div>
+        <div className="flex gap-1">
+          {[0,1,2,3,4].map(n => (
+            <button key={n} onClick={() => set('chambresMin', n === 0 ? '' : String(n))}
+              className={`flex-1 h-9 rounded-xl text-xs font-bold transition-all ${
+                chambresMin === n ? 'bg-orange-500 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}>
+              {n === 0 ? 'Tt' : n === 4 ? '4+' : n}
             </button>
           ))}
         </div>
@@ -370,6 +450,28 @@ function FilterPanel({ params, set, resetAll, activeCount }) {
           ))}
         </div>
       </div>
+
+      {/* État du bien */}
+      <div>
+        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">État du bien</div>
+        <div className="space-y-1">
+          {[
+            { value: '',           label: 'Tous états' },
+            { value: 'neuf',       label: 'Neuf / VEFA' },
+            { value: 'tres_bon',   label: 'Très bon état' },
+            { value: 'bon',        label: 'Bon état' },
+            { value: 'rafraichir', label: 'À rafraîchir' },
+            { value: 'renover',    label: 'À rénover' },
+          ].map(({ value, label }) => (
+            <button key={value || 'all'} onClick={() => set('condition', value)}
+              className={`w-full px-3 py-2 rounded-xl text-sm text-left font-medium transition-all ${
+                condition === value ? 'bg-orange-50 text-orange-700 border border-orange-200' : 'text-slate-600 hover:bg-slate-50'
+              }`}>
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
@@ -419,6 +521,8 @@ export default function ListingsPage() {
   const parking      = searchParams.get('parking')      === 'true'
   const elevator     = searchParams.get('elevator')     === 'true'
   const furnished    = searchParams.get('furnished')    === 'true'
+  const chambresMin  = Number(searchParams.get('chambresMin') || 0)
+  const condition    = searchParams.get('condition')    || ''
   const sort         = searchParams.get('sort')         || 'relevance'
   const view         = searchParams.get('view')         || 'grid'
   const page         = Number(searchParams.get('page')  || 1)
@@ -518,15 +622,20 @@ export default function ListingsPage() {
       if (parking    && !el.parking)    return false
       if (elevator   && !el.elevator)   return false
       if (furnished  && !l.furnished)   return false
+      const beds = l.bedrooms ?? Math.max(0, (l.rooms || 1) - 1)
+      if (chambresMin && beds < chambresMin) return false
+      if (condition && l.condition !== condition) return false
       return true
     })
-  }, [listings, type, location, priceMin, priceMax, surfaceMin, roomsMin, propertyType, dpe, parking, elevator])
+  }, [listings, type, location, priceMin, priceMax, surfaceMin, roomsMin, chambresMin, propertyType, condition, dpe, parking, elevator, furnished])
 
   const sorted = useMemo(() => {
     const arr = [...filtered]
     if (sort === 'price-asc')  arr.sort((a, b) => (a.price || 0) - (b.price || 0))
     if (sort === 'price-desc') arr.sort((a, b) => (b.price || 0) - (a.price || 0))
     if (sort === 'surface')    arr.sort((a, b) => (b.surface || 0) - (a.surface || 0))
+    if (sort === 'recent')     arr.sort((a, b) => new Date(b.published_at || 0) - new Date(a.published_at || 0))
+    if (sort === 'favoris')    arr.sort((a, b) => ((b.is_prestige?3:b.is_premium?2:b.is_exclusive?1:0) - (a.is_prestige?3:a.is_premium?2:a.is_exclusive?1:0)))
     return arr
   }, [filtered, sort])
 
@@ -534,7 +643,7 @@ export default function ListingsPage() {
   const paginated  = sorted.slice((page - 1) * PER_PAGE, page * PER_PAGE)
 
   // Active filter count (excludes type + location which live in the top bar)
-  const activeCount = [priceMin, priceMax, surfaceMin, roomsMin > 0 ? 'x' : '', propertyType, dpeRaw, parking ? 'x' : '', elevator ? 'x' : '', furnished ? 'x' : ''].filter(Boolean).length
+  const activeCount = [priceMin, priceMax, surfaceMin, roomsMin > 0 ? 'x' : '', chambresMin > 0 ? 'x' : '', propertyType, condition, dpeRaw, parking ? 'x' : '', elevator ? 'x' : '', furnished ? 'x' : ''].filter(Boolean).length
 
   // ── Location search state (local, committed on Enter / button click) ───────
   const [locDraft, setLocDraft] = useState(location)
@@ -640,9 +749,11 @@ export default function ListingsPage() {
                   onChange={setSort}
                   options={[
                     { value: 'relevance',  label: 'Pertinence' },
+                    { value: 'recent',     label: 'Plus récents' },
                     { value: 'price-asc',  label: 'Prix croissant' },
                     { value: 'price-desc', label: 'Prix décroissant' },
                     { value: 'surface',    label: 'Surface' },
+                    { value: 'favoris',    label: 'Coup de cœur' },
                   ]}
                   size="sm"
                   searchable={false}
@@ -704,14 +815,16 @@ export default function ListingsPage() {
             {!loading && activeCount > 0 && (
               <div className="flex flex-wrap gap-2 mb-4">
                 {[
-                  priceMin     && { key:'priceMin',     label:`≥ ${Number(priceMin).toLocaleString('fr-FR')} €`,     fn: () => set('priceMin','') },
-                  priceMax     && { key:'priceMax',     label:`≤ ${Number(priceMax).toLocaleString('fr-FR')} €`,     fn: () => set('priceMax','') },
-                  surfaceMin   && { key:'surfaceMin',   label:`≥ ${surfaceMin} m²`,                                   fn: () => set('surfaceMin','') },
-                  roomsMin > 0 && { key:'roomsMin',    label:`${roomsMin}+ pièces`,                                   fn: () => set('roomsMin','') },
-                  propertyType && { key:'propertyType', label: propertyType,                                           fn: () => set('propertyType','') },
-                  dpeRaw       && { key:'dpe',          label:`DPE : ${dpe.join(', ')}`,                              fn: () => set('dpe','') },
-                  parking      && { key:'parking',      label:'Parking',                                               fn: () => set('parking','') },
-                  elevator     && { key:'elevator',     label:'Ascenseur',                                             fn: () => set('elevator','') },
+                  priceMin        && { key:'priceMin',     label:`≥ ${Number(priceMin).toLocaleString('fr-FR')} €`, fn: () => set('priceMin','') },
+                  priceMax        && { key:'priceMax',     label:`≤ ${Number(priceMax).toLocaleString('fr-FR')} €`, fn: () => set('priceMax','') },
+                  surfaceMin      && { key:'surfaceMin',   label:`≥ ${surfaceMin} m²`,                               fn: () => set('surfaceMin','') },
+                  roomsMin > 0    && { key:'roomsMin',     label:`${roomsMin}+ pièces`,                              fn: () => set('roomsMin','') },
+                  chambresMin > 0 && { key:'chambresMin',  label:`${chambresMin}+ ch.`,                              fn: () => set('chambresMin','') },
+                  propertyType    && { key:'propertyType', label: propertyType,                                       fn: () => set('propertyType','') },
+                  condition       && { key:'condition',    label: { neuf:'Neuf / VEFA', tres_bon:'Très bon état', bon:'Bon état', rafraichir:'À rafraîchir', renover:'À rénover' }[condition] || condition, fn: () => set('condition','') },
+                  dpeRaw          && { key:'dpe',          label:`DPE : ${dpe.join(', ')}`,                          fn: () => set('dpe','') },
+                  parking         && { key:'parking',      label:'Parking',                                           fn: () => set('parking','') },
+                  elevator        && { key:'elevator',     label:'Ascenseur',                                         fn: () => set('elevator','') },
                 ].filter(Boolean).map(chip => (
                   <motion.button key={chip.key} layout
                     initial={{ scale:0.9, opacity:0 }} animate={{ scale:1, opacity:1 }}
