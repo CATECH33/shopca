@@ -233,7 +233,7 @@ function PropertyCard({ raw, idx, onSave, saved }) {
           </div>
           <button
             onClick={e => { e.stopPropagation(); navigate(`/annonces/${l.id}`) }}
-            className="w-full py-2.5 rounded-2xl bg-[#0B1F3A] hover:bg-orange-500 text-white text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2 group/btn"
+            className="w-full py-3 rounded-2xl bg-[#0B1F3A] hover:bg-orange-500 text-white text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2 group/btn"
           >
             Voir le bien
             <I.ArrowRight size={13} className="transition-transform duration-200 group-hover/btn:translate-x-1" />
@@ -723,7 +723,7 @@ export default function ListingsPage() {
 
               {/* Mobile filter button */}
               <button onClick={() => setDrawerOpen(true)}
-                className={`lg:hidden flex items-center gap-1.5 h-9 px-4 rounded-xl border text-sm font-semibold transition-all ${
+                className={`lg:hidden flex items-center gap-1.5 h-11 px-4 rounded-xl border text-sm font-semibold transition-all ${
                   activeCount > 0 ? 'bg-orange-500 text-white border-orange-500' : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
                 }`}>
                 <I.Filter size={13} />

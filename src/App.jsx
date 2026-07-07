@@ -964,7 +964,7 @@ function Listings({ listings, loading, error, source, title = 'Biens à la une',
                   : `${listings.length} bien${listings.length > 1 ? 's' : ''} correspondant à votre recherche.`}
             </p>
           </div>
-          <Link to="/annonces" className="group text-white bg-[#0B1F3A] hover:bg-orange-500 rounded-full px-5 py-2.5 font-semibold text-sm flex items-center gap-2 transition-all duration-200 hover:shadow-lg hover:shadow-orange-200/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2">
+          <Link to="/annonces" className="group text-white bg-[#0B1F3A] hover:bg-orange-500 rounded-full px-5 py-3 font-semibold text-sm flex items-center gap-2 transition-all duration-200 hover:shadow-lg hover:shadow-orange-200/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2">
             Voir tous les biens
             <span className="inline-flex transition-transform duration-200 group-hover:translate-x-1">
               <Icons.ArrowRight size={16} />
