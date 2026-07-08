@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { I } from '../../lib/ui.jsx'
 import { useAuth } from '../../features/auth/providers/AuthProvider.jsx'
 import { startCheckout } from '../../features/subscription/checkoutService.js'
-import { getSubscriptionStatus } from '../../features/subscription/subscriptionService.js'
+import { getSubscriptionStatus, openBillingPortal } from '../../features/subscription/subscriptionService.js'
 
 const PLANS = [
   {
@@ -28,7 +28,7 @@ const PLANS = [
   {
     id: 'premium',
     name: 'Premium',
-    price: '9',
+    price: '7,50',
     period: '/mois',
     Icon: I.Star,
     color: 'orange',
@@ -51,29 +51,62 @@ export default function PageAbonnement({ dark }) {
   const [current, setCurrent] = useState('free')
   const [selected, setSelected] = useState('premium')
   const [loading, setLoading] = useState(false)
+  const [portalLoading, setPortalLoading] = useState(false)
+  const [subscription, setSubscription] = useState(null)
   const [error, setError] = useState('')
 
   useEffect(() => {
     if (!user) return
-    if (profile?.premium_alerts) {
-      setCurrent('premium')
-      setSelected('premium')
-      return
-    }
     getSubscriptionStatus(user.id)
       .then(sub => {
-        if (sub) { setCurrent('premium'); setSelected('premium') }
+        if (sub) {
+          setCurrent('premium')
+          setSelected('premium')
+          setSubscription(sub)
+        } else if (profile?.premium_alerts) {
+          setCurrent('premium')
+          setSelected('premium')
+        }
       })
-      .catch(() => {})
+      .catch(() => {
+        if (profile?.premium_alerts) {
+          setCurrent('premium')
+          setSelected('premium')
+        }
+      })
   }, [user, profile])
+
+  const handlePortal = async () => {
+    setPortalLoading(true)
+    setError('')
+    try {
+      await openBillingPortal(window.location.href)
+    } catch (err) {
+      setError(err.message || 'Erreur lors de l\'ouverture du portail.')
+      setPortalLoading(false)
+    }
+  }
 
   const handleSubscribe = async () => {
     if (!user) return
     const plan = PLANS.find(p => p.id === selected)
-    if (!plan?.stripePrice) return
 
     setLoading(true)
     setError('')
+
+    // Downgrading to free = manage subscription via Stripe portal (real cancel)
+    if (selected === 'free' && current === 'premium') {
+      try {
+        await openBillingPortal(window.location.href)
+      } catch (err) {
+        setError(err.message || 'Erreur lors de l\'ouverture du portail.')
+        setLoading(false)
+      }
+      return
+    }
+
+    if (!plan?.stripePrice) { setLoading(false); return }
+
     try {
       await startCheckout(plan.stripePrice, {
         successUrl: `${window.location.origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}&type=${plan.stripePrice}`,
@@ -165,9 +198,9 @@ export default function PageAbonnement({ dark }) {
             {loading ? (
               <><I.Loader size={15} /> Redirection vers Stripe...</>
             ) : selected === 'premium' ? (
-              'Passer à Premium — 9€/mois'
+              'Passer à Premium — 7,50€/mois'
             ) : (
-              'Repasser en Gratuit'
+              'Gérer mon abonnement'
             )}
           </button>
         </motion.div>
@@ -177,19 +210,52 @@ export default function PageAbonnement({ dark }) {
         <div className={`rounded-2xl border shadow-sm overflow-hidden ${bd}`}>
           <div className={`flex items-center justify-between px-5 py-4 border-b ${dark ? 'border-white/10' : 'border-slate-100'}`}>
             <p className={`text-sm font-extrabold ${tx}`}>Votre abonnement</p>
-            <span className="text-[10px] font-bold bg-emerald-100 text-emerald-600 px-2.5 py-1 rounded-full uppercase">Actif</span>
+            <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase ${
+              subscription?.cancel_at_period_end
+                ? 'bg-amber-100 text-amber-700'
+                : 'bg-emerald-100 text-emerald-600'
+            }`}>
+              {subscription?.cancel_at_period_end ? 'Annulation prévue' : 'Actif'}
+            </span>
           </div>
           <div className="px-5 py-4 space-y-3">
             <div className="flex items-center justify-between">
               <span className={`text-sm ${tx}`}>Plan Premium</span>
-              <span className={`text-sm font-bold ${tx}`}>9,00 €/mois</span>
+              <span className={`text-sm font-bold ${tx}`}>
+                {subscription?.price_amount
+                  ? `${(subscription.price_amount / 100).toFixed(2).replace('.', ',')} €/${subscription.price_interval === 'year' ? 'an' : 'mois'}`
+                  : '7,50 €/mois'}
+              </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className={`text-xs ${sx}`}>Prochain renouvellement</span>
-              <span className={`text-xs ${sx}`}>{new Date(Date.now() + 30 * 86400000).toLocaleDateString('fr-FR')}</span>
+              <span className={`text-xs ${sx}`}>
+                {subscription?.cancel_at_period_end ? 'Fin de l\'abonnement' : 'Prochain renouvellement'}
+              </span>
+              <span className={`text-xs ${sx}`}>
+                {subscription?.current_period_end
+                  ? new Date(subscription.current_period_end).toLocaleDateString('fr-FR')
+                  : subscription?.end_date
+                    ? new Date(subscription.end_date).toLocaleDateString('fr-FR')
+                    : '—'}
+              </span>
             </div>
-            <p className={`text-[11px] ${sx}`}>
-              Gérez votre abonnement et vos moyens de paiement depuis le portail Stripe.
+            <button
+              onClick={handlePortal}
+              disabled={portalLoading}
+              className={`w-full h-11 rounded-xl text-sm font-bold transition flex items-center justify-center gap-2 mt-2 ${
+                portalLoading
+                  ? 'bg-slate-200 text-slate-500 cursor-wait'
+                  : dark
+                    ? 'bg-white/10 hover:bg-white/15 text-white border border-white/20'
+                    : 'bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200'
+              }`}>
+              {portalLoading
+                ? <><I.Loader size={14}/> Ouverture du portail…</>
+                : <><I.CreditCard size={14}/> Gérer, factures et annulation</>
+              }
+            </button>
+            <p className={`text-[11px] ${sx} text-center`}>
+              Portail sécurisé Stripe — factures, moyens de paiement, annulation.
             </p>
           </div>
         </div>

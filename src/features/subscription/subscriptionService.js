@@ -61,3 +61,18 @@ export async function getSubscriptionStatus(userId) {
   if (error) throw error
   return data
 }
+
+// ── Open Stripe Billing Portal (manage subscription, invoices, cancel) ───────
+export async function openBillingPortal(returnUrl) {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) throw new Error('Vous devez être connecté.')
+
+  const { data, error } = await supabase.functions.invoke('stripe-portal', {
+    body: { returnUrl: returnUrl || window.location.href },
+  })
+
+  if (error) throw new Error(error.message || 'Erreur lors de l\'ouverture du portail.')
+  if (!data?.url) throw new Error('URL du portail Stripe invalide.')
+
+  window.location.href = data.url
+}

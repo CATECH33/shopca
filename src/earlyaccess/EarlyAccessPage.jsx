@@ -7,6 +7,7 @@ import { useAuth } from '../features/auth/providers/AuthProvider.jsx'
 import {
   startPremiumAlertsCheckout,
   getSubscriptionStatus,
+  openBillingPortal,
 } from '../features/subscription/subscriptionService.js'
 import {
   fetchEarlyAccessListings,
@@ -18,7 +19,7 @@ import {
 } from './earlyAccessService.js'
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
-const PREMIUM_PRICE_LABEL = '9€/mois' // aligné avec PageAbonnement.jsx
+const PREMIUM_PRICE_LABEL = '7,50€/mois' // source de vérité Stripe (create-checkout-session unit_amount: 750)
 
 /* ── Inline icons ── */
 const Crown  = (p) => <svg width={p?.size||20} height={p?.size||20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={p?.className}><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>
@@ -618,7 +619,11 @@ export default function EarlyAccessPage() {
           <p className="text-slate-500 mb-8 text-sm sm:text-base">Rejoignez les acheteurs Premium qui trouvent leurs biens avant les autres.</p>
           <div className="flex items-center justify-center gap-3 flex-wrap">
             <button
-              onClick={() => isPremium ? navigate('/mon-espace') : handleUpgrade()}
+              onClick={async () => {
+                if (!isPremium) return handleUpgrade()
+                try { await openBillingPortal(window.location.href) }
+                catch { navigate('/mon-espace') }
+              }}
               data-testid="bottom-cta"
               className="h-12 px-6 sm:px-8 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-full transition shadow-soft">
               {isPremium ? 'Gérer mon abonnement' : 'Passer Premium maintenant'}

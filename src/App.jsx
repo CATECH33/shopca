@@ -1338,7 +1338,7 @@ function EarlyAccessTeaser() {
                 className="h-12 px-7 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-full transition shadow-soft text-sm">
                 Découvrir l'accès anticipé
               </motion.button>
-              <span className="text-white/40 text-xs">À partir de 29€/mois</span>
+              <span className="text-white/40 text-xs">7,50€/mois · Sans engagement</span>
             </div>
           </motion.div>
 
