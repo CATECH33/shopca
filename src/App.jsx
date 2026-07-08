@@ -949,6 +949,7 @@ function Categories({ onPick }) {
    Listings grid
    ============================================================================ */
 function Listings({ listings, loading, error, source, title = 'Biens à la une', kicker = 'Sélection' }) {
+  const navigate = useNavigate()
   return (
     <section id="listings" className="py-20 bg-slate-50">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
@@ -1015,6 +1016,7 @@ function Listings({ listings, loading, error, source, title = 'Biens à la une',
                   key={l.id}
                   variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } } }}
                   whileHover={{ y: -8 }}
+                  onClick={() => navigate(`/annonces/${l.id}`)}
                   className="group bg-white rounded-3xl overflow-hidden shadow-soft hover:shadow-cardHover transition-shadow duration-300 cursor-pointer"
                 >
                   <div className="relative overflow-hidden aspect-[4/3]">
