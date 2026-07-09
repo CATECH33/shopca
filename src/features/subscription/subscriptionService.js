@@ -16,12 +16,17 @@ export async function startPremiumAlertsCheckout() {
   })
 
   if (error) throw new Error(error.message || 'Erreur lors de la création de la session de paiement.')
+
+  // Prefer session.url (recommended since 2023)
+  if (data?.url) {
+    window.location.href = data.url
+    return
+  }
   if (!data?.sessionId) throw new Error('Session de paiement invalide.')
 
   const { getStripe } = await import('../../lib/stripe.js')
   const stripe = await getStripe()
   if (!stripe) throw new Error('Stripe non disponible.')
-
   const { error: stripeError } = await stripe.redirectToCheckout({ sessionId: data.sessionId })
   if (stripeError) throw new Error(stripeError.message)
 }

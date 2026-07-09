@@ -203,7 +203,8 @@ Deno.serve(async (req) => {
 
     const session = await stripe.checkout.sessions.create(sessionParams)
 
-    return new Response(JSON.stringify({ sessionId: session.id }), {
+    // Return both sessionId (legacy) and url (recommended by Stripe)
+    return new Response(JSON.stringify({ sessionId: session.id, url: session.url }), {
       headers: { ...cors, 'Content-Type': 'application/json' },
     })
   } catch (err) {

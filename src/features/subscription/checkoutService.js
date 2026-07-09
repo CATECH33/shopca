@@ -24,13 +24,18 @@ export async function startCheckout(priceType, options = {}) {
   })
 
   if (error) throw new Error(error.message || 'Erreur lors de la création du paiement.')
+
+  // Prefer session.url (recommended since 2023) — no Stripe.js required.
+  // Fall back to legacy redirectToCheckout via sessionId if url absent.
+  if (data?.url) {
+    window.location.href = data.url
+    return
+  }
   if (!data?.sessionId) throw new Error('Session Stripe invalide.')
 
-  // Redirect to Stripe Checkout — lazy-load stripe.js (238 KB)
   const { getStripe } = await import('../../lib/stripe.js')
   const stripe = await getStripe()
   if (!stripe) throw new Error('Stripe.js non disponible.')
-
   const { error: stripeError } = await stripe.redirectToCheckout({ sessionId: data.sessionId })
   if (stripeError) throw new Error(stripeError.message)
 }
