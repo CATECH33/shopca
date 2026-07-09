@@ -71,7 +71,7 @@ function PremiumLock({ onUpgrade }) {
 }
 
 /* ── Listing card ── */
-function EarlyCard({ listing, isPremium, onUpgrade, user, initialInterested, initialInterestCount }) {
+function EarlyCard({ listing, isPremium, onUpgrade, user, initialInterested, initialInterestCount, priority = false }) {
   const { endsAt, pct } = listing
   const { mins, label, expired } = useCountdown(endsAt)
   const urgent = mins < 10
@@ -118,6 +118,11 @@ function EarlyCard({ listing, isPremium, onUpgrade, user, initialInterested, ini
           <img
             src={listing.img}
             alt={listing.title}
+            loading={priority ? 'eager' : 'lazy'}
+            fetchpriority={priority ? 'high' : 'auto'}
+            decoding="async"
+            width="600"
+            height="416"
             onError={(e) => { if (e.currentTarget.src !== FALLBACK_IMG) e.currentTarget.src = FALLBACK_IMG }}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
@@ -572,6 +577,7 @@ export default function EarlyAccessPage() {
                       user={user}
                       initialInterested={interestSet.has(String(l.id))}
                       initialInterestCount={interestCounts[String(l.id)] || 0}
+                      priority={i < 3}
                     />
                   </motion.div>
                 ))}
