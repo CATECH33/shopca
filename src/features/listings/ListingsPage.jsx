@@ -1,5 +1,7 @@
-﻿import React, { useState, useEffect, useMemo, useCallback } from 'react'
+﻿import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react'
 import { Link, useSearchParams, useNavigate } from 'react-router-dom'
+
+const ListingsMap = lazy(() => import('./ListingsMap.jsx'))
 import { motion, AnimatePresence } from 'framer-motion'
 import { BrandLogo, I } from '../../lib/ui.jsx'
 import { ShopCASelect } from '../../components/ui/ShopCASelect'
@@ -765,6 +767,7 @@ export default function ListingsPage() {
                 {[
                   { id:'grid', svg: <><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></> },
                   { id:'list', svg: <><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3.5" cy="6" r="0.5" fill="currentColor"/><circle cx="3.5" cy="12" r="0.5" fill="currentColor"/><circle cx="3.5" cy="18" r="0.5" fill="currentColor"/></> },
+                  { id:'map',  svg: <><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m0 0L9 7"/></> },
                 ].map(({ id, svg }) => (
                   <button key={id} onClick={() => setView(id)}
                     className={`flex items-center justify-center w-8 h-7 rounded-lg transition-colors ${view === id ? 'bg-[#0F172A] text-white' : 'text-slate-400 hover:text-slate-600'}`}>
@@ -859,6 +862,14 @@ export default function ListingsPage() {
                   Réinitialiser les filtres
                 </button>
               </div>
+            ) : view === 'map' ? (
+              <Suspense fallback={
+                <div className="w-full h-[calc(100vh-260px)] min-h-[500px] rounded-3xl bg-slate-100 flex items-center justify-center">
+                  <div className="text-slate-400 text-sm">Chargement de la carte…</div>
+                </div>
+              }>
+                <ListingsMap listings={sorted} />
+              </Suspense>
             ) : view === 'grid' ? (
               <motion.div
                 initial="hidden" animate="show"
@@ -879,7 +890,7 @@ export default function ListingsPage() {
             )}
 
             {/* Pagination */}
-            {!loading && sorted.length > PER_PAGE && (
+            {!loading && sorted.length > PER_PAGE && view !== 'map' && (
               <div className="flex items-center justify-center gap-2 mt-10">
                 <button onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1}
                   className="w-9 h-9 rounded-xl flex items-center justify-center bg-white border border-slate-200 text-slate-500 hover:border-orange-400 hover:text-orange-500 disabled:opacity-30 transition">
