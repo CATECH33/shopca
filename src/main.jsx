@@ -7,7 +7,7 @@ import ProtectedRoute from './lib/ProtectedRoute.jsx'
 import './index.css'
 
 // ── Chargement immédiat (critique pour le rendu initial) ──────────────────────
-import App from './App.jsx'
+const App = lazy(() => import('./App.jsx'))
 
 // ── Lazy loading (code splitting automatique) ─────────────────────────────────
 const LoginPage              = lazy(() => import('./features/auth/pages/LoginPage.jsx'))

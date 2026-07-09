@@ -1,8 +1,8 @@
 import { supabase } from '../../lib/supabase.js'
-import { getStripe } from '../../lib/stripe.js'
 
 // ── Stripe Checkout for Premium Alerts ───────────────────────────────────────
 // Creates a Stripe Checkout session via Supabase Edge Function, then redirects.
+// Stripe.js is lazy-loaded (238 KB) to avoid blocking initial page render.
 export async function startPremiumAlertsCheckout() {
   const { data: { session } } = await supabase.auth.getSession()
   if (!session) throw new Error('Vous devez être connecté.')
@@ -18,6 +18,7 @@ export async function startPremiumAlertsCheckout() {
   if (error) throw new Error(error.message || 'Erreur lors de la création de la session de paiement.')
   if (!data?.sessionId) throw new Error('Session de paiement invalide.')
 
+  const { getStripe } = await import('../../lib/stripe.js')
   const stripe = await getStripe()
   if (!stripe) throw new Error('Stripe non disponible.')
 

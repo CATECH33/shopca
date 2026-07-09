@@ -1,5 +1,4 @@
 ﻿import { supabase } from '../../lib/supabase.js'
-import { getStripe } from '../../lib/stripe.js'
 
 /**
  * Start a Stripe Checkout for any SHOPCA price type.
@@ -27,7 +26,8 @@ export async function startCheckout(priceType, options = {}) {
   if (error) throw new Error(error.message || 'Erreur lors de la création du paiement.')
   if (!data?.sessionId) throw new Error('Session Stripe invalide.')
 
-  // Redirect to Stripe Checkout
+  // Redirect to Stripe Checkout — lazy-load stripe.js (238 KB)
+  const { getStripe } = await import('../../lib/stripe.js')
   const stripe = await getStripe()
   if (!stripe) throw new Error('Stripe.js non disponible.')
 

@@ -63,7 +63,7 @@ function PremiumLock({ onUpgrade }) {
       <button
         onClick={onUpgrade}
         data-testid="premium-lock-btn"
-        className="h-10 px-5 bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold rounded-full transition shadow-soft">
+        className="h-10 px-5 bg-orange-600 hover:bg-orange-700 text-navy-900 text-sm font-extrabold rounded-full transition shadow-soft">
         Passer Premium — {PREMIUM_PRICE_LABEL}
       </button>
     </div>
@@ -446,13 +446,14 @@ export default function EarlyAccessPage() {
             <button
               onClick={handleUpgrade}
               data-testid="topbar-upgrade"
-              className="h-8 px-3 sm:px-4 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-full transition whitespace-nowrap">
+              className="h-8 px-3 sm:px-4 bg-orange-600 hover:bg-orange-700 text-navy-900 text-xs font-extrabold rounded-full transition whitespace-nowrap">
               Passer Premium
             </button>
           )}
         </div>
       </header>
 
+      <main id="main" role="main">
       {/* Hero */}
       <section className="relative pt-14 pb-16 sm:pb-20 bg-gradient-to-br from-[#0B1F3A] via-[#0B1F3A] to-[#162E52] overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
@@ -504,7 +505,7 @@ export default function EarlyAccessPage() {
           type="button"
           onClick={handleUpgrade}
           data-testid="status-bar-upgrade"
-          className="w-full bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold text-center py-3 px-4 flex items-center justify-center gap-2 transition">
+          className="w-full bg-orange-600 hover:bg-orange-700 text-navy-900 text-sm font-extrabold text-center py-3 px-4 flex items-center justify-center gap-2 transition">
           <Crown size={16}/>
           <span>Passez Premium pour voir ces annonces — <span className="underline">{PREMIUM_PRICE_LABEL}, sans engagement</span></span>
         </button>
@@ -590,7 +591,7 @@ export default function EarlyAccessPage() {
                   <button
                     onClick={handleUpgrade}
                     data-testid="unlock-cta"
-                    className="h-12 px-6 sm:px-8 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-full transition shadow-soft text-sm">
+                    className="h-12 px-6 sm:px-8 bg-orange-600 hover:bg-orange-700 text-navy-900 font-extrabold rounded-full transition shadow-soft text-sm">
                     Commencer — {PREMIUM_PRICE_LABEL}
                   </button>
                   <span className="text-white/40 text-sm">ou <Link to="/tarifs" className="text-white/70 underline hover:text-white transition" data-testid="see-offers">voir les offres</Link></span>
@@ -625,7 +626,7 @@ export default function EarlyAccessPage() {
                 catch { navigate('/mon-espace') }
               }}
               data-testid="bottom-cta"
-              className="h-12 px-6 sm:px-8 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-full transition shadow-soft">
+              className="h-12 px-6 sm:px-8 bg-orange-600 hover:bg-orange-700 text-navy-900 font-extrabold rounded-full transition shadow-soft">
               {isPremium ? 'Gérer mon abonnement' : 'Passer Premium maintenant'}
             </button>
             <Link
@@ -637,6 +638,7 @@ export default function EarlyAccessPage() {
           </div>
         </div>
       </section>
+      </main>
     </div>
   )
 }

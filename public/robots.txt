@@ -10,7 +10,6 @@ Disallow: /forms
 Disallow: /debug-auth
 Disallow: /onboarding
 Disallow: /account
-Disallow: /early-access
 Disallow: /subscription/
 
 # Sitemap
