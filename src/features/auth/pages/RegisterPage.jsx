@@ -1184,8 +1184,16 @@ export default function RegisterPage() {
             return // Stripe will redirect — don't show success overlay
           } catch (stripeErr) {
             console.warn('[premium] Stripe checkout deferred:', stripeErr.message)
-            // Fall through to success — user can subscribe later
+            // Fall through — auto-redirect below
           }
+        }
+
+        // Auto-connect: if signup returned a session (mailer_autoconfirm=true or
+        // OAuth path), skip the email-confirmation overlay and go straight to
+        // the right dashboard.
+        if (result.session) {
+          navigate(tab === 'pro' ? '/pro' : '/onboarding')
+          return
         }
 
         setSuccess(true)
