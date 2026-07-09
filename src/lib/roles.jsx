@@ -21,11 +21,11 @@ export const ROLE_META = {
   platform_owner:   { label: 'Propriétaire',     rank: 4, color: 'rose'    },
 }
 
-/* Redirect target by role — used by Login + ProtectedRoute */
+/* Redirect target by role — aligned with actual routes in main.jsx */
 export function roleRedirect(role) {
-  if (role === 'platform_owner') return '/managerIT'
-  if (['agency_admin', 'agency'].includes(role)) return '/agency'
-  return '/app'
+  if (['platform_owner', 'moderator'].includes(role)) return '/managerIT'
+  if (['pro_user', 'agency_admin', 'agency'].includes(role)) return '/pro'
+  return '/mon-espace'
 }
 
 /* Hierarchical check: userRole's rank >= requiredRole's rank */

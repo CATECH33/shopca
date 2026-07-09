@@ -1,0 +1,33 @@
+# SHOPCA — Supabase project configuration
+# Managed via `supabase config push --project-ref vvjmcrcakmmjuhpbtzbu`
+
+project_id = "vvjmcrcakmmjuhpbtzbu"
+
+[auth]
+site_url = "https://shopca.fr"
+additional_redirect_urls = [
+  "https://shopca.fr/**",
+  "https://www.shopca.fr/**",
+  "http://localhost:5173/**",
+  "http://localhost:4173/**",
+]
+
+# Keep email confirmation ON for security (users must verify their email).
+# If you want instant sign-up → dashboard access, set enable_confirmations = false.
+[auth.email]
+enable_signup = true
+enable_confirmations = true
+double_confirm_changes = true
+secure_password_change = true
+
+# Custom SMTP via Resend — removes the 3/hour rate limit of the default SMTP
+[auth.email.smtp]
+enabled = true
+host = "smtp.resend.com"
+port = 465
+user = "resend"
+pass = "env(RESEND_API_KEY)"
+admin_email = "noreply@shopca.fr"
+sender_name = "SHOPCA"
+
+# OAuth providers (already configured via dashboard — leave untouched)

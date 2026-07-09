@@ -5,6 +5,7 @@ import { I, BrandLogo, PasswordStrength } from '../../../lib/ui.jsx'
 import { useAuthAction, svc } from '../hooks/useAuth.js'
 import { isValidEmail } from '../validators/authValidators.js'
 import { startPremiumAlertsCheckout } from '../../subscription/subscriptionService.js'
+import { postAuthRedirect } from '../services/redirect.js'
 import { ShopCAInput } from '../../../components/ui/ShopCAInput'
 import { ShopCACheckbox } from '../../../components/ui/ShopCACheckbox'
 
@@ -1192,7 +1193,12 @@ export default function RegisterPage() {
         // OAuth path), skip the email-confirmation overlay and go straight to
         // the right dashboard.
         if (result.session) {
-          navigate(tab === 'pro' ? '/pro' : '/onboarding')
+          const dest = postAuthRedirect(
+            { account_type: tab === 'pro' ? 'professional' : 'personal', preferences: prefs },
+            result.user,
+            { preferOnboarding: tab !== 'pro' }
+          )
+          navigate(dest, { replace: true })
           return
         }
 

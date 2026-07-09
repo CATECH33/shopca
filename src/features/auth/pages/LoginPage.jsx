@@ -6,6 +6,7 @@ import { useAuthAction, svc } from '../hooks/useAuth.js'
 import { supabase } from '../../../lib/supabase.js'
 import { useAuth } from '../providers/AuthProvider.jsx'
 import { validateLoginForm } from '../validators/authValidators.js'
+import { postAuthRedirect } from '../services/redirect.js'
 import { ShopCAInput } from '../../../components/ui/ShopCAInput'
 
 const FEATURES = [
@@ -125,7 +126,16 @@ export default function LoginPage() {
   const [oauthLoading, setOauthLoading] = useState(false)
 
   useEffect(() => {
-    if (!authLoading && user) navigate('/', { replace: true })
+    if (authLoading || !user) return
+    ;(async () => {
+      try {
+        const { data: profile } = await supabase.from('profiles')
+          .select('role, account_type, preferences').eq('id', user.id).maybeSingle()
+        navigate(postAuthRedirect(profile, user), { replace: true })
+      } catch {
+        navigate(postAuthRedirect(null, user), { replace: true })
+      }
+    })()
   }, [user, authLoading, navigate])
 
   const signInWithGoogle = async () => {
@@ -148,14 +158,13 @@ export default function LoginPage() {
       }
     })
     if (result) {
-      // Fetch real role from profiles table (authoritative source)
+      // Fetch real profile to compute the right destination
       try {
-        const { data } = await supabase.from('profiles').select('role').eq('id', result.user.id).single()
-        const PRO_ROLES = ['pro_user', 'agency', 'agency_admin', 'platform_owner']
-        navigate(PRO_ROLES.includes(data?.role) ? '/pro' : '/')
+        const { data } = await supabase.from('profiles')
+          .select('role, account_type, preferences').eq('id', result.user.id).maybeSingle()
+        navigate(postAuthRedirect(data, result.user), { replace: true })
       } catch {
-        const isPro = result.user?.user_metadata?.account_type === 'professional'
-        navigate(isPro ? '/pro' : '/')
+        navigate(postAuthRedirect(null, result.user), { replace: true })
       }
     } else if (unconfirmed) navigate('/auth/verify-pending', { state: { email } })
   }

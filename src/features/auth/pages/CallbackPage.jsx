@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BrandLogo, I } from '../../../lib/ui.jsx'
 import { supabase } from '../../../lib/supabase.js'
+import { postAuthRedirect } from '../services/redirect.js'
 
 // ── Left panel ────────────────────────────────────────────────────────────────
 function LeftPanel() {
@@ -109,39 +110,73 @@ function LeftPanel() {
 // ── Main export ───────────────────────────────────────────────────────────────
 export default function CallbackPage() {
   const navigate = useNavigate()
-  const [status,    setStatus]    = useState('loading') // 'loading' | 'success' | 'error'
-  const [countdown, setCountdown] = useState(4)
+  const [status, setStatus] = useState('loading') // 'loading' | 'success' | 'error'
+  const [countdown, setCountdown] = useState(2)
+  const [target, setTarget] = useState('/mon-espace')
 
-  // Listen for SIGNED_IN fired when Supabase processes the confirmation token
+  // ── Step 1: exchange PKCE code for session (email confirm, OAuth) ─────
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if ((event === 'SIGNED_IN' || event === 'USER_UPDATED') && session) {
-        setStatus('success')
+    let cancelled = false
+    let unsubscribe = () => {}
+
+    const resolveTarget = async (user) => {
+      // Fetch profile to compute the right redirect
+      let profile = null
+      if (user?.id) {
+        try {
+          const { data } = await supabase.from('profiles')
+            .select('role, account_type, preferences, first_name')
+            .eq('id', user.id).maybeSingle()
+          profile = data
+        } catch { /* ignore, will fallback */ }
       }
-    })
-    // Also check for an existing session (user refreshed the page after confirming)
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) setStatus('success')
-    })
-    const timer = setTimeout(() => {
-      setStatus(prev => prev === 'loading' ? 'error' : prev)
-    }, 6000)
-    return () => { subscription.unsubscribe(); clearTimeout(timer) }
+      // preferOnboarding for a brand-new personal account
+      const dest = postAuthRedirect(profile, user, { preferOnboarding: true })
+      if (!cancelled) { setTarget(dest); setStatus('success') }
+    }
+
+    const finish = async () => {
+      // 1) If URL has ?code=… (PKCE) → exchange it
+      const url = new URL(window.location.href)
+      const code = url.searchParams.get('code')
+      if (code) {
+        try {
+          await supabase.auth.exchangeCodeForSession(window.location.href)
+        } catch (err) {
+          console.warn('[callback] exchangeCodeForSession failed:', err.message)
+        }
+      }
+
+      // 2) Check if a session exists now
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session?.user) return resolveTarget(session.user)
+
+      // 3) Otherwise subscribe to SIGNED_IN (implicit flow / delayed detect)
+      const { data: sub } = supabase.auth.onAuthStateChange((event, s) => {
+        if ((event === 'SIGNED_IN' || event === 'USER_UPDATED' || event === 'TOKEN_REFRESHED') && s?.user) {
+          resolveTarget(s.user)
+        }
+      })
+      unsubscribe = () => sub.subscription?.unsubscribe?.()
+
+      // 4) Fallback: error after 8s if still nothing
+      setTimeout(() => {
+        if (cancelled) return
+        setStatus(prev => prev === 'loading' ? 'error' : prev)
+      }, 8000)
+    }
+
+    finish()
+    return () => { cancelled = true; unsubscribe() }
   }, [])
 
-  // Countdown + auto-redirect after success
+  // ── Step 2: countdown + auto-redirect ────────────────────────────────
   useEffect(() => {
     if (status !== 'success') return
-    if (countdown === 0) {
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        const isPro = session?.user?.user_metadata?.account_type === 'professional'
-        navigate(isPro ? '/pro' : '/onboarding')
-      })
-      return
-    }
+    if (countdown === 0) { navigate(target, { replace: true }); return }
     const t = setTimeout(() => setCountdown(n => n - 1), 1000)
     return () => clearTimeout(t)
-  }, [status, countdown, navigate])
+  }, [status, countdown, navigate, target])
 
   return (
     <div className="min-h-screen flex bg-white">
@@ -202,18 +237,14 @@ export default function CallbackPage() {
                     <div className="h-1.5 rounded-full bg-emerald-100 overflow-hidden">
                       <motion.div className="h-full bg-emerald-500 rounded-full"
                         initial={{ width: '100%' }}
-                        animate={{ width: `${(countdown / 4) * 100}%` }}
+                        animate={{ width: `${(countdown / 2) * 100}%` }}
                         transition={{ duration: 1, ease: 'linear' }} />
                     </div>
                   </div>
 
-                  <button onClick={async () => {
-                    const { data: { session } } = await supabase.auth.getSession()
-                    const isPro = session?.user?.user_metadata?.account_type === 'professional'
-                    navigate(isPro ? '/pro' : '/onboarding')
-                  }}
+                  <button onClick={() => navigate(target, { replace: true })}
                     className="w-full h-12 flex items-center justify-center gap-2 rounded-xl bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-sm transition-all shadow-lg shadow-orange-200/60 hover:shadow-orange-300/70 hover:-translate-y-0.5">
-                    <I.Home size={15} />Accéder à SHOPCA
+                    <I.ArrowRight size={15} />Accéder à mon espace
                   </button>
                 </motion.div>
               )}
