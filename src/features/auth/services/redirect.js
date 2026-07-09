@@ -8,7 +8,7 @@
  *   /mon-espace    — private_user, premium_seller, user (default logged-in)
  *   /onboarding    — new personal accounts that haven't set preferences yet
  */
-export function postAuthRedirect(profile, user, { preferOnboarding = false } = {}) {
+export function postAuthRedirect(profile, user /* opts kept for compat */) {
   const role = profile?.role || user?.user_metadata?.role
   const accountType = profile?.account_type || user?.user_metadata?.account_type
 
@@ -20,11 +20,7 @@ export function postAuthRedirect(profile, user, { preferOnboarding = false } = {
     return '/pro'
   }
 
-  // Personal — first time (no preferences filled) → onboarding wizard
-  const prefs = profile?.preferences
-  const hasPrefs = Array.isArray(prefs) ? prefs.length > 0 : !!prefs
-  if (preferOnboarding && !hasPrefs) return '/onboarding'
-
-  // Default logged-in home
+  // Personal (default) — goes straight to the user dashboard. The onboarding
+  // wizard remains reachable at /onboarding for users who want to complete it.
   return '/mon-espace'
 }
