@@ -15,6 +15,7 @@ export default defineConfig({
           'vendor-stripe':   ['@stripe/stripe-js'],
           'vendor-supabase': ['@supabase/supabase-js'],
           'vendor-helmet':   ['react-helmet-async'],
+          'vendor-mapbox':   ['mapbox-gl'],
         },
       },
     },

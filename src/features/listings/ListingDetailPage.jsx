@@ -1,8 +1,10 @@
-﻿import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect, lazy, Suspense } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BrandLogo, I } from '../../lib/ui.jsx'
 import { supabase } from '../../lib/supabase.js'
+
+const ListingMap = lazy(() => import('./ListingMap.jsx'))
 import { FALLBACK, AGENCIES, DPE_COLORS, enrich, fmtPrice, fmtPricePerSqm, unsplash } from './listingsData.js'
 import { ShopCAInput } from '../../components/ui/ShopCAInput'
 import { ShopCATextarea } from '../../components/ui/ShopCATextarea'
@@ -454,6 +456,39 @@ export default function ListingDetailPage() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* Localisation (Mapbox) */}
+            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 lg:p-8">
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <h2 className="text-lg font-extrabold text-[#0F172A]">Localisation</h2>
+                  <p className="text-slate-500 text-sm mt-0.5">
+                    <I.MapPin size={12} className="inline mr-1 text-orange-500"/>
+                    {listing.city}{listing.district ? ` — ${listing.district}` : ''}
+                  </p>
+                </div>
+                {(listing.lat && listing.lng) && (
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${listing.lat},${listing.lng}`}
+                    target="_blank" rel="noopener noreferrer"
+                    className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-orange-600 hover:text-orange-700 transition">
+                    Voir dans Google Maps <I.ArrowRight size={12}/>
+                  </a>
+                )}
+              </div>
+              <Suspense fallback={
+                <div className="w-full h-[360px] sm:h-[420px] rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center">
+                  <div className="text-slate-400 text-sm">Chargement de la carte…</div>
+                </div>
+              }>
+                <ListingMap
+                  lat={listing.lat}
+                  lng={listing.lng}
+                  title={listing.title}
+                  city={listing.city}
+                />
+              </Suspense>
             </div>
 
             {/* DPE visual */}
