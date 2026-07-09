@@ -120,17 +120,22 @@ export default function CallbackPage() {
     let unsubscribe = () => {}
 
     const resolveTarget = async (user) => {
-      // Fetch profile to compute the right redirect
+      // Fetch profile with a small retry loop — the session's JWT sometimes
+      // takes ~200ms to be picked up by supabase-js after exchangeCodeForSession.
       let profile = null
       if (user?.id) {
-        try {
-          const { data } = await supabase.from('profiles')
-            .select('role, account_type, preferences, first_name')
-            .eq('id', user.id).maybeSingle()
-          profile = data
-        } catch { /* ignore, will fallback */ }
+        for (let i = 0; i < 4; i++) {
+          try {
+            const { data } = await supabase.from('profiles')
+              .select('role, account_type, preferences, first_name')
+              .eq('id', user.id).maybeSingle()
+            if (data) { profile = data; break }
+          } catch { /* retry */ }
+          await new Promise(r => setTimeout(r, 250))
+        }
       }
-      // preferOnboarding for a brand-new personal account
+      // preferOnboarding for a brand-new personal account (no admin role,
+      // no filled preferences).
       const dest = postAuthRedirect(profile, user, { preferOnboarding: true })
       if (!cancelled) { setTarget(dest); setStatus('success') }
     }
