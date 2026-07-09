@@ -11,6 +11,14 @@ function planFromType(type: string): string {
   return 'premium'
 }
 
+// Handle both old and new Stripe API shapes (period fields moved to items in 2025+)
+function getPeriodStart(sub: any): number | null {
+  return sub?.current_period_start ?? sub?.items?.data?.[0]?.current_period_start ?? null
+}
+function getPeriodEnd(sub: any): number | null {
+  return sub?.current_period_end ?? sub?.items?.data?.[0]?.current_period_end ?? null
+}
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -73,8 +81,10 @@ serve(async (req) => {
     const price_currency = item?.price?.currency    ?? 'eur'
     const price_interval = item?.price?.recurring?.interval ?? 'month'
 
-    const periodStart = new Date(subscription.current_period_start * 1000).toISOString()
-    const periodEnd   = new Date(subscription.current_period_end   * 1000).toISOString()
+    const pStart = getPeriodStart(subscription)
+    const pEnd   = getPeriodEnd(subscription)
+    const periodStart = pStart ? new Date(pStart * 1000).toISOString() : null
+    const periodEnd   = pEnd   ? new Date(pEnd   * 1000).toISOString() : null
 
     await supabaseAdmin.from('subscriptions').upsert({
       user_id: user.id,

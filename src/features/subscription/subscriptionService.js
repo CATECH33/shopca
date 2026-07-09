@@ -62,6 +62,14 @@ export async function getSubscriptionStatus(userId) {
   return data
 }
 
+// ── Real-time entitlement check (RPC — bypasses stale profile.premium_alerts) ─
+export async function isPremiumActive(userId) {
+  if (!userId) return false
+  const { data, error } = await supabase.rpc('is_premium_active', { p_user_id: userId })
+  if (error) { console.warn('[premium] check failed:', error.message); return false }
+  return !!data
+}
+
 // ── Open Stripe Billing Portal (manage subscription, invoices, cancel) ───────
 export async function openBillingPortal(returnUrl) {
   const { data: { session } } = await supabase.auth.getSession()
