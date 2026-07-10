@@ -20,14 +20,11 @@ enable_confirmations = true
 double_confirm_changes = true
 secure_password_change = true
 
-# Custom SMTP via Resend — removes the 3/hour rate limit of the default SMTP
+# Custom SMTP — disabled until a real Resend API key is provided.
+# When you have the key, set the RESEND_API_KEY env var locally then
+# flip `enabled = true` and run `supabase config push`.
+# In the meantime, Supabase's default SMTP is used (3/hour rate limit).
 [auth.email.smtp]
-enabled = true
-host = "smtp.resend.com"
-port = 465
-user = "resend"
-pass = "env(RESEND_API_KEY)"
-admin_email = "noreply@shopca.fr"
-sender_name = "SHOPCA"
+enabled = false
 
 # OAuth providers (already configured via dashboard — leave untouched)
