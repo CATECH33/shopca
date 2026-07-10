@@ -70,6 +70,7 @@ const Icons = {
   Sparkles: (p) => (<svg {...svgBase(p?.size)} className={p?.className}><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>),
   CreditCard: (p) => (<svg {...svgBase(p?.size)} className={p?.className}><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>),
   BadgeCheck: (p) => (<svg {...svgBase(p?.size)} className={p?.className}><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg>),
+  Settings: (p) => (<svg {...svgBase(p?.size)} className={p?.className}><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>),
   Send: (p) => (<svg {...svgBase(p?.size)} className={p?.className}><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg>),
   Home2: (p) => (<svg {...svgBase(p?.size)} className={p?.className}><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>),
   Tag: (p) => (<svg {...svgBase(p?.size)} className={p?.className}><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>),
@@ -331,7 +332,11 @@ const HOME_GUIDES = [
    User chip (logged in)
    ============================================================================ */
 function UserChip({ user, role, onSignOut, onNavigate }) {
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
+  const isPro     = ['pro_user', 'agency', 'agency_admin'].includes(role)
+  const isManager = ['platform_owner', 'moderator'].includes(role)
+
   const rawName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email || ''
   const displayName = rawName.split('@')[0] || 'Utilisateur'
   const initials = rawName
@@ -340,7 +345,28 @@ function UserChip({ user, role, onSignOut, onNavigate }) {
     .slice(0, 2)
     .map((w) => w[0].toUpperCase())
     .join('') || 'U'
-  const go = (view) => { setOpen(false); onNavigate?.(view) }
+  const goRoute  = (path) => { setOpen(false); navigate(path) }
+  const goView   = (view) => { setOpen(false); onNavigate?.(view) }
+
+  // Items adaptés au rôle — pas d'items pro visibles pour un particulier
+  const items = []
+  if (isManager) {
+    items.push({ icon: Icons.Shield,   label: 'ManagerIT',           onClick: () => goRoute('/managerIT'),  tone: 'orange', badge: 'Admin' })
+  }
+  if (isPro) {
+    items.push({ icon: Icons.Building, label: 'Dashboard Pro',        onClick: () => goRoute('/pro'),                       tone: 'orange', badge: 'Pro' })
+    items.push({ icon: Icons.Home,     label: 'Mes annonces',         onClick: () => goRoute('/pro?page=listings'),         tone: 'slate' })
+    items.push({ icon: Icons.Users,    label: 'CRM',                  onClick: () => goRoute('/crm'),                       tone: 'orange', badge: 'Pro' })
+    items.push({ icon: Icons.FileText, label: 'Formulaires',          onClick: () => goRoute('/forms'),                     tone: 'orange', badge: 'Pro' })
+    items.push({ icon: Icons.BadgeCheck, label: 'Vérification agence', onClick: () => goRoute('/pro?page=verification'),    tone: 'emerald', badge: 'Pro' })
+    items.push({ icon: Icons.Settings, label: 'Paramètres',           onClick: () => goRoute('/pro?page=settings'),         tone: 'slate' })
+  } else {
+    items.push({ icon: Icons.Home2,    label: 'Mon tableau de bord',  onClick: () => goRoute('/mon-espace'),                tone: 'orange' })
+    items.push({ icon: Icons.Heart,    label: 'Mes favoris',          onClick: () => goView('favoris'),                     tone: 'slate' })
+    items.push({ icon: Icons.Bell,     label: 'Mes alertes',          onClick: () => goView('alerts'),                      tone: 'orange' })
+  }
+  // Communs à tous
+  items.push({ icon: Icons.User,     label: 'Mon profil',           onClick: () => goRoute('/account'),                     tone: 'slate' })
 
   return (
     <div className="relative">
@@ -362,50 +388,26 @@ function UserChip({ user, role, onSignOut, onNavigate }) {
               <div className="text-xs text-slate-500">Connecté en tant que</div>
               <div className="text-sm font-semibold text-navy-900 truncate">{user?.email || displayName}</div>
             </div>
-            <button onClick={() => go('personal-dash')} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50 text-left">
-              <Icons.Home2 size={16} className="text-orange-500" />
-              Mon tableau de bord
-            </button>
-            <button onClick={() => navigate('/pro')} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50 text-left">
-              <Icons.Building size={16} className="text-orange-500" />
-              Dashboard Pro
-              <span className="ml-auto text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-orange-50 text-orange-600 ring-1 ring-orange-200">Pro</span>
-            </button>
-            <Link to="/account" onClick={() => setOpen(false)} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50">
-              <Icons.User size={16} className="text-slate-600" /> Mon profil
-            </Link>
-            <button onClick={() => go('messages')} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50 text-left">
-              <Icons.Mail size={16} className="text-orange-500" />
-              Messages
-              <span className="ml-auto bg-orange-500 text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center">3</span>
-            </button>
-            <button onClick={() => go('favoris')} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50 text-left">
-              <Icons.Heart size={16} className="text-slate-600" /> Mes favoris
-            </button>
-            <button onClick={() => go('mes-annonces')} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50 text-left">
-              <Icons.Home size={16} className="text-slate-600" /> Mes annonces
-            </button>
-            <Link to="/crm" onClick={() => setOpen(false)} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50">
-              <Icons.Users size={16} className="text-orange-500" />
-              CRM Pro
-              <span className="ml-auto text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-orange-50 text-orange-600 ring-1 ring-orange-200">Pro</span>
-            </Link>
-            <Link to="/forms" onClick={() => setOpen(false)} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50">
-              <Icons.FileText size={16} className="text-orange-500" />
-              Formulaires
-              <span className="ml-auto text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-orange-50 text-orange-600 ring-1 ring-orange-200">Pro</span>
-            </Link>
-            <button onClick={() => go('verification')} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50 text-left">
-              <Icons.BadgeCheck size={16} className="text-emerald-600" />
-              Vérification agence
-              <span className="ml-auto text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-600 ring-1 ring-emerald-200">Pro</span>
-            </button>
-            <button onClick={() => go('alerts')} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50 text-left">
-              <Icons.Bell size={16} className="text-orange-500" />
-              Smart Alerts
-              <span className="ml-auto text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-orange-50 text-orange-600 ring-1 ring-orange-200">Nouveau</span>
-            </button>
-            <Link to="/auth/logout" onClick={() => setOpen(false)} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 border-t border-slate-100">
+            {items.map((it) => (
+              <button key={it.label} onClick={it.onClick}
+                className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-navy-900 hover:bg-slate-50 text-left">
+                <it.icon size={16} className={
+                  it.tone === 'orange'  ? 'text-orange-500'
+                  : it.tone === 'emerald' ? 'text-emerald-600'
+                  : 'text-slate-600'
+                } />
+                {it.label}
+                {it.badge && (
+                  <span className={`ml-auto text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded ring-1 ${
+                    it.tone === 'emerald'
+                      ? 'bg-emerald-50 text-emerald-600 ring-emerald-200'
+                      : 'bg-orange-50 text-orange-600 ring-orange-200'
+                  }`}>{it.badge}</span>
+                )}
+              </button>
+            ))}
+            <Link to="/auth/logout" onClick={() => setOpen(false)}
+              className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 border-t border-slate-100">
               <Icons.LogOut size={16} /> Déconnexion
             </Link>
           </div>
@@ -484,31 +486,38 @@ function Header({ currentView, setCurrentView, user, role, onSignIn, onPublish, 
                 âš¡ Accès anticipé
               </button>
               <button
-                onClick={() => navigate('/dashboard')}
+                onClick={() => {
+                  const isPro = ['pro_user', 'agency', 'agency_admin', 'platform_owner'].includes(role)
+                  navigate(isPro ? '/pro' : '/mon-espace')
+                }}
                 className={`text-sm font-medium transition-colors px-3 py-2 rounded-full ${isOverlay ? 'text-white hover:text-orange-400' : 'text-navy-900 hover:text-orange-600'}`}
               >
                 Mon espace
               </button>
-              <button
-                onClick={() => navigate('/crm')}
-                className={`flex items-center gap-1.5 text-sm font-semibold transition-colors px-3 py-1.5 rounded-full border ${
-                  isOverlay
-                    ? 'border-white/30 text-white/90 hover:text-orange-400 hover:border-orange-400/50'
-                    : 'border-orange-200 text-orange-600 hover:bg-orange-50'
-                }`}
-              >
-                <Icons.Users size={14} /> CRM
-              </button>
-              <button
-                onClick={() => navigate('/forms')}
-                className={`flex items-center gap-1.5 text-sm font-semibold transition-colors px-3 py-1.5 rounded-full border ${
-                  isOverlay
-                    ? 'border-white/30 text-white/90 hover:text-orange-400 hover:border-orange-400/50'
-                    : 'border-orange-200 text-orange-600 hover:bg-orange-50'
-                }`}
-              >
-                <Icons.FileText size={14} /> Formulaires
-              </button>
+              {['pro_user', 'agency', 'agency_admin', 'platform_owner'].includes(role) && (
+                <>
+                  <button
+                    onClick={() => navigate('/crm')}
+                    className={`flex items-center gap-1.5 text-sm font-semibold transition-colors px-3 py-1.5 rounded-full border ${
+                      isOverlay
+                        ? 'border-white/30 text-white/90 hover:text-orange-400 hover:border-orange-400/50'
+                        : 'border-orange-200 text-orange-600 hover:bg-orange-50'
+                    }`}
+                  >
+                    <Icons.Users size={14} /> CRM
+                  </button>
+                  <button
+                    onClick={() => navigate('/forms')}
+                    className={`flex items-center gap-1.5 text-sm font-semibold transition-colors px-3 py-1.5 rounded-full border ${
+                      isOverlay
+                        ? 'border-white/30 text-white/90 hover:text-orange-400 hover:border-orange-400/50'
+                        : 'border-orange-200 text-orange-600 hover:bg-orange-50'
+                    }`}
+                  >
+                    <Icons.FileText size={14} /> Formulaires
+                  </button>
+                </>
+              )}
               <UserChip user={user} role={role} onSignOut={onSignOut} onNavigate={setCurrentView} />
             </>
           ) : (
@@ -5792,6 +5801,11 @@ export default function App() {
   const handlePublish = () => {
     if (!user) {
       setAuthModal({ open: true, mode: 'register' })
+      return
+    }
+    const isPro = ['pro_user', 'agency', 'agency_admin', 'platform_owner'].includes(role)
+    if (isPro) {
+      navigate('/pro?page=listings&new=1')
     } else {
       setCurrentView('publier')
     }

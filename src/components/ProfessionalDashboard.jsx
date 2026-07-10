@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../features/auth/providers/AuthProvider.jsx'
 import DashSidebar from './prodash/DashSidebar.jsx'
@@ -26,15 +27,26 @@ const PRO_PAGES = {
 
 export default function ProfessionalDashboard({ onExit }) {
   const { profile, loading: authLoading } = useAuth()
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const [dark, setDark] = useState(false)
   const [page, setPage] = useState(null)
+  const [openNewListing, setOpenNewListing] = useState(false)
 
   useEffect(() => {
-    if (!authLoading && page === null) {
-      setPage('overview')
+    if (authLoading) return
+    // Support ?page=listings|profile|... & new=1
+    const urlPage = searchParams.get('page')
+    const wantsNew = searchParams.get('new') === '1'
+    if (page === null) setPage(PRO_PAGES[urlPage] ? urlPage : 'overview')
+    if (wantsNew) {
+      setOpenNewListing(true)
+      // Clean the URL so a refresh doesn't reopen the wizard
+      const next = new URLSearchParams(searchParams)
+      next.delete('new')
+      setSearchParams(next, { replace: true })
     }
-  }, [authLoading, page])
+  }, [authLoading, page, searchParams, setSearchParams])
 
   if (authLoading || page === null) {
     return (
@@ -67,7 +79,7 @@ export default function ProfessionalDashboard({ onExit }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.18 }}>
-              <Page dark={dark} setPage={setPage} />
+              <Page dark={dark} setPage={setPage} openNewListing={openNewListing} setOpenNewListing={setOpenNewListing} />
             </motion.div>
           </AnimatePresence>
         </main>

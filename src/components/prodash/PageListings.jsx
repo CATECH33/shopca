@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { I } from '../../lib/ui.jsx'
 import { useAuth } from '../../features/auth/providers/AuthProvider.jsx'
 import { supabase } from '../../lib/supabase.js'
+
+const ListingWizard = lazy(() => import('../../dashboard/ListingWizard.jsx'))
 
 const STATUS_LABEL = {
   active:   'Actif',
@@ -40,12 +42,17 @@ function fmtPrice(price, transactionType) {
     : base
 }
 
-export default function PageListings({ dark }) {
+export default function PageListings({ dark, openNewListing = false, setOpenNewListing }) {
   const { user } = useAuth()
   const [listings, setListings] = useState([])
   const [loading,  setLoading]  = useState(true)
   const [filter,   setFilter]   = useState('Tous')
   const [deleting, setDeleting] = useState(null)
+  const [wizardOpen, setWizardOpen] = useState(false)
+
+  // Sync with the URL-driven flag from ProfessionalDashboard
+  useEffect(() => { if (openNewListing) setWizardOpen(true) }, [openNewListing])
+  const closeWizard = () => { setWizardOpen(false); setOpenNewListing?.(false) }
 
   const load = useCallback(async () => {
     if (!user) return
@@ -102,7 +109,9 @@ export default function PageListings({ dark }) {
               }`}>{f}</button>
           ))}
         </div>
-        <button className="flex items-center gap-2 h-9 px-4 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold transition shrink-0">
+        <button
+          onClick={() => setWizardOpen(true)}
+          className="flex items-center gap-2 h-9 px-4 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold transition shrink-0">
           <I.Plus size={13} /> Nouvelle annonce
         </button>
       </div>
@@ -192,6 +201,31 @@ export default function PageListings({ dark }) {
           </table>
         )}
       </div>
+
+      {/* Listing creation wizard modal */}
+      <AnimatePresence>
+        {wizardOpen && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[130] bg-slate-900/60 backdrop-blur-sm flex items-start justify-center overflow-y-auto p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 20 }}
+              transition={{ duration: 0.22 }}
+              className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl mt-8 mb-8">
+              <button
+                onClick={closeWizard}
+                className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white border border-slate-200 hover:bg-slate-50 flex items-center justify-center shadow-sm">
+                <I.X size={16} className="text-slate-500" />
+              </button>
+              <Suspense fallback={<div className="p-16 text-center text-slate-400">Chargement du formulaire…</div>}>
+                <ListingWizard onClose={closeWizard} onCreated={() => { closeWizard(); load() }} />
+              </Suspense>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

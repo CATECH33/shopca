@@ -104,7 +104,7 @@ export default function LoggedInHome({
     { label: 'Mes favoris',   Icon: I.Heart,       view: 'favoris',      color: '#EF4444' },
     { label: 'Mes alertes',   Icon: I.Bell,        view: 'alerts',       color: '#F97316' },
     { label: 'Publier',       Icon: I.Upload,      action: onPublish,    color: '#8B5CF6' },
-    ...(isPro ? [{ label: 'Dashboard Pro', Icon: I.BarChart, view: 'pro-dash', color: '#0EA5E9' }] : []),
+    ...(isPro ? [{ label: 'Dashboard Pro', Icon: I.BarChart, action: () => navigate('/pro'), color: '#0EA5E9' }] : []),
   ]
 
   return (
