@@ -4,6 +4,33 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { I, Button, Badge } from '../lib/ui.jsx'
 import { ShopCACheckbox } from '../components/ui/ShopCACheckbox'
 import { ShopCARadio } from '../components/ui/ShopCARadio'
+import { supabase } from '../lib/supabase.js'
+import { useAuth } from '../features/auth/providers/AuthProvider.jsx'
+
+// Map wizard state to a Supabase listings row
+function mapDraftToRow(data, userId, status) {
+  const property = (data.type || '').toLowerCase()
+  const propertyType =
+    property === 'studio'    ? 'studio'
+    : property === 'maison'  ? 'maison'
+    : property === 'villa'   ? 'villa'
+    : property === 'colocation' ? 'appartement'
+    : 'appartement'
+  return {
+    user_id: userId,
+    title: (data.title || '').trim().slice(0, 160) || 'Annonce sans titre',
+    description: (data.description || '').trim(),
+    price: Number(data.price) || 0,
+    city: (data.city || '').trim(),
+    district: (data.address || '').trim() || null,
+    property_type: propertyType,
+    transaction_type: data.transaction === 'louer' ? 'location' : 'vente',
+    surface: Number(data.surface) || null,
+    rooms: Number(data.rooms) || null,
+    images: (data.photos || []).map(p => p.url || p.dataUrl).filter(Boolean),
+    status,
+  }
+}
 
 /* ============================================================
    Listing Creation Wizard
@@ -55,12 +82,15 @@ const initialDraft = {
   agreedTerms: false,
 }
 
-export default function ListingWizard() {
+export default function ListingWizard({ onClose, onCreated }) {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [step, setStep] = useState(0)
   const [data, setData] = useState(initialDraft)
   const [savedAt, setSavedAt] = useState(null)
   const [aiLoading, setAiLoading] = useState(false)
+  const [publishing, setPublishing] = useState(false)
+  const [error, setError] = useState('')
 
   // Hydrate from localStorage on mount
   useEffect(() => {
@@ -121,10 +151,41 @@ export default function ListingWizard() {
     }, 900)
   }
 
-  const onPublish = () => {
-    // In real app: insert into supabase.from('listings')
-    localStorage.removeItem(DRAFT_KEY)
-    navigate('/app/listings')
+  const onSaveDraft = async () => {
+    if (!user) { setError('Vous devez être connecté.'); return }
+    setPublishing(true); setError('')
+    try {
+      const row = mapDraftToRow(data, user.id, 'draft')
+      const { error: err } = await supabase.from('listings').insert(row)
+      if (err) throw err
+      localStorage.removeItem(DRAFT_KEY)
+      if (onCreated) onCreated()
+      else if (onClose) onClose()
+      else navigate('/pro?page=listings')
+    } catch (e) {
+      setError(e.message || 'Erreur lors de l\'enregistrement du brouillon.')
+    } finally {
+      setPublishing(false)
+    }
+  }
+
+  const onPublish = async () => {
+    if (!user) { setError('Vous devez être connecté.'); return }
+    setPublishing(true); setError('')
+    try {
+      // pending = awaiting moderation (default workflow for new listings)
+      const row = mapDraftToRow(data, user.id, 'pending')
+      const { error: err } = await supabase.from('listings').insert(row)
+      if (err) throw err
+      localStorage.removeItem(DRAFT_KEY)
+      if (onCreated) onCreated()
+      else if (onClose) onClose()
+      else navigate('/pro?page=listings')
+    } catch (e) {
+      setError(e.message || 'Erreur lors de la publication.')
+    } finally {
+      setPublishing(false)
+    }
   }
 
   return (
@@ -214,15 +275,30 @@ export default function ListingWizard() {
                 Vous pouvez quitter à tout moment, votre progression est sauvegardée.
               </div>
               {step < STEPS.length - 1 ? (
-                <Button onClick={next} disabled={!canNext}>
-                  Continuer <I.ArrowRight size={14}/>
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" onClick={onSaveDraft} disabled={publishing || !user}>
+                    Enregistrer en brouillon
+                  </Button>
+                  <Button onClick={next} disabled={!canNext}>
+                    Continuer <I.ArrowRight size={14}/>
+                  </Button>
+                </div>
               ) : (
-                <Button onClick={onPublish} disabled={!canNext}>
-                  Publier l'annonce <I.Send size={14}/>
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" onClick={onSaveDraft} disabled={publishing}>
+                    Enregistrer en brouillon
+                  </Button>
+                  <Button onClick={onPublish} disabled={!canNext || publishing}>
+                    {publishing ? 'Publication…' : <>Publier l'annonce <I.Send size={14}/></>}
+                  </Button>
+                </div>
               )}
             </div>
+            {error && (
+              <div className="mt-3 rounded-xl bg-rose-50 border border-rose-200 px-4 py-2.5 text-sm text-rose-700">
+                {error}
+              </div>
+            )}
           </div>
         </div>
       </div>

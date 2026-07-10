@@ -7,18 +7,26 @@ import { supabase } from '../../lib/supabase.js'
 const ListingWizard = lazy(() => import('../../dashboard/ListingWizard.jsx'))
 
 const STATUS_LABEL = {
-  active:   'Actif',
+  draft:    'Brouillon',
   pending:  'En attente',
+  active:   'Actif',
+  rejected: 'Rejetée',
   sold:     'Vendu',
   rented:   'Loué',
+  archived: 'Archivée',
+  expired:  'Expirée',
   inactive: 'Inactif',
 }
 
 const STATUS_STYLE = {
-  'Actif':      'bg-emerald-100 text-emerald-700',
-  'Loué':       'bg-sky-100 text-sky-700',
-  'Vendu':      'bg-slate-100 text-slate-500',
+  'Brouillon':  'bg-slate-100 text-slate-600',
   'En attente': 'bg-amber-100 text-amber-700',
+  'Actif':      'bg-emerald-100 text-emerald-700',
+  'Rejetée':    'bg-rose-100 text-rose-700',
+  'Vendu':      'bg-indigo-100 text-indigo-700',
+  'Loué':       'bg-sky-100 text-sky-700',
+  'Archivée':   'bg-slate-100 text-slate-500',
+  'Expirée':    'bg-slate-100 text-slate-400',
   'Inactif':    'bg-slate-100 text-slate-400',
 }
 
@@ -29,10 +37,12 @@ const TYPE_LABEL = {
 }
 
 const FILTER_TO_STATUS = {
-  'Actif':      'active',
-  'Loué':       'rented',
-  'Vendu':      'sold',
+  'Brouillon':  'draft',
   'En attente': 'pending',
+  'Actif':      'active',
+  'Vendu':      'sold',
+  'Loué':       'rented',
+  'Archivée':   'archived',
 }
 
 function fmtPrice(price, transactionType) {
@@ -87,7 +97,32 @@ export default function PageListings({ dark, openNewListing = false, setOpenNewL
     }
   }
 
-  const filters = ['Tous', 'Actif', 'Loué', 'Vendu', 'En attente']
+  const [menuId, setMenuId] = useState(null)
+  const handleSetStatus = async (id, next) => {
+    setMenuId(null)
+    try {
+      const { error } = await supabase.from('listings').update({ status: next }).eq('id', id)
+      if (!error) {
+        setListings(prev => prev.map(l => l.id === id ? { ...l, status: next } : l))
+      }
+    } catch (err) {
+      console.error('[listings] status change error:', err)
+    }
+  }
+  // Menu options depend on current status
+  const availableActions = (currentStatus) => {
+    const all = [
+      { key: 'active',   label: 'Publier',        icon: I.Send },
+      { key: 'pending',  label: 'Soumettre pour modération', icon: I.Clock },
+      { key: 'draft',    label: 'Remettre en brouillon', icon: I.Edit },
+      { key: 'sold',     label: 'Marquer vendu',  icon: I.Check },
+      { key: 'rented',   label: 'Marquer loué',   icon: I.Check },
+      { key: 'archived', label: 'Archiver',       icon: I.Archive },
+    ]
+    return all.filter(a => a.key !== currentStatus)
+  }
+
+  const filters = ['Tous', 'Brouillon', 'En attente', 'Actif', 'Vendu', 'Loué', 'Archivée']
   const shown   = filter === 'Tous'
     ? listings
     : listings.filter(l => l.status === FILTER_TO_STATUS[filter])
@@ -181,16 +216,37 @@ export default function PageListings({ dark, openNewListing = false, setOpenNewL
                         </span>
                       </td>
                       <td className="px-4 py-3.5">
-                        <div className="flex gap-1">
-                          <button className={`w-7 h-7 rounded-lg flex items-center justify-center transition ${dark ? 'hover:bg-white/10 text-white/40' : 'hover:bg-slate-100 text-slate-400'}`}>
-                            <I.Edit size={13} />
+                        <div className="flex gap-1 relative">
+                          <button
+                            onClick={() => setMenuId(menuId === l.id ? null : l.id)}
+                            aria-label="Actions"
+                            className={`w-7 h-7 rounded-lg flex items-center justify-center transition ${dark ? 'hover:bg-white/10 text-white/40' : 'hover:bg-slate-100 text-slate-500'}`}>
+                            <I.MoreH size={14} />
                           </button>
                           <button onClick={() => handleDelete(l.id)} disabled={deleting === l.id}
+                            aria-label="Supprimer"
                             className={`w-7 h-7 rounded-lg flex items-center justify-center transition disabled:opacity-40 ${dark ? 'hover:bg-rose-500/20 text-white/40' : 'hover:bg-rose-50 text-slate-400'}`}>
                             {deleting === l.id
                               ? <I.Loader size={13} className="animate-spin" />
                               : <I.Trash size={13} />}
                           </button>
+                          {menuId === l.id && (
+                            <>
+                              <div className="fixed inset-0 z-20" onClick={() => setMenuId(null)} />
+                              <div className={`absolute right-0 top-8 z-30 w-52 rounded-xl border shadow-xl overflow-hidden ${dark ? 'bg-[#1f2937] border-white/10' : 'bg-white border-slate-200'}`}>
+                                {availableActions(l.status).map(a => {
+                                  const A = a.icon
+                                  return (
+                                    <button key={a.key}
+                                      onClick={() => handleSetStatus(l.id, a.key)}
+                                      className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold transition ${dark ? 'hover:bg-white/10 text-white' : 'hover:bg-slate-50 text-navy-900'}`}>
+                                      <A size={13} className="text-orange-500" /> {a.label}
+                                    </button>
+                                  )
+                                })}
+                              </div>
+                            </>
+                          )}
                         </div>
                       </td>
                     </motion.tr>
